@@ -1,9 +1,9 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Character_SO", menuName = "LightLines/Character_SO", order = 0)]
+[CreateAssetMenu(fileName = "CharacterData_SO", menuName = "LightLines/CharacterData_SO", order = 0)]
 public class CharacterData_SO : ScriptableObject {
     [Tooltip("プレイヤー入力空間"), SerializeField] 
-    Transform _playerInputSpace = default;
+    private Transform _playerInputSpace = default;
     public Transform PlayerInputSpace{
         get { return _playerInputSpace; }
         set { _playerInputSpace = value; }
@@ -11,24 +11,29 @@ public class CharacterData_SO : ScriptableObject {
 
     [Header("Direction")]
     [Tooltip("キャラ向きスムーズタイム"), SerializeField, Min(0f)]
-    float _turnSmoothTime = 0.1f;
+    private float _turnSmoothTime = 0.1f;
     public float TurnSmoothTime
     {
         get { return _turnSmoothTime; }
     }
 
     [Header("MaxSpeed")]
-    [Tooltip("最大地面歩行速度"), SerializeField, Range(0f, 100f)] 
-    float _maxWalkSpeed = 5f;
-    [Tooltip("最大地面走る速度"), SerializeField, Range(0f, 100f)] 
-    float _maxRunSpeed = 10f;
-    [Tooltip("最大地面捕獲速度"), SerializeField, Range(0f, 100f)] 
-    float _maxSnapSpeed = 100f;
+    [Tooltip("最大地面歩行速度"), SerializeField, Range(0f, 100f)]
+    private float _maxWalkSpeed = 5f;
+    [Tooltip("最大地面走る速度"), SerializeField, Range(0f, 100f)]
+    private float _maxRunSpeed = 10f;
+    [Tooltip("最大空中移動速度"), SerializeField, Range(0f,100f)]
+    private float _maxAirSpeed = 3f;
+    [Tooltip("最大地面捕獲速度"), SerializeField, Range(0f, 100f)]
+    private float _maxSnapSpeed = 100f;
     public float MaxWalkSpeed{
         get { return _maxWalkSpeed; }
     }
     public float MaxRunSpeed{
         get { return _maxRunSpeed; }
+    }
+    public float MaxAirSpeed{
+        get { return _maxAirSpeed; }
     }
     public float MaxSnapSpeed{
         get { return _maxSnapSpeed; }
@@ -36,27 +41,27 @@ public class CharacterData_SO : ScriptableObject {
 
     [Header("Accleration")]
     [Tooltip("歩行加速度"), SerializeField, Range(0f, 100f)]
-    float _maxWalkAccleration = 2f;
+    private float _walkAcceleration = 2f;
     [Tooltip("走る加速度"), SerializeField, Range(0f, 100f)]
-    float _maxRunAccleration = 10f;
+    private float _runAcceleration = 10f;
     [Tooltip("空中加速度"), SerializeField, Range(0f, 100f)]
-    float _maxAirAccleration = 1f;
-    public float MaxWalkAccleration{
-        get { return _maxWalkAccleration; }
+    private float _airAcceleration = 1f;
+    public float WalkAcceleration{
+        get { return _walkAcceleration; }
     }
-    public float MaxRunAccleration{
-        get { return _maxRunAccleration; }
+    public float RunAcceleration{
+        get { return _runAcceleration; }
     }
-    public float MaxAirAccleration{
-        get { return _maxAirAccleration; }
+    public float AirAcceleration{
+        get { return _airAcceleration; }
     }
 
 
     [Header("Jump")]
     [Tooltip("最大ジャンプ高さ"), SerializeField, Range(0f, 10f)]
-    float _jumpHeight = 2f;
+    private float _jumpHeight = 2f;
     [Tooltip("最大空中ジャンプ数(地面ジャンプ除く)"), SerializeField, Range(0, 5)]
-    int _maxAirJumps = 0;
+    private int _maxAirJumps = 0;
     public float JumpHeight{
         get { return _jumpHeight; }
     }
@@ -64,13 +69,13 @@ public class CharacterData_SO : ScriptableObject {
         get { return _maxAirJumps; }
     }
 
-    [Header("Check")]
-    [Tooltip("地面検知距離"), SerializeField, Min(0f)] 
-    float _probeDistance = 1f;
+    [Header("GroundCheck")]
+    [Tooltip("地面検知距離"), SerializeField, Min(0f)]
+    private float _probeDistance = 1f;
     [Tooltip("最大斜面通行角度"), SerializeField, Range(0f, 90f)]
-    float _maxGroundAngle = 45f;
+    private float _maxGroundAngle = 45f;
     [Tooltip("地面Layer"), SerializeField]
-    LayerMask _probeMask = -1;
+    private LayerMask _probeMask = -1;
     public float ProbeDistance{
         get { return _probeDistance; }
     }
@@ -81,6 +86,15 @@ public class CharacterData_SO : ScriptableObject {
         get { return _probeMask; }
     }
 
-
-
+    [Header("RealTimeData")]
+    private bool _runInput;
+    public bool RunInput {
+        get { return _runInput; }
+        set { _runInput = value; }
+    }
+    private Vector3 _velocity;
+    public Vector3 Velocity{
+        get { return _velocity; }
+        set { _velocity = value; }
+    }
 }
