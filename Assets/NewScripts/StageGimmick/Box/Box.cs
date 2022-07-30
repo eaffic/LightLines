@@ -25,7 +25,6 @@ public class Box : MonoBehaviour
     
     bool OnMove { get; set; } //移動中
     bool OnRotate { get; set; } //回転中
-    bool OnMovingPlatform { get; set; } //移動プラットフォームに載っているか？
     bool OnHead => Physics.Raycast(transform.position, Vector3.up, 0.5f, _wallLayer);   //上方向確認
     bool OnGround => Physics.Raycast(transform.position + new Vector3 (0, 0.1f, 0), Vector3.down, 0.2f, _groundLayer);   //地面確認
 
@@ -37,7 +36,7 @@ public class Box : MonoBehaviour
     
     void Update()
     {
-        SetMaterial();
+        //SetMaterial();
 
         Debug.DrawRay(transform.position + new Vector3(0, 0.1f, 0), Vector3.down * 0.2f, OnGround ? Color.red : Color.green);
     }
@@ -92,9 +91,9 @@ public class Box : MonoBehaviour
     {
         //while(OnMove || OnRotate) { yield return null; }
 
-        _rigidBody.constraints = RigidbodyConstraints.FreezeAll;
+        _rigidBody.useGravity = false;
         OnMove = true;
-        AudioManager.PlayBoxMoveAudio();
+        //AudioManager.PlayBoxMoveAudio();
 
         //移動
         Vector3 velocity = Vector3.zero;
@@ -108,7 +107,7 @@ public class Box : MonoBehaviour
 
         transform.position = movePosition;
         OnMove = false;
-        _rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+        _rigidBody.useGravity = true;
         yield return null;
     }
 
@@ -116,7 +115,7 @@ public class Box : MonoBehaviour
     IEnumerator BoxRotate(float angle){
         //while(OnMove || OnRotate) { yield return null; }
 
-        _rigidBody.constraints = RigidbodyConstraints.FreezeAll;
+        //_rigidBody.constraints = RigidbodyConstraints.FreezeAll;
         OnRotate = true;
 
         float targetAngle = transform.eulerAngles.y + angle;
@@ -128,7 +127,7 @@ public class Box : MonoBehaviour
 
         transform.eulerAngles = new Vector3(0, targetAngle, 0);
         OnRotate = false;
-        _rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+        //_rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         yield return null;
     }
 }

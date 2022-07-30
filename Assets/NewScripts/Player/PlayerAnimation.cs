@@ -17,6 +17,8 @@ public class PlayerAnimation : MonoBehaviour {
         _animator.SetFloat("Velocity", _velocity.magnitude / _fsm.PlayerData.MaxRunSpeed);
 
         _animator.SetBool("OnGround", _fsm.PlayerMovementController.OnGround);
+
+        _animator.SetBool("Fall", _fsm.PlayerData.Velocity.y < -0.1f);
     }
 
     public void PlayJumpAnimation(){

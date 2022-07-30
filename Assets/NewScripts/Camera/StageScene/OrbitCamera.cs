@@ -164,7 +164,7 @@ public class OrbitCamera : MonoBehaviour
     {
         if (_isStageSelect) return false;
 
-        Vector2 playerInput = InputManager.Instance.GetCameraRotateInput();
+        Vector2 playerInput = GameInputManager.Instance.GetCameraRotateInput();
 
         const float e = 1e-3f; //誤差範囲
         if (Mathf.Abs(playerInput.x) > e || Mathf.Abs(playerInput.y) > e)
@@ -181,12 +181,12 @@ public class OrbitCamera : MonoBehaviour
     {
         if (_isStageSelect) return;
 
-        if(InputManager.Instance.GetCameraZoomInInput() && _distance > _minDistance)
+        if(GameInputManager.Instance.GetCameraZoomInInput() && _distance > _minDistance)
         {
             _distance = Mathf.MoveTowards(_distance, _minDistance, 5 * Time.deltaTime);
         }
 
-        if(InputManager.Instance.GetCameraZoomOutInput() && _distance < _maxDistance)
+        if(GameInputManager.Instance.GetCameraZoomOutInput() && _distance < _maxDistance)
         {
             _distance = Mathf.MoveTowards(_distance, _maxDistance, 5 * Time.deltaTime);
         }
@@ -243,7 +243,7 @@ public class OrbitCamera : MonoBehaviour
         float headingAngle = GetAngle(movement / Mathf.Sqrt(movementDeltaSqr));
         //xz平面の角度を取得する(カメラ角度と移動角度)
         float deltaAbs = Mathf.Abs(Mathf.DeltaAngle(_orbitAngles.y, headingAngle));
-        //なめらか処理
+        //なめらか移動処理
         float rotationChange = _rotationSpeed * Mathf.Min(Time.unscaledDeltaTime, movementDeltaSqr);
         if (deltaAbs < _alignSmoothRange)
         {
@@ -253,7 +253,7 @@ public class OrbitCamera : MonoBehaviour
         {
             rotationChange *= (180f - deltaAbs) / _alignSmoothRange;
         }
-        _orbitAngles.y = Mathf.MoveTowardsAngle(_orbitAngles.y, headingAngle, rotationChange);
+        _orbitAngles.y = Mathf.MoveTowardsAngle(_orbitAngles.y, headingAngle, rotationChange * 2f);
 
         return true;
     }

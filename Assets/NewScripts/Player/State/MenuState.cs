@@ -3,16 +3,16 @@ using UnityEngine;
 /// <summary>
 /// メニュを開く
 /// </summary>
-public class MenuState : BaseState<PlayerStateType> {
+public class MenuState : BaseState<PlayerState> {
     private PlayerFSM _fsm;
 
-    public MenuState(PlayerFSM manager, PlayerStateType type)
+    public MenuState(PlayerFSM manager, PlayerState type)
     {
         base.ThisStateType = type;
         _fsm = manager;
     }
 
-    public override void OnEnter(PlayerStateType previewstate)
+    public override void OnEnter(PlayerState previewstate)
     {
         base.OnEnter(previewstate);
         _fsm.PlayerMovementController.SetCurrentState(ThisStateType);
@@ -21,7 +21,7 @@ public class MenuState : BaseState<PlayerStateType> {
     public override void OnUpdate(float deltaTime)
     {
         base.OnUpdate(deltaTime);
-        if (InputManager.Instance.GetUIMenuInput())
+        if (GameInputManager.Instance.GetUIMenuInput())
         {
             _fsm.TransitionState(base.ThisStateType, PreviewState);
         }

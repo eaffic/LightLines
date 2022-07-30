@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PlayerStateType{
+public enum PlayerState{
     Idle, Walk, Run, Jump, Push, Menu
 }
 
@@ -12,47 +12,45 @@ public class PlayerFSM : MonoBehaviour {
     public PlayerMovement PlayerMovementController; //移動制御
     public PlayerAnimation PlayerAnimationController; //動画制御
     public PlayerActions PlayerActionsController; //動作制御
-    private IState<PlayerStateType> _currentState;
-    private Dictionary<PlayerStateType, IState<PlayerStateType>> _states = new Dictionary<PlayerStateType, IState<PlayerStateType>>();
+    public PlayerAudio PlayerAudioController; //音声制御
+
+    private IState<PlayerState> _currentState;
+    private Dictionary<PlayerState, IState<PlayerState>> _states = new Dictionary<PlayerState, IState<PlayerState>>();
 
     private void Awake() {
+        //PlayerData = ScriptableObject.CreateInstance<CharacterData_SO>();
         PlayerData.PlayerInputSpace = Camera.main.gameObject.transform;
-
+        
         TryGetComponent(out PlayerMovementController);
         TryGetComponent(out PlayerAnimationController);
+        TryGetComponent(out PlayerActionsController);
+        TryGetComponent(out PlayerAudioController);
 
-        _states.Add(PlayerStateType.Idle, new IdleState(this, PlayerStateType.Idle));
-        _states.Add(PlayerStateType.Walk, new WalkState(this, PlayerStateType.Walk));
-        _states.Add(PlayerStateType.Run, new RunState(this, PlayerStateType.Run));
-        _states.Add(PlayerStateType.Jump, new JumpState(this, PlayerStateType.Jump));
-        _states.Add(PlayerStateType.Push, new PushState(this, PlayerStateType.Push));
-        _states.Add(PlayerStateType.Menu, new MenuState(this, PlayerStateType.Menu));
+        _states.Add(PlayerState.Idle, new PlayerIdleState(this, PlayerState.Idle));
+        _states.Add(PlayerState.Walk, new PlayerWalkState(this, PlayerState.Walk));
+        _states.Add(PlayerState.Run, new PlayerRunState(this, PlayerState.Run));
+        _states.Add(PlayerState.Jump, new PlayerJumpState(this, PlayerState.Jump));
+        _states.Add(PlayerState.Push, new PlayerPushState(this, PlayerState.Push));
+        _states.Add(PlayerState.Menu, new MenuState(this, PlayerState.Menu));
 
-        TransitionState(default, PlayerStateType.Idle); //初期状態
+        TransitionState(default, PlayerState.Idle); //初期状態
     }
 
     private void Update() {
         _currentState.OnUpdate(Time.deltaTime);
+        PlayerActionsController.SearchBox();
         Debug.Log(_currentState);
-    }
-
-    private void FixedUpdate() {
-        _currentState.OnFixedUpdate();
     }
 
     /// <summary>
     /// 状態遷移
     /// </summary>
     /// <param name="type"></param>
-    public void TransitionState(PlayerStateType now, PlayerStateType next){
+    public void TransitionState(PlayerState now, PlayerState next){
         if(_currentState != null){
             _currentState.OnExit();
         }
         _currentState = _states[next];
         _currentState.OnEnter(now);
-    }
-
-    public PlayerStateType GetCurrentStateType(){
-        return _currentState.ThisStateType;
     }
 }

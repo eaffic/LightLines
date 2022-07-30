@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
     private PlayerFSM _fsm;
     private Rigidbody _rigidBody;
-    private PlayerStateType _currentStateType;
+    private PlayerState _currentStateType;
 
     //キャラ基本情報
     [SerializeField] private float _maxSpeed; //最大速度
@@ -15,10 +15,8 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private Vector3 _velocity;  //現在速度
     [SerializeField] private Vector3 _desiredVelocity;  //予期速度
     [SerializeField] private Vector3 _contactNormal; //接触地面の法線合計
-
     [SerializeField] private int _groundContactCount; //接触した地面の数
 
-    [SerializeField] private bool _canUpdate; //更新確認
     public bool OnJump { get; set; } //ジャンプ状態
     public bool OnGround => _groundContactCount > 0;  //地面確認
     public bool OnSlope //坂道確認
@@ -36,23 +34,35 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void Update() {
-        if (_canUpdate == false) { return; }
-
-        InputCheck();
+        switch (_currentStateType)
+        {
+            case PlayerState.Walk:
+            case PlayerState.Run:
+            case PlayerState.Jump:
+                InputCheck();
+                break;
+            default:
+                break;
+        }
     }
 
-    private void FixedUpdate() {
+    private void FixedUpdate() { 
+        switch(_currentStateType)
+        {
+            case PlayerState.Walk:
+            case PlayerState.Run:
+            case PlayerState.Jump:
+                _velocity = _rigidBody.velocity;
+                SnapToGround();
+                AdjustVelocity();
+                ClearState();
+                _rigidBody.velocity = _velocity;
+                break;
+            default:
+                break;
+        }
         _fsm.PlayerData.Velocity = _rigidBody.velocity;
-        if (_canUpdate == false) { return; }
-
-        _velocity = _rigidBody.velocity;
-
-        SnapToGround();
         CheckGravity();
-        AdjustVelocity();
-        ClearState();
-
-        _rigidBody.velocity = _velocity;
     }
 
     /// <summary>
@@ -60,7 +70,7 @@ public class PlayerMovement : MonoBehaviour {
     /// </summary>
     private void InputCheck()
     {
-        Vector3 moveVector = InputManager.Instance.GetPlayerMoveInput();
+        Vector3 moveVector = GameInputManager.Instance.GetPlayerMoveInput();
         
         //カメラ方向を基に進行方向を調整する
         if (_fsm.PlayerData.PlayerInputSpace)
@@ -118,7 +128,7 @@ public class PlayerMovement : MonoBehaviour {
     private bool SnapToGround()
     {
         //ジャンプ中
-        if(_fsm.GetCurrentStateType() == PlayerStateType.Jump)
+        if(OnJump)
         {
             return false;
         }
@@ -234,14 +244,14 @@ public class PlayerMovement : MonoBehaviour {
         return vector - _contactNormal * Vector3.Dot(vector, _contactNormal);
     }
 
-
     /// <summary>
     /// 重力使用設定
+    /// 
     /// </summary>
     private void CheckGravity()
     {
         //坂道の上に止まる
-        if (OnSlope && OnGround)
+        if (OnSlope && OnGround && !OnJump)
         {
             _rigidBody.useGravity = false;
         }
@@ -265,26 +275,24 @@ public class PlayerMovement : MonoBehaviour {
     /// <summary>
     /// キャラ状態設定
     /// </summary>
-    public void SetCurrentState(PlayerStateType type){
+    public void SetCurrentState(PlayerState type){
+        _currentStateType = type;
+        
         switch (type){
-            case PlayerStateType.Walk:
-                _canUpdate = true;
+            case PlayerState.Walk:
                 _acceleration = _fsm.PlayerData.WalkAcceleration;
                 _maxSpeed = _fsm.PlayerData.MaxWalkSpeed;
                 break;
-            case PlayerStateType.Run:
-                _canUpdate = true;
+            case PlayerState.Run:
                 _acceleration = _fsm.PlayerData.RunAcceleration;
                 _maxSpeed = _fsm.PlayerData.MaxRunSpeed;
                 break;
-            case PlayerStateType.Jump:
-                _canUpdate = true;
+            case PlayerState.Jump:
                 _acceleration = _fsm.PlayerData.AirAcceleration;
                 OnJump = true;
                 Jump();
                 break;
             default:
-                _canUpdate = false;
                 break;
         }
     }
