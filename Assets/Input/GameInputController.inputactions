@@ -30,14 +30,6 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Run",
-                    "type": "Button",
-                    "id": "e0bd3bab-72c9-48ee-8f1b-e6c6d680a10d",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "Reset",
                     "type": "Button",
                     "id": "6af00f54-32d1-44b7-8bd8-109fca931488",
@@ -167,28 +159,6 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "d38c8436-6f60-40b4-a015-a192dd015b3d",
-                    "path": "<Keyboard>/z",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Run",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8291d4ef-b254-4035-8fae-fb782b580b3a",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Run",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 },
                 {
                     "name": "",
@@ -463,7 +433,7 @@
                 {
                     "name": "negative",
                     "id": "d7b56a36-36d9-415b-b430-200314ac7a9b",
-                    "path": "<Gamepad>/dpad/down",
+                    "path": "<Gamepad>/leftStick/down",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -474,7 +444,7 @@
                 {
                     "name": "positive",
                     "id": "88fe0a1f-9cf7-4ad0-abb2-86db73f26bb6",
-                    "path": "<Gamepad>/dpad/up",
+                    "path": "<Gamepad>/leftStick/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

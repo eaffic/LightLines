@@ -1,24 +1,27 @@
 using UnityEngine;
+using GameEnumList;
 
 /// <summary>
 /// 移動制御クラス
 /// </summary>
-public class PlayerMovement : MonoBehaviour {
-    private CharacterData_SO _data;
+public class PlayerMovement : MonoBehaviour
+{
+    private PlayerFSM _fsm;
     private Rigidbody _rigidBody;
 
+    [SerializeField] private GameObject _rippleParticle;
+
+    private Vector3 _lastTouchWallPosition;
+
     //キャラ基本情報
-    [SerializeField] private float _maxSpeed; //最大速度
-    [SerializeField] private float _acceleration; //加速度
-    [SerializeField] private float _turnSmoothVelocity; //転向速度
-    [SerializeField] private Vector3 _velocity;  //現在速度
-    [SerializeField] private Vector3 _desiredVelocity;  //予期速度
-    [SerializeField] private Vector3 _contactNormal; //接触地面の法線合計
+    private float _maxSpeed; //最大速度
+    private float _acceleration; //加速度
+    private float _turnSmoothVelocity; //転向速度
+    private Vector3 _velocity;  //現在速度
+    private Vector3 _desiredVelocity;  //予期速度
+    private Vector3 _contactNormal; //接触地面の法線合計
+    private int _groundContactCount; //接触した地面の数
 
-    [SerializeField] private int _groundContactCount; //接触した地面の数
-
-    [SerializeField] private bool _update;
-    public bool UpdateMovement { get => _update; set => _update = value; } //更新確認
     public bool OnJump { get; set; } //ジャンプ状態
     public bool OnGround => _groundContactCount > 0;  //地面確認
     public bool OnSlope //坂道確認
@@ -26,29 +29,50 @@ public class PlayerMovement : MonoBehaviour {
         get
         {
             return Vector3.Angle(_contactNormal, Vector3.up) > 0 &&
-                   Vector3.Angle(_contactNormal, Vector3.up) <= _data.MaxGroundAngle;
+                   Vector3.Angle(_contactNormal, Vector3.up) <= _fsm.PlayerData.MaxGroundAngle;
         }
     }
 
-    private void Awake() {
+    private void Awake()
+    {
         TryGetComponent(out _rigidBody);
+        TryGetComponent(out _fsm);
+
+        _rippleParticle.transform.parent = null;
     }
 
-    private void Update() {
-        if (!UpdateMovement) { return; }
-        InputCheck();
+    private void Update()
+    {
+        switch (_fsm.CurrentState)
+        {
+            case PlayerState.Walk:
+            case PlayerState.Run:
+            case PlayerState.Jump:
+                InputCheck();
+                break;
+            default:
+                break;
+        }
     }
 
-    private void FixedUpdate() {
-        if (!UpdateMovement) { return; }
-        _velocity = _rigidBody.velocity;
-
-        SnapToGround();
-        AdjustVelocity();
-        ClearState();
-
-        _rigidBody.velocity = _velocity;
-        _data.Velocity = _velocity;
+    private void FixedUpdate()
+    {
+        switch (_fsm.CurrentState)
+        {
+            case PlayerState.Walk:
+            case PlayerState.Run:
+            case PlayerState.Jump:
+                _velocity = _rigidBody.velocity;
+                SnapToGround();
+                AdjustVelocity();
+                ClearState();
+                _rigidBody.velocity = _velocity;
+                break;
+            default:
+                break;
+        }
+        _fsm.PlayerData.Velocity = _rigidBody.velocity;
+        CheckGravity();
     }
 
     /// <summary>
@@ -56,15 +80,15 @@ public class PlayerMovement : MonoBehaviour {
     /// </summary>
     private void InputCheck()
     {
-        Vector3 moveVector = InputManager.Instance.GetPlayerMoveInput();
-        
+        Vector3 moveVector = GameInputManager.Instance.GetPlayerMoveInput();
+
         //カメラ方向を基に進行方向を調整する
-        if (_data.PlayerInputSpace)
+        if (_fsm.PlayerData.PlayerInputSpace)
         {
-            Vector3 forward = _data.PlayerInputSpace.forward;
+            Vector3 forward = _fsm.PlayerData.PlayerInputSpace.forward;
             forward.y = 0f;
             forward.Normalize();
-            Vector3 right = _data.PlayerInputSpace.right;
+            Vector3 right = _fsm.PlayerData.PlayerInputSpace.right;
             right.y = 0;
             right.Normalize();
             _desiredVelocity = (right * moveVector.x + forward * moveVector.z) * _maxSpeed; //希望速度
@@ -88,49 +112,44 @@ public class PlayerMovement : MonoBehaviour {
         float currentX = Vector3.Dot(_velocity, xAxis);
         float currentZ = Vector3.Dot(_velocity, zAxis);
 
-        //加速度率
-        float maxSpeedChange = _acceleration * Time.fixedDeltaTime;
+        //加速度率(坂道の加速度は別設定)
+        float maxSpeedChange = (OnSlope ? _fsm.PlayerData.SlopeAcceleration : _acceleration) * Time.fixedDeltaTime;
 
         //新しい速度
         float newX = Mathf.MoveTowards(currentX, _desiredVelocity.x, maxSpeedChange);
-
         float newZ = Mathf.MoveTowards(currentZ, _desiredVelocity.z, maxSpeedChange);
 
         //速度更新(新旧速度の差から方向を調整する)
         _velocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
 
-        //坂道チェック
-        CheckGravity();
-
         //速度から向き調整
-        if (new Vector3(_velocity.x, 0f, _velocity.z).magnitude > 0.01f)
+        if (new Vector3(_velocity.x, 0f, _velocity.z).magnitude > 0.05f)
         {
             float turnAngle = Mathf.Atan2(_velocity.x, _velocity.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, turnAngle, ref _turnSmoothVelocity, _data.TurnSmoothTime);
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, turnAngle, ref _turnSmoothVelocity, _fsm.PlayerData.TurnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
         }
     }
 
     /// <summary>
     /// 地面接触判断(一瞬地面で離しても戻れるように)
-    /// trueに返すとOnGroundと判断されている
     /// </summary>
-    /// <returns></returns>
-    bool SnapToGround()
+    /// <returns>true OnGroundと同じ意味/false 空中移動</returns>
+    private bool SnapToGround()
     {
         //ジャンプ中
-        if(OnJump)
+        if (OnJump)
         {
             return false;
         }
         //速度は地面検知速度以内のこと
         float speed = _velocity.magnitude;
-        if (speed > _data.MaxSnapSpeed)
+        if (speed > _fsm.PlayerData.MaxSnapSpeed)
         {
             return false;
         }
         //足元は地面コライダー
-        if (!Physics.Raycast(_rigidBody.position, Vector3.down, out RaycastHit hit, _data.ProbeDistance, _data.ProbeMask))
+        if (!Physics.Raycast(_rigidBody.position, Vector3.down, out RaycastHit hit, _fsm.PlayerData.ProbeDistance, _fsm.PlayerData.ProbeMask))
         {
             return false;
         }
@@ -150,15 +169,64 @@ public class PlayerMovement : MonoBehaviour {
         return true;
     }
 
+    /// <summary>
+    /// ジャンプ
+    /// </summary>
+    private void Jump()
+    {
+        Vector3 jumpDirection = Vector3.up;
+        Vector3 _velocity = _rigidBody.velocity;
+
+        //ジャンプ初期速度は設定した高さから計算する v = √-2gh
+        float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * _fsm.PlayerData.JumpHeight);
+        float alignedSpeed = Vector3.Dot(_velocity, jumpDirection); //現在速度のジャンプ方向の長さ（大きさ）
+        //現在速度とジャンプ速度の調整
+        if (alignedSpeed > 0f)
+        {
+            //ジャンプ速度をマイナスにならないように制限する
+            jumpSpeed = Mathf.Max(jumpSpeed - alignedSpeed, 0f);
+        }
+
+        _velocity += jumpDirection * jumpSpeed; //ジャンプ速度を追加する
+        _rigidBody.velocity = _velocity;
+    }
+
     #region 接触コライダー更新
     private void OnCollisionEnter(Collision other)
     {
         EvaluateCollision(other);
+
+        if (other.gameObject.tag == "Wall")
+        {
+            Vector3 player = new Vector3(transform.position.x, 0f, transform.position.z);
+            Vector3 contact = new Vector3(other.contacts[0].point.x, 0f, other.contacts[0].point.z);
+
+            float angle = Vector3.Angle(player - contact, Vector3.right);
+            _rippleParticle.transform.eulerAngles = new Vector3(0, angle + 90, 0);
+            _rippleParticle.transform.position = new Vector3(other.contacts[0].point.x, this.transform.position.y + 1f, other.contacts[0].point.z);
+            _lastTouchWallPosition = other.contacts[0].point;
+            //_rippleParticle.transform.LookAt(new Vector3(transform.position.x, _rippleParticle.transform.position.y, transform.position.z));
+            _rippleParticle.SetActive(true);
+        }
     }
 
     private void OnCollisionStay(Collision other)
     {
         EvaluateCollision(other);
+
+        if (other.gameObject.tag == "Wall")
+        {
+            _rippleParticle.transform.position = new Vector3(_lastTouchWallPosition.x, this.transform.position.y + 1f, _lastTouchWallPosition.z);
+            _rippleParticle.SetActive(true);
+            _lastTouchWallPosition = other.contacts[0].point;
+        }
+    }
+
+    private void OnCollisionExit(Collision other) {
+        if (other.gameObject.tag == "Wall")
+        {
+            _rippleParticle.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -200,7 +268,7 @@ public class PlayerMovement : MonoBehaviour {
     /// <returns></returns>
     private float GetMinDot(int layer)
     {
-        return Mathf.Cos(_data.MaxGroundAngle * Mathf.Deg2Rad); //斜面角度のcosθ
+        return Mathf.Cos(_fsm.PlayerData.MaxGroundAngle * Mathf.Deg2Rad); //斜面角度のcosθ
     }
 
     /// <summary>
@@ -214,56 +282,13 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     /// <summary>
-    /// キャラ状態データ
-    /// </summary>
-    /// <param name="data"></param>
-    public void SetData(CharacterData_SO data)
-    {
-        _data = data;
-    }
-
-    /// <summary>
-    /// 状態による速度設定
-    /// </summary>
-    /// <param name="maxSpeed"></param>
-    /// <param name="accleration"></param>
-    public void SetStateMoveData(float maxSpeed, float accleration){
-        _maxSpeed = maxSpeed;
-        _acceleration = accleration;
-    }
-
-    /// <summary>
-    /// ジャンプ
-    /// </summary>
-    public void Jump()
-    {
-        OnJump = true;
-        _acceleration = _data.AirAcceleration;
-
-        Vector3 jumpDirection = Vector3.up;
-        Vector3 _velocity = _rigidBody.velocity;
-
-        //ジャンプ初期速度は設定した高さから計算する v = √-2gh
-        float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * _data.JumpHeight);
-        float alignedSpeed = Vector3.Dot(_velocity, jumpDirection); //現在速度のジャンプ方向の長さ（大きさ）
-        //現在速度とジャンプ速度の調整
-        if (alignedSpeed > 0f)
-        {
-            //ジャンプ速度をマイナスにならないように制限する
-            jumpSpeed = Mathf.Max(jumpSpeed - alignedSpeed, 0f);
-        }
-
-        _velocity += jumpDirection * jumpSpeed; //ジャンプ速度を追加する
-        _rigidBody.velocity = _velocity;
-    }
-
-    /// <summary>
     /// 重力使用設定
+    /// 
     /// </summary>
-    public void CheckGravity()
+    private void CheckGravity()
     {
         //坂道の上に止まる
-        if (OnSlope && OnGround && _velocity.sqrMagnitude < 0.1f)
+        if (OnSlope && OnGround && !OnJump)
         {
             _rigidBody.useGravity = false;
         }
@@ -271,5 +296,46 @@ public class PlayerMovement : MonoBehaviour {
         {
             _rigidBody.useGravity = true;
         }
+    }
+
+    //---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    /// <summary>
+    /// キャラ基本データ設定
+    /// </summary>
+    /// <param name="data"></param>
+    public void SetData(CharacterData_SO data)
+    {
+        _fsm.PlayerData = data;
+    }
+
+    /// <summary>
+    /// キャラ状態設定
+    /// </summary>
+    public void SetCurrentState()
+    {
+        switch (_fsm.CurrentState)
+        {
+            case PlayerState.Walk:
+                _acceleration = _fsm.PlayerData.WalkAcceleration;
+                _maxSpeed = _fsm.PlayerData.MaxWalkSpeed;
+                break;
+            case PlayerState.Run:
+                _acceleration = _fsm.PlayerData.RunAcceleration;
+                _maxSpeed = _fsm.PlayerData.MaxRunSpeed;
+                break;
+            case PlayerState.Jump:
+                _acceleration = _fsm.PlayerData.AirAcceleration;
+                OnJump = true;
+                Jump();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void ResetMoveSpeed()
+    {
+        _rigidBody.velocity = Vector3.zero;
     }
 }

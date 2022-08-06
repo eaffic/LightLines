@@ -43,14 +43,6 @@ public class @GameInputController : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Run"",
-                    ""type"": ""Button"",
-                    ""id"": ""e0bd3bab-72c9-48ee-8f1b-e6c6d680a10d"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""Reset"",
                     ""type"": ""Button"",
                     ""id"": ""6af00f54-32d1-44b7-8bd8-109fca931488"",
@@ -180,28 +172,6 @@ public class @GameInputController : IInputActionCollection, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d38c8436-6f60-40b4-a015-a192dd015b3d"",
-                    ""path"": ""<Keyboard>/z"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Run"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8291d4ef-b254-4035-8fae-fb782b580b3a"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Run"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
@@ -476,7 +446,7 @@ public class @GameInputController : IInputActionCollection, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""d7b56a36-36d9-415b-b430-200314ac7a9b"",
-                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -487,7 +457,7 @@ public class @GameInputController : IInputActionCollection, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""88fe0a1f-9cf7-4ad0-abb2-86db73f26bb6"",
-                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -538,7 +508,6 @@ public class @GameInputController : IInputActionCollection, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Push = m_Player.FindAction("Push", throwIfNotFound: true);
-        m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_Reset = m_Player.FindAction("Reset", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
@@ -603,7 +572,6 @@ public class @GameInputController : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Push;
-    private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_Reset;
     public struct PlayerActions
     {
@@ -612,7 +580,6 @@ public class @GameInputController : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Push => m_Wrapper.m_Player_Push;
-        public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputAction @Reset => m_Wrapper.m_Player_Reset;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -632,9 +599,6 @@ public class @GameInputController : IInputActionCollection, IDisposable
                 @Push.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPush;
                 @Push.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPush;
                 @Push.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPush;
-                @Run.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
-                @Run.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
-                @Run.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Reset.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReset;
                 @Reset.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReset;
                 @Reset.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReset;
@@ -651,9 +615,6 @@ public class @GameInputController : IInputActionCollection, IDisposable
                 @Push.started += instance.OnPush;
                 @Push.performed += instance.OnPush;
                 @Push.canceled += instance.OnPush;
-                @Run.started += instance.OnRun;
-                @Run.performed += instance.OnRun;
-                @Run.canceled += instance.OnRun;
                 @Reset.started += instance.OnReset;
                 @Reset.performed += instance.OnReset;
                 @Reset.canceled += instance.OnReset;
@@ -772,7 +733,6 @@ public class @GameInputController : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnPush(InputAction.CallbackContext context);
-        void OnRun(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
     }
     public interface ICameraActions

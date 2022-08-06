@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - BoxPushArea
+  - Laser
+  - Target
+  - Mirror
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -14,8 +18,8 @@ TagManager:
   - UI
   - Ground
   - Box
-  - 
-  - 
+  - Agent
+  - Wall
   - 
   - 
   - 
