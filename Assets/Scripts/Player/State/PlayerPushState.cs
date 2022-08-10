@@ -7,30 +7,35 @@ using GameEnumList;
 public class PlayerPushState : BaseState<PlayerState> {
     private PlayerFSM _fsm;
 
-    public PlayerPushState(PlayerFSM manager, PlayerState type)
+    public PlayerPushState(PlayerFSM manager, PlayerState state)
     {
-        base.ThisStateType = type;
+        base.ThisState = state;
         _fsm = manager;
     }
 
-    public override void OnEnter(PlayerState previewState)
+    public override void OnEnter(PlayerState oldState)
     {
-        base.OnEnter(previewState);
+        base.OnEnter(oldState);
         _fsm.PlayerMovementController.SetCurrentState();
         _fsm.PlayerAnimationController.PlayPushAnimation();
-        _fsm.PlayerAudioController.StopAudio();
+        AudioManager.Instance.Stop("Player");
     }
 
     public override void OnUpdate(float deltaTime)
     {
         base.OnUpdate(deltaTime);
-        if(Timer > 1f){
-            _fsm.TransitionState(ThisStateType ,PlayerState.Idle);
+        if (_fsm.PlayerData.Velocity.y < -1f)
+        {
+            _fsm.TransitionState(base.ThisState, PlayerState.Fall);
         }
 
-        if (GameManager.OpenMenu)
+        if(Timer > 1f){
+            _fsm.TransitionState(base.ThisState ,PlayerState.Idle);
+        }
+
+        if (GameManager.Pause)
         {
-            _fsm.TransitionState(ThisStateType, PlayerState.Menu);
+            _fsm.TransitionState(base.ThisState, PlayerState.Menu);
         }
     }
 

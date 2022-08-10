@@ -10,10 +10,8 @@ using GameEnumList;
 /// </summary>
 public class GameInputManager : Singleton<GameInputManager>
 {
-    // private List<Action> _noParameterInput = new List<Action>();
-    // private List<Action<float>> _floatInput = new List<Action<float>>();
-    // private List<Action<bool>> _boolInput = new List<Action<bool>>();
-    // private List<Action<Vector2>> _vectorInput = new List<Action<Vector2>>();
+    private static bool _banInput;
+    public static bool BanInput { get => _banInput; set => _banInput = value; }
 
     private GameInputController _gameInputController;
     private InputActionMap _player;
@@ -22,13 +20,13 @@ public class GameInputManager : Singleton<GameInputManager>
 
     protected override void Awake()
     {
-        base.Awake();
-        DontDestroyOnLoad(this);
-
         _gameInputController = new GameInputController();
         _player = _gameInputController.Player;
         _camera = _gameInputController.Camera;
         _ui = _gameInputController.UI;
+
+        base.Awake();
+        DontDestroyOnLoad(gameObject);
     }
 
     private void OnEnable()
@@ -43,54 +41,72 @@ public class GameInputManager : Singleton<GameInputManager>
 
     public Vector3 GetPlayerMoveInput()
     {
+        if (GameManager.OnSceneChange) { return Vector3.zero; }
+
         var value = _gameInputController.Player.Move.ReadValue<Vector2>();
         return new Vector3(value.x, 0f, value.y);
     }
 
     public Vector2 GetCameraRotateInput()
     {
+        if (GameManager.OnSceneChange) { return Vector2.zero; }
+
         var value = _gameInputController.Camera.Rotate.ReadValue<Vector2>();
         return new Vector2(-value.y, value.x);
     }
     
     public bool GetPlayerJumpInput()
     {
+        if (GameManager.OnSceneChange) { return false; }
+
         return _gameInputController.Player.Jump.triggered;
     }
 
     public bool GetPlayerPushInput()
     {
+        if (GameManager.OnSceneChange) { return false; }
+
         return _gameInputController.Player.Push.triggered;
     }
 
     public bool GetCameraZoomInInput()
     {
+        if (GameManager.OnSceneChange) { return false; }
+
         return _gameInputController.Camera.ZoomIn.ReadValue<float>() > 0.1f;
     }
 
     public bool GetCameraZoomOutInput()
     {
-        return _gameInputController.Camera.ZoomOut.ReadValue<float>() > 0.1f;
-    }
+        if (GameManager.OnSceneChange) { return false; }
 
-    public bool GetUIMenuInput()
-    {
-        return _gameInputController.UI.OpenCLoseMenu.triggered;
+        return _gameInputController.Camera.ZoomOut.ReadValue<float>() > 0.1f;
     }
 
     public bool GetUISelectInput(out float input)
     {
+        if (GameManager.OnSceneChange) { input = 0f; return false; }
+
         input = _gameInputController.UI.Select.ReadValue<float>();
         return _gameInputController.UI.Select.triggered;
     }
 
     public bool GetUISubmitInput(){
+        if (GameManager.OnSceneChange) { return false; }
+
         return _gameInputController.UI.Submit.triggered;
     }
-
-    public bool GetExitGameInput()
+    
+    public bool GetUIMenuInput()
     {
-        return _gameInputController.UI.ExitGame.triggered;
+        if (GameManager.OnSceneChange) { return false; }
+
+        return _gameInputController.UI.OpenCLoseMenu.triggered;
+    }
+
+    public void GetExitGameInput()
+    {
+        Application.Quit();
     }
 
     /// <summary>

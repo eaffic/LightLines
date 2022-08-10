@@ -21,8 +21,9 @@ public class StageIcon : MonoBehaviour
     private void InputCheck()
     {
         if (_enabled == false) { return; }
-        if (GameManager.OpenMenu) { return; }
+        if (GameManager.Pause) { return; }
 
+        
         if (GameInputManager.Instance.GetUISubmitInput()){
             EventCenter.StageInfomationUpdateNotify(_targetStage);
         }

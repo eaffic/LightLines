@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7710880111850918818}
   m_Layer: 7
   m_Name: Box
-  m_TagString: Untagged
+  m_TagString: Box
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,7 +99,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 2}
+  m_Size: {x: 1.85, y: 2, z: 1.85}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!54 &7710880111850918819
 Rigidbody:
@@ -132,10 +132,10 @@ MonoBehaviour:
   _moveTime: 0.3
   _wallLayer:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 451
   _groundLayer:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 192
   _duration: 2
   IsPlayerPushTarget: 0
   IsSecretItemInBox: 0
@@ -149,7 +149,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7710880112394529886}
   - component: {fileID: 7710880112394529887}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: PushAreaBack
   m_TagString: BoxPushArea
   m_Icon: {fileID: 0}
@@ -181,7 +181,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.8, y: 0.4, z: 0.6}
+  m_Size: {x: 0.2, y: 0.4, z: 0.2}
   m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &7710880112513302641
 GameObject:
@@ -193,7 +193,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7710880112513302646}
   - component: {fileID: 7710880112513302647}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: PushAreaLeft
   m_TagString: BoxPushArea
   m_Icon: {fileID: 0}
@@ -225,7 +225,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.6, y: 0.4, z: 0.8}
+  m_Size: {x: 0.2, y: 0.4, z: 0.2}
   m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &7710880112737951181
 GameObject:
@@ -237,7 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7710880112737951282}
   - component: {fileID: 7710880112737951283}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: PushAreaForward
   m_TagString: BoxPushArea
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.8, y: 0.4, z: 0.6}
+  m_Size: {x: 0.2, y: 0.4, z: 0.2}
   m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &7710880112752470822
 GameObject:
@@ -281,7 +281,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7710880112752470823}
   - component: {fileID: 7710880112752470820}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: PushAreaRight
   m_TagString: BoxPushArea
   m_Icon: {fileID: 0}
@@ -313,5 +313,5 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.6, y: 0.4, z: 0.8}
+  m_Size: {x: 0.2, y: 0.4, z: 0.2}
   m_Center: {x: 0, y: 0.4, z: 0}

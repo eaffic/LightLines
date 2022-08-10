@@ -13,7 +13,7 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
         if (_instance != null)
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
         else{
             _instance = (T)this;

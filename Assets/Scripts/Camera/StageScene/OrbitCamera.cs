@@ -23,7 +23,7 @@ public class OrbitCamera : MonoBehaviour
     [Tooltip("障害物Layer"), SerializeField] LayerMask _obstructionMask = -1;
 
     Vector3 _focusPoint; //注視点
-    Vector3 _previewFocusPoint; //前フレームの注視点
+    Vector3 _oldFocusPoint; //前フレームの注視点
     Vector2 _orbitAngles = new Vector2(30f, 0f); //カメラ角度
     float _lastManuaRotationTime; //最後一回カメラ位置を操作した時間記録
 
@@ -128,7 +128,7 @@ public class OrbitCamera : MonoBehaviour
     {
         if (_isStageSelect) return;
 
-        _previewFocusPoint = _focusPoint; //このフレームの注視点を記録する
+        _oldFocusPoint = _focusPoint; //このフレームの注視点を記録する
         Vector3 targetPoint = _focus.position;
 
         //注視点位置調整
@@ -227,8 +227,8 @@ public class OrbitCamera : MonoBehaviour
 
         //注視点の移動量
         Vector2 movement = new Vector2(
-            _focusPoint.x - _previewFocusPoint.x,
-            _focusPoint.z - _previewFocusPoint.z
+            _focusPoint.x - _oldFocusPoint.x,
+            _focusPoint.z - _oldFocusPoint.z
         );
         
         float movementDeltaSqr = movement.sqrMagnitude;

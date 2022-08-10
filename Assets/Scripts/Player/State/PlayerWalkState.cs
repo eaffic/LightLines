@@ -7,44 +7,52 @@ using GameEnumList;
 public class PlayerWalkState : BaseState<PlayerState> {
     private PlayerFSM _fsm;
 
-    public PlayerWalkState(PlayerFSM manager, PlayerState type)
+    public PlayerWalkState(PlayerFSM manager, PlayerState state)
     {
-        base.ThisStateType = type;
+        base.ThisState = state;
         _fsm = manager;
     }
 
-    public override void OnEnter(PlayerState previewState)
+    public override void OnEnter(PlayerState oldState)
     {
-        base.OnEnter(previewState);
+        base.OnEnter(oldState);
         _fsm.PlayerMovementController.SetCurrentState();
-        _fsm.PlayerAudioController.SetPlayerWalkAudio();
+        AudioManager.Instance.Play("Player", "Walk", true);
     }
 
     public override void OnUpdate(float deltaTime)
     {
         base.OnUpdate(deltaTime);
-        _fsm.PlayerActionsController.SearchBox();
 
+        if (_fsm.PlayerMovementController.OnGround == false && _fsm.PlayerData.Velocity.y < -0.5f)
+        {
+            _fsm.TransitionState(base.ThisState, PlayerState.Fall);
+        }
 
         //前状態はRunの場合、一定の速度を達したらRunに移行する
         float input = GameInputManager.Instance.GetPlayerMoveInput().magnitude;
         float velocity = new Vector2(_fsm.PlayerData.Velocity.x, _fsm.PlayerData.Velocity.z).magnitude;
-        if (velocity > _fsm.PlayerData.MaxWalkSpeed * 0.9f && input > 0.99f)
+        if (velocity > _fsm.PlayerData.MaxWalkSpeed * 0.8f && input > 0.995f)
         {
-            _fsm.TransitionState(ThisStateType, PlayerState.Run);
+            _fsm.TransitionState(base.ThisState, PlayerState.Run);
         }
 
         if(Timer > 0.2f && velocity < 0.1f && input < 0.05f){
-            _fsm.TransitionState(ThisStateType, PlayerState.Idle);
+            _fsm.TransitionState(base.ThisState, PlayerState.Idle);
         }
 
         if(GameInputManager.Instance.GetPlayerJumpInput()){
-            _fsm.TransitionState(ThisStateType, PlayerState.Jump);
+            _fsm.TransitionState(base.ThisState, PlayerState.Jump);
         }
 
-        if (GameManager.OpenMenu)
+        if (GameInputManager.Instance.GetPlayerPushInput() && _fsm.PlayerActionsController.CheckTargetBox())
         {
-            _fsm.TransitionState(ThisStateType, PlayerState.Menu);
+            _fsm.TransitionState(base.ThisState, PlayerState.Push);
+        }
+
+        if (GameManager.Pause)
+        {
+            _fsm.TransitionState(base.ThisState, PlayerState.Menu);
         }
     }
 

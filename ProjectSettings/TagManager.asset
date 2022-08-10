@@ -9,6 +9,11 @@ TagManager:
   - Target
   - Mirror
   - Wall
+  - TrackingObject
+  - Actors
+  - SecretItem
+  - Box
+  - MovingBlock
   layers:
   - Default
   - TransparentFX
@@ -19,7 +24,7 @@ TagManager:
   - Ground
   - Box
   - Agent
-  - Wall
+  - 
   - 
   - 
   - 
@@ -45,4 +50,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Particle
+    uniqueID: 22186633
     locked: 0

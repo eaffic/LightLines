@@ -1,19 +1,19 @@
 public class BaseState<T> : IState<T>
 {
-    private T _previewState;
-    public T PreviewState => _previewState;
+    private T _oldState;
+    public T OldState => _oldState;
 
-    private T _thisType;
-    public T ThisStateType { 
-        get => _thisType; 
-        set => _thisType = value;
+    private T _thisState;
+    public T ThisState { 
+        get => _thisState; 
+        set => _thisState = value;
     }
 
     private float _timer;
     public float Timer => _timer;
     
-    public virtual void OnEnter(T previewState){
-        _previewState = previewState;
+    public virtual void OnEnter(T oldState){
+        _oldState = oldState;
         _timer = 0;
     }
 

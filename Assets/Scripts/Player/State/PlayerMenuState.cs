@@ -7,25 +7,25 @@ using GameEnumList;
 public class PlayerMenuState : BaseState<PlayerState> {
     private PlayerFSM _fsm;
 
-    public PlayerMenuState(PlayerFSM manager, PlayerState type)
+    public PlayerMenuState(PlayerFSM manager, PlayerState state)
     {
-        base.ThisStateType = type;
+        base.ThisState = state;
         _fsm = manager;
     }
 
-    public override void OnEnter(PlayerState previewstate)
+    public override void OnEnter(PlayerState oldState)
     {
-        base.OnEnter(previewstate);
+        base.OnEnter(oldState);
         _fsm.PlayerMovementController.SetCurrentState();
-        _fsm.PlayerMovementController.ResetMoveSpeed();
-        _fsm.PlayerAudioController.StopAudio();
+        AudioManager.Instance.Stop("Player");
     }
 
     public override void OnUpdate(float deltaTime)
     {
         base.OnUpdate(deltaTime);
-        if(GameManager.OpenMenu == false){
-            _fsm.TransitionState(base.ThisStateType, base.PreviewState);
+
+        if(GameManager.Pause == false){
+            _fsm.TransitionState(base.ThisState, base.OldState);
         }
     }
 

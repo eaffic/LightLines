@@ -145,7 +145,7 @@ MonoBehaviour:
   _alignSmoothRange: 45
   _obstructionMask:
     serializedVersion: 2
-    m_Bits: 240
+    m_Bits: 64
 --- !u!114 &9222324365499635246
 MonoBehaviour:
   m_ObjectHideFlags: 0

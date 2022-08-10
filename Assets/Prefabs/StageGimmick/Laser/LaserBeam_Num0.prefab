@@ -9792,7 +9792,7 @@ MonoBehaviour:
   _lineRenderer: {fileID: 292506059692621705}
   _blockLayer:
     serializedVersion: 2
-    m_Bits: 465
+    m_Bits: 449
   _laserDistance: 10
   _maxReflectCount: 10
 --- !u!1 &546911969239756447

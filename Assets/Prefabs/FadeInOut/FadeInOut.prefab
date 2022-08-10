@@ -89,8 +89,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TransitionSpeed: 1
-  ResetTime: 2
-  ResetImage: {fileID: 0}
 --- !u!1 &3809150960414755545
 GameObject:
   m_ObjectHideFlags: 0

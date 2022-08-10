@@ -7,21 +7,20 @@ using GameEnumList;
 
 public class StageInfomatonUI : MonoBehaviour
 {
-    [SerializeField] private GameObject _panel;
     [SerializeField] private Text _titleText;
-    [SerializeField] private Text _timeText;
-    [SerializeField] private Text _itemText;
+    [SerializeField] private Text _clearTimeText;
+    [SerializeField] private Text _getItemText;
     [SerializeField] private Text _startText;
     [SerializeField] private Text _cancelText;
     [SerializeField] private Image _starIcon;
     [SerializeField] private Image _stageImage;
-    [SerializeField] private List<Image> _stageImageList = new List<Image>();
+    [SerializeField] private Sprite[] _stageImageList;
 
-    private enum StageUISelect { Start, Cancel };
-    private StageUISelect _currentSelect;
+    private enum StageSelectUISelect { Start, Cancel };
+    private StageSelectUISelect _currentSelect;
     private SceneType _targetScene;
-    private StageInfo _stageInfo;
     private bool _enabled;
+    private float _oldInput;
 
     private Animator _animator;
 
@@ -39,10 +38,11 @@ public class StageInfomatonUI : MonoBehaviour
     {
         TryGetComponent(out _animator);
 
-        _currentSelect = StageUISelect.Start;
+        _currentSelect = StageSelectUISelect.Start;
         _starIcon.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
 
         _startText.color = Color.red;
+        _cancelText.color = Color.white;
     }
 
     private void Update()
@@ -51,26 +51,36 @@ public class StageInfomatonUI : MonoBehaviour
 
         _starIcon.transform.Rotate(Vector3.forward);
 
+        UpdateCursor();
+        Submit();
+    }
+
+    private void UpdateCursor(){
         float input;
         if (GameInputManager.Instance.GetUISelectInput(out input))
         {
-            if (input > 0)
+            StageSelectUISelect oldSelect = _currentSelect;
+            //連続入力防止
+            if (input > 0.8f && _oldInput < 0.8f)
             {
-                _currentSelect = (StageUISelect)Mathf.Max((int)--_currentSelect, 0);
+                _currentSelect = (StageSelectUISelect)Mathf.Max((int)--_currentSelect, 0);
             }
-            else
+            else if(input < -0.8f && _oldInput > -0.8f)
             {
-                _currentSelect = (StageUISelect)Mathf.Min((int)++_currentSelect, 1);
+                _currentSelect = (StageSelectUISelect)Mathf.Min((int)++_currentSelect, 1);
             }
+
+            if (_currentSelect == oldSelect) { return; }
+            AudioManager.Instance.Play("UI", "Select", false);
 
             switch (_currentSelect)
             {
-                case StageUISelect.Start:
+                case StageSelectUISelect.Start:
                     _startText.color = Color.red;
                     _cancelText.color = Color.white;
                     _starIcon.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
                     break;
-                case StageUISelect.Cancel:
+                case StageSelectUISelect.Cancel:
                     _startText.color = Color.white;
                     _cancelText.color = Color.red;
                     _starIcon.rectTransform.localPosition = new Vector2(_cancelText.rectTransform.localPosition.x - _cancelText.rectTransform.rect.width / 1.8f, _cancelText.transform.localPosition.y);
@@ -78,14 +88,21 @@ public class StageInfomatonUI : MonoBehaviour
             }
         }
 
-        if(GameInputManager.Instance.GetUISubmitInput()){
-            switch (_currentSelect){
-                case StageUISelect.Start:
+        _oldInput = input;
+    }
+
+    private void Submit(){
+        if (GameInputManager.Instance.GetUISubmitInput())
+        {
+            switch (_currentSelect)
+            {
+                case StageSelectUISelect.Start:
+                    AudioManager.Instance.Play("UI", "Submit", false);
                     ToNewStage();
                     break;
-                case StageUISelect.Cancel:
-                    _animator.SetBool("Enable", false);
-                    GameManager.OpenMenu = false;
+                case StageSelectUISelect.Cancel:
+                    AudioManager.Instance.Play("UI", "Cancel", false);
+                    Cancel();
                     break;
             }
         }
@@ -96,20 +113,31 @@ public class StageInfomatonUI : MonoBehaviour
         EventCenter.FadeNotify(_targetScene);
     }
 
+    private void Cancel()
+    {
+        _animator.Play("CloseMenu", 0);
+        GameManager.Pause = false;
+    }
+
     public void UpdateInfomation(SceneType scene)
     {
-        GameManager.OpenMenu = true;
+        //メニュー表示中、または閉じるの動画中の場合キャンセル
+        if (_enabled) { return; }
+
+        _animator.Play("OpenMenu", 0);
+        
+        AudioManager.Instance.Play("UI", "OpenMenu", false);
+        GameManager.Pause = true;
         _targetScene = scene;
-        _stageInfo = DataManager.GetStageInfo(scene);
-        //_stageImage.sprite = _sourceSprite;
+        StageInfo info = DataManager.GetStageInfo(scene);
+        _stageImage.sprite = Array.Find<Sprite>(_stageImageList, sprite => sprite.name == scene.ToString());
         _titleText.text = scene.ToString();
         string s = String.Format("{0:00}:{1:00}:{2:00}",
-            (int)_stageInfo.ClearTime / 60,
-            (int)_stageInfo.ClearTime % 60,
-            (_stageInfo.ClearTime - (int)_stageInfo.ClearTime) * 100);
-        _timeText.text = s;
-        _itemText.text = _stageInfo.SecretItemCount.ToString() + " / " + _stageInfo.SecretItemMaxCount.ToString();
-        _animator.SetBool("Enable", true);
+            (int)info.ClearTime / 60,
+            (int)info.ClearTime % 60,
+            (info.ClearTime - (int)info.ClearTime) * 100);
+        _clearTimeText.text = s;
+        _getItemText.text = info.SecretItemCount.ToString() + " / " + info.SecretItemMaxCount.ToString();
     }
 
     public void UIAnimationEnd(){

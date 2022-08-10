@@ -98,7 +98,6 @@ public class DataManager : Singleton<DataManager>
     public static void SaveStageClearData(StageInfo stageInfo)
     {
         bool checkdata = false;
-
         for (int i = 0; i < _saveData.StageInfoList.Count; ++i)
         {
             //データが存在しているとき、データを更新する

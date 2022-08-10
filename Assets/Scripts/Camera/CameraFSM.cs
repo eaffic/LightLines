@@ -14,16 +14,16 @@ public class CameraFSM : MonoBehaviour {
     private void Awake() {
         TryGetComponent(out OrbitCameraController);
 
-        _states.Add(StageCameraState.IntoStage, new IntoStageState(this, StageCameraState.IntoStage));
-        _states.Add(StageCameraState.Orbit, new OrbitState(this, StageCameraState.Orbit));
-        _states.Add(StageCameraState.Clear, new ClearState(this, StageCameraState.Clear));
+        _states.Add(StageCameraState.IntoStage, new CameraIntoStageState(this, StageCameraState.IntoStage));
+        _states.Add(StageCameraState.Orbit, new CameraOrbitState(this, StageCameraState.Orbit));
+        _states.Add(StageCameraState.Clear, new CameraClearState(this, StageCameraState.Clear));
 
         TransitionState(default, StageCameraState.IntoStage);
     }
 
     private void LateUpdate() {
         _currentState.OnLateUpdate(Time.deltaTime);
-        Debug.Log(_currentState.ThisStateType);
+        //Debug.Log(_currentState.ThisState);
     }
 
     /// <summary>

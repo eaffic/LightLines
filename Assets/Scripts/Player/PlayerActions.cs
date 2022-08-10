@@ -32,7 +32,6 @@ public class PlayerActions : MonoBehaviour {
         if (other.tag == "BoxPushArea")
         {
             _inBoxPushArea = false;
-            _pushPoint = Vector3.zero;
         }
     }
     #endregion
@@ -105,6 +104,7 @@ public class PlayerActions : MonoBehaviour {
         if (check){
             transform.position = new Vector3(_pushPoint.x, transform.position.y, _pushPoint.z);
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, angle, transform.eulerAngles.z);
+            _pushPoint = Vector3.zero;
         }
 
         return check;
@@ -113,6 +113,8 @@ public class PlayerActions : MonoBehaviour {
     //アニメーションのタイミングと合わせて呼び出す
     public void PushTargetBox()
     {
+        AudioManager.Instance.Play("Player", "Push", false);
+
         Vector2 distance = new Vector2(transform.position.x - _targetBox.transform.position.x, transform.position.z - _targetBox.transform.position.z);
         if (distance.y < -0.5f)
         {

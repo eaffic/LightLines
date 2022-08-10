@@ -12,9 +12,12 @@ public class TitleUI : MonoBehaviour {
 
     private enum TitleSelect { GameStart, DeleteData, ExitGame };
     private TitleSelect _currentSelect = default;
+    private float _oldinput;
 
     private void Start() {
         _startText.color = Color.red;
+        _deleteText.color = Color.white;
+        _exitText.color = Color.white;
         _starIcon.rectTransform.localPosition  = new Vector2(-_startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
     }
 
@@ -22,18 +25,29 @@ public class TitleUI : MonoBehaviour {
     {
         _starIcon.transform.Rotate(Vector3.forward);
 
+        UpdateCursor();
+        Submit();
+    }
+
+    private void UpdateCursor(){
         float input;
         if (GameInputManager.Instance.GetUISelectInput(out input))
         {
-            if (input > 0)
+            TitleSelect oldSelect = _currentSelect;
+            //連続入力防止
+            if (input > 0.8f && _oldinput < 0.8f)
             {
                 _currentSelect = (TitleSelect)Mathf.Max((int)--_currentSelect, 0);
                 _deleteHintText.enabled = false;
             }
-            else{
+            else if(input < -0.8f && _oldinput > -0.8f)
+            {
                 _currentSelect = (TitleSelect)Mathf.Min((int)++_currentSelect, 2);
                 _deleteHintText.enabled = false;
             }
+
+            if (_currentSelect == oldSelect) { return; }
+            AudioManager.Instance.Play("UI", "Select", false);
 
             //テキストの色変更
             switch (_currentSelect)
@@ -41,7 +55,6 @@ public class TitleUI : MonoBehaviour {
                 case TitleSelect.GameStart:
                     _startText.color = Color.red;
                     _deleteText.color = Color.white;
-                    _exitText.color = Color.white;
                     _starIcon.rectTransform.localPosition = new Vector2(-_startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
                     break;
                 case TitleSelect.DeleteData:
@@ -51,7 +64,6 @@ public class TitleUI : MonoBehaviour {
                     _starIcon.rectTransform.localPosition = new Vector2(-_deleteText.rectTransform.rect.width / 1.8f, _deleteText.transform.localPosition.y);
                     break;
                 case TitleSelect.ExitGame:
-                    _startText.color = Color.white;
                     _deleteText.color = Color.white;
                     _exitText.color = Color.red;
                     _starIcon.rectTransform.localPosition = new Vector2(-_exitText.rectTransform.rect.width / 1.8f, _exitText.transform.localPosition.y);
@@ -59,12 +71,20 @@ public class TitleUI : MonoBehaviour {
             }
         }
 
-        if(GameInputManager.Instance.GetUISubmitInput()){
-            switch(_currentSelect){
+        _oldinput = input;
+    }
+    
+    private void Submit(){
+        if (GameInputManager.Instance.GetUISubmitInput())
+        {
+            switch (_currentSelect)
+            {
                 case TitleSelect.GameStart:
+                    AudioManager.Instance.Play("UI", "Submit", false);
                     GameStart();
                     break;
                 case TitleSelect.DeleteData:
+                    AudioManager.Instance.Play("UI", "DeleteData", false);
                     DeleteData();
                     break;
                 case TitleSelect.ExitGame:
@@ -74,19 +94,18 @@ public class TitleUI : MonoBehaviour {
         }
     }
 
-    public void GameStart()
+    private void GameStart()
     {
-        if (FadeInOut.OnSceneChange) { return; }
         EventCenter.FadeNotify(SceneType.StageSelect);
     }
 
-    public void DeleteData()
+    private void DeleteData()
     {
         _deleteHintText.enabled = true;
         DataManager.DeleteSaveFile("savedata.json");
     }
 
-    public void ExitGame()
+    private void ExitGame()
     {
         Application.Quit();
     }

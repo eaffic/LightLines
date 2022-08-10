@@ -1,7 +1,7 @@
 public interface IState<T> {
-    T ThisStateType { get; set; }
+    T ThisState { get; set; }
 
-    void OnEnter(T previewState);
+    void OnEnter(T oldState);
     void OnUpdate(float deltaTime);
     void OnLateUpdate(float deltaTime);
     void OnFixedUpdate();

@@ -14,12 +14,13 @@ public class EventCenter
     //クリア目標リスト
     private static List<IStageGimmick> _laserTargetList = new List<IStageGimmick>(16);
 
-    #region 委託
-    private static List<Action> _stageSecretItemObserver = new List<Action>(8);
-    private static List<Action<bool>> _stageClearObserver = new List<Action<bool>>(8);
+    #region 委託リスト
+    private static List<Action> _stageSecretItemObserver = new List<Action>(8); //ステージ内の隠しアイテム
+    private static List<Action<string>> _uiObserver = new List<Action<string>>(8); //ui
+    private static List<Action<bool>> _stageClearObserver = new List<Action<bool>>(8); //クリア時
     private static List<Action<int, bool>> _buttonObserver = new List<Action<int, bool>>(256); //サイズは先に決まります
-    private static List<Action<SceneType>> _fadeInOutObserver = new List<Action<SceneType>>(8);
-    private static List<Action<SceneType>> _stageInfomationObserver = new List<Action<SceneType>>(8);
+    private static List<Action<SceneType>> _fadeInOutObserver = new List<Action<SceneType>>(8); //フェード効果
+    private static List<Action<SceneType>> _stageInfomationObserver = new List<Action<SceneType>>(8); //ステージ情報
     #endregion
 
     #region ボタンと連動するギミック
@@ -167,7 +168,7 @@ public class EventCenter
     }
     #endregion
 
-    #region ステージ選択画面のUI更新
+    #region ステージ情報表示
     public static void AddStageInfomationListener(Action<SceneType> action){
         if(!_stageInfomationObserver.Contains(action)){
             _stageInfomationObserver.Add(action);
@@ -183,6 +184,30 @@ public class EventCenter
         for (int i = _stageInfomationObserver.Count - 1; i >= 0; --i){
             if(_stageInfomationObserver[i] != null){
                 _stageInfomationObserver[i].Invoke(type);
+            }
+        }
+    }
+    #endregion
+    
+    #region UI起動、終了
+    public static void AddUIListener(Action<string> action){
+        if(!_uiObserver.Contains(action)){
+            _uiObserver.Add(action);
+        }
+    }
+    public static void RemoveUIListener(Action<string> action){
+        _uiObserver.Remove(action);
+    }
+    /// <summary>
+    /// UI起動、終了
+    /// </summary>
+    /// <param name="uiName">ui名</param>
+    public static void UINotify(string uiName){
+        if (Enabled == false) { return; }
+
+        for (int i = _uiObserver.Count - 1; i >= 0; --i){
+            if(_uiObserver[i] != null){
+                _uiObserver[i].Invoke(uiName);
             }
         }
     }

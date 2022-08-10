@@ -11,17 +11,10 @@ using GameEnumList;
 /// </summary>
 public class FadeInOut : MonoBehaviour
 {
-    public static bool OnSceneChange = false; //Scene移行中(誤操作防止のため)
-
     public float TransitionSpeed; //エフェクト速度
-    public float ResetTime; //リセットの所要時間
-    public bool Reset { get; set; }
-    public Image ResetImage; //リセット表示画像
 
     private SceneType _sceneToLoad; //シーン名
     private Image _theImage;
-    private bool _shouldReveal; //フェードイン、アウト制御
-    private float _resetTimer; //リセット時間計算
 
     private void OnEnable() {
         EventCenter.AddFadeListener(Notify);
@@ -34,56 +27,52 @@ public class FadeInOut : MonoBehaviour
     void Start()
     {
         _theImage = GetComponent<Image>();
-        _theImage.material.SetFloat("_Cutoff", -1f);
-        _shouldReveal = true;
-        OnSceneChange = false;
+        _theImage.material.SetFloat("_Cutoff", -1.1f);
+        GameManager.OnSceneChange = true;
+        StartFadeIn();
     }
 
-    void Update()
-    {
-        // if (Reset) { ResetScene(); }
-        // else { _resetTimer = 0; ResetImage.fillAmount = 0; }
+    public void StartFadeIn(){
+        StartCoroutine(FadeIn());
+    }
 
-        //黒幕表現処理
-        if (_shouldReveal)
-        {
-            //FadeIn
-            _theImage.material.SetFloat("_Cutoff", Mathf.MoveTowards(_theImage.material.GetFloat("_Cutoff"), 1.1f, TransitionSpeed * Time.deltaTime));
-        }
-        else
-        {
-            //FadeOut
-            _theImage.material.SetFloat("_Cutoff", Mathf.MoveTowards(_theImage.material.GetFloat("_Cutoff"), -1f, TransitionSpeed * Time.deltaTime));
+    public void StartFadeOut(){
+        StartCoroutine(FadeOut());
+    }
 
-            //新しいシーンに遷移する前の音声処理
-            if (_theImage.material.GetFloat("_Cutoff") <= -0.1f - _theImage.material.GetFloat("_Smoothing"))
-            {
-                SceneManager.LoadScene((int)_sceneToLoad);
-                GameManager.OpenMenu = false;
-                GameManager.StageClear = false;
-                GameManager.CurrentScene = _sceneToLoad;
-            }
+    IEnumerator FadeIn(){
+        float cutoff = _theImage.material.GetFloat("_Cutoff");
+        while(cutoff < 1f){
+            cutoff = Mathf.MoveTowards(_theImage.material.GetFloat("_Cutoff"), 1.1f, TransitionSpeed * Time.deltaTime);
+            _theImage.material.SetFloat("_Cutoff", cutoff);
+            yield return null;
         }
+        _theImage.material.SetFloat("_Cutoff", 1.1f);
+        //フェード効果完成
+        GameManager.OnSceneChange = false;
+        GameManager.Pause = false;
+        yield return null;
+    }
+
+    IEnumerator FadeOut(){
+        float cutoff = _theImage.material.GetFloat("_Cutoff");
+        while (cutoff > -1f)
+        {
+            cutoff = Mathf.MoveTowards(_theImage.material.GetFloat("_Cutoff"), -1.1f, TransitionSpeed * Time.deltaTime);
+            _theImage.material.SetFloat("_Cutoff", cutoff);
+            yield return null;
+        }
+        _theImage.material.SetFloat("_Cutoff", -1.1f);
+        //新しいシーンに遷移する
+        GameManager.Instance.StartToLoadNewScene(_sceneToLoad);
+        
+        yield return null;
     }
 
     //----------------------------------------------------
-    //リセット処理
-    public void ResetScene()
-    {
-        _resetTimer += Time.deltaTime;
-        ResetImage.fillAmount = _resetTimer / ResetTime;
-
-        if (_resetTimer > ResetTime)
-        {
-            _sceneToLoad = (SceneType)SceneManager.GetActiveScene().buildIndex;
-            Notify(_sceneToLoad);
-        }
-    }
-
     public void Notify(SceneType type){
-        Debug.Log("a");
+        GameManager.OnSceneChange = true;
         _sceneToLoad = type;
-        OnSceneChange = true;
-        _shouldReveal = false;
+        StartCoroutine(FadeOut());
     }
 }

@@ -22,8 +22,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _contactNormal; //接触地面の法線合計
     private int _groundContactCount; //接触した地面の数
 
-    public bool OnJump { get; set; } //ジャンプ状態
-    public bool OnGround => _groundContactCount > 0;  //地面確認
+    public bool OnAir { get; set; } //ジャンプ状態
+    public bool OnGround => _groundContactCount > 0 || SnapToGround();  //地面確認
     public bool OnSlope //坂道確認
     {
         get
@@ -48,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
             case PlayerState.Walk:
             case PlayerState.Run:
             case PlayerState.Jump:
+            case PlayerState.Fall:
                 InputCheck();
                 break;
             default:
@@ -59,9 +60,11 @@ public class PlayerMovement : MonoBehaviour
     {
         switch (_fsm.CurrentState)
         {
+            case PlayerState.Idle:
             case PlayerState.Walk:
             case PlayerState.Run:
             case PlayerState.Jump:
+            case PlayerState.Fall:
                 _velocity = _rigidBody.velocity;
                 SnapToGround();
                 AdjustVelocity();
@@ -138,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
     private bool SnapToGround()
     {
         //ジャンプ中
-        if (OnJump)
+        if (OnAir)
         {
             return false;
         }
@@ -288,7 +291,7 @@ public class PlayerMovement : MonoBehaviour
     private void CheckGravity()
     {
         //坂道の上に止まる
-        if (OnSlope && OnGround && !OnJump)
+        if (OnSlope && OnGround)
         {
             _rigidBody.useGravity = false;
         }
@@ -300,15 +303,6 @@ public class PlayerMovement : MonoBehaviour
 
     //---------------------------------------------------------------------------
     //---------------------------------------------------------------------------
-    /// <summary>
-    /// キャラ基本データ設定
-    /// </summary>
-    /// <param name="data"></param>
-    public void SetData(CharacterData_SO data)
-    {
-        _fsm.PlayerData = data;
-    }
-
     /// <summary>
     /// キャラ状態設定
     /// </summary>
@@ -326,8 +320,16 @@ public class PlayerMovement : MonoBehaviour
                 break;
             case PlayerState.Jump:
                 _acceleration = _fsm.PlayerData.AirAcceleration;
-                OnJump = true;
+                OnAir = true;
                 Jump();
+                break;
+            case PlayerState.Fall:
+                _acceleration = _fsm.PlayerData.AirAcceleration;
+                break;
+            case PlayerState.Idle:
+            case PlayerState.Push:
+            case PlayerState.Menu:
+                ResetMoveSpeed();
                 break;
             default:
                 break;

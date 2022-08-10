@@ -10,6 +10,7 @@ namespace GameEnumList
         Stage1_1,
         Stage1_2,
         Stage1_3,
+        NULLSCENE, //nextStageシーン遷移確認用
     }
 
     /// <summary>
@@ -21,8 +22,9 @@ namespace GameEnumList
         Walk, 
         Run, 
         Jump, 
+        Fall,
         Push, 
-        Menu  //メニューなどUIを開くとき
+        Menu  //メニューなどのUIを開くとき
     }
 
     /// <summary>
@@ -39,26 +41,8 @@ namespace GameEnumList
     /// </summary>
     public enum StageCameraState
     {
-        IntoStage,
+        IntoStage, //ステージの開始動画カメラ
         Orbit, //プレイヤー操作可能
-        Clear,
-    }
-
-    /// <summary>
-    /// インプットタイプリスト
-    /// </summary>
-    public enum InputType
-    {
-        PlayerMove,
-        PlayerRun,
-        PlayerJump,
-        PlayerPush,
-        CameraRotate,
-        CameraZoomIn,
-        CameraZoomOut,
-        UIMenu,
-        UISelect,
-        UISubmit,
-        ExitGame,
+        Clear, //クリア動画カメラ
     }
 }
