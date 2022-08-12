@@ -62,12 +62,12 @@ public class Laser : BaseStageGimmick
                 if (hitInfo.collider.tag == "Target")
                 {
                     //クリア目標
-                    if (_currentHitObject.GetComponent<IStageGimmick>().Number == this.Number)
+                    if (_currentHitObject.GetComponent<IStageGimmick>().ID == this.ID)
                     {
                         _currentHitTarget = _currentHitObject;
                         if (!_currentHitTarget.GetComponent<IStageGimmick>().IsOpen)
                         {
-                            _currentHitTarget.GetComponent<IStageGimmick>().Notify(Number, true);
+                            _currentHitTarget.GetComponent<IStageGimmick>().OnNotify(ID, true);
                         }
                     }
                 }
@@ -129,7 +129,7 @@ public class Laser : BaseStageGimmick
 
         if (_currentHitTarget != _currentHitObject)
         {
-            _currentHitTarget.GetComponent<IStageGimmick>().Notify(this.Number, false);
+            _currentHitTarget.GetComponent<IStageGimmick>().OnNotify(this.ID, false);
             _currentHitTarget = null;
         }
     }
@@ -142,7 +142,7 @@ public class Laser : BaseStageGimmick
         _endBeam.SetActive(!_endBeam.activeSelf);
     }
 
-    public override void Notify(int num, bool state)
+    public override void OnNotify(int num, bool state)
     {
         _isOpen = state;
         SetParticalEffect();

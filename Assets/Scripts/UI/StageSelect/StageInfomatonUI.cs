@@ -7,6 +7,7 @@ using GameEnumList;
 
 public class StageInfomatonUI : MonoBehaviour
 {
+    //色、位置変更など必要なオブジェクト
     [SerializeField] private Text _titleText;
     [SerializeField] private Text _clearTimeText;
     [SerializeField] private Text _getItemText;
@@ -14,7 +15,8 @@ public class StageInfomatonUI : MonoBehaviour
     [SerializeField] private Text _cancelText;
     [SerializeField] private Image _starIcon;
     [SerializeField] private Image _stageImage;
-    [SerializeField] private Sprite[] _stageImageList;
+    [SerializeField] private Sprite[] _stageImageList; //ステージ内容を簡単表示用のプレビュー画像
+    //TODO プレビュー画像ではなく、動画表示をする
 
     private enum StageSelectUISelect { Start, Cancel };
     private StageSelectUISelect _currentSelect;
@@ -26,12 +28,14 @@ public class StageInfomatonUI : MonoBehaviour
 
     private void OnEnable()
     {
-        EventCenter.AddStageInfomationListener(UpdateInfomation);
+        //起動時、EventCenterに登録する
+        EventCenter.AddStageInfomationListener(OnNotify);
     }
 
     private void OnDisable()
     {
-        EventCenter.AddStageInfomationListener(UpdateInfomation);
+        //終了時、登録を外す
+        EventCenter.AddStageInfomationListener(OnNotify);
     }
 
     private void Awake()
@@ -47,6 +51,7 @@ public class StageInfomatonUI : MonoBehaviour
 
     private void Update()
     {
+        //TODO UI管理システムの構築
         if (_enabled == false) { return; }
 
         _starIcon.transform.Rotate(Vector3.forward);
@@ -55,6 +60,9 @@ public class StageInfomatonUI : MonoBehaviour
         Submit();
     }
 
+    /// <summary>
+    /// 選択更新
+    /// </summary>
     private void UpdateCursor(){
         float input;
         if (GameInputManager.Instance.GetUISelectInput(out input))
@@ -91,6 +99,9 @@ public class StageInfomatonUI : MonoBehaviour
         _oldInput = input;
     }
 
+    /// <summary>
+    /// 確認ボタンを押す時、対応のメソッドを実行する
+    /// </summary>
     private void Submit(){
         if (GameInputManager.Instance.GetUISubmitInput())
         {
@@ -108,18 +119,43 @@ public class StageInfomatonUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 目標ステージに移行
+    /// </summary>
     private void ToNewStage()
     {
         EventCenter.FadeNotify(_targetScene);
     }
 
+    /// <summary>
+    /// ゲームに戻る
+    /// </summary>
     private void Cancel()
     {
         _animator.Play("CloseMenu", 0);
         GameManager.Pause = false;
     }
 
-    public void UpdateInfomation(SceneType scene)
+    /// <summary>
+    /// ステージ選択の情報パネル更新
+    /// </summary>
+    private void UpdateStageInfomation(){
+        StageInfo info = DataManager.GetStageInfo(_targetScene);
+        _stageImage.sprite = Array.Find<Sprite>(_stageImageList, sprite => sprite.name == _targetScene.ToString());
+        _titleText.text = _targetScene.ToString();
+        string s = String.Format("{0:00}:{1:00}:{2:00}",
+            (int)info.ClearTime / 60,
+            (int)info.ClearTime % 60,
+            (info.ClearTime - (int)info.ClearTime) * 100);
+        _clearTimeText.text = s;
+        _getItemText.text = info.SecretItemCount.ToString() + " / " + info.SecretItemMaxCount.ToString();
+    }
+
+    /// <summary>
+    /// EventCenterから呼び出すの関数
+    /// </summary>
+    /// <param name="scene"></param>
+    public void OnNotify(SceneType scene)
     {
         //メニュー表示中、または閉じるの動画中の場合キャンセル
         if (_enabled) { return; }
@@ -129,17 +165,12 @@ public class StageInfomatonUI : MonoBehaviour
         AudioManager.Instance.Play("UI", "OpenMenu", false);
         GameManager.Pause = true;
         _targetScene = scene;
-        StageInfo info = DataManager.GetStageInfo(scene);
-        _stageImage.sprite = Array.Find<Sprite>(_stageImageList, sprite => sprite.name == scene.ToString());
-        _titleText.text = scene.ToString();
-        string s = String.Format("{0:00}:{1:00}:{2:00}",
-            (int)info.ClearTime / 60,
-            (int)info.ClearTime % 60,
-            (info.ClearTime - (int)info.ClearTime) * 100);
-        _clearTimeText.text = s;
-        _getItemText.text = info.SecretItemCount.ToString() + " / " + info.SecretItemMaxCount.ToString();
+        UpdateStageInfomation();
     }
 
+    /// <summary>
+    /// UI動画の確認
+    /// </summary>
     public void UIAnimationEnd(){
         _enabled = !_enabled;
     }

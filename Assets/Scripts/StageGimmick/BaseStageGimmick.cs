@@ -1,9 +1,12 @@
 using UnityEngine;
 
+/// <summary>
+/// 他のギミックと連動するのベースクラス
+/// </summary>
 public abstract class BaseStageGimmick : MonoBehaviour, IStageGimmick
 {
     [SerializeField] protected int _number;
-    public int Number
+    public int ID
     {
         get => _number;
         set => _number = value;
@@ -15,5 +18,5 @@ public abstract class BaseStageGimmick : MonoBehaviour, IStageGimmick
         get => _isOpen;
     }
 
-    public virtual void Notify(int num, bool state) {}
+    public virtual void OnNotify(int num, bool state) { }
 }

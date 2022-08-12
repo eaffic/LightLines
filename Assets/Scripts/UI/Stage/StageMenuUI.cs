@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using GameEnumList;
 
 public class StageMenuUI : MonoBehaviour {
+    //色、位置変更など必要なオブジェクト
     [SerializeField] private Text _returnText;
     [SerializeField] private Text _restartText;
     [SerializeField] private Text _stageSelectText;
@@ -12,25 +13,28 @@ public class StageMenuUI : MonoBehaviour {
     [SerializeField] private Text _getItemText;
     [SerializeField] private Image _starIcon;
 
-    private enum StageMenuUISelect { Return, Restart, StageSelect };
-    private StageMenuUISelect _currentSelect;
+    private enum StageMenuUISelect { Return, Restart, StageSelect }; //選択肢の種類
+    private StageMenuUISelect _currentSelect; //現在の選択
     private Animator _animator;
     private bool _enabled;
-    private float _oldInput;
+    private float _oldInput; //前フレームの入力
 
     private void Awake() {
         TryGetComponent(out _animator);
     }
 
     private void OnEnable() {
-        EventCenter.AddUIListener(Notify);
+        //EventCenterに登録
+        EventCenter.AddUIListener(OnNotify);
     }
 
     private void OnDisable() {
-        EventCenter.RemoveUIListener(Notify);
+        //登録を外す
+        EventCenter.RemoveUIListener(OnNotify);
     }
 
     private void Update() {
+        //TODO UI管理システムの構築
         if(GameInputManager.Instance.GetUIMenuInput()){
             EventCenter.UINotify("Menu");
         }
@@ -42,6 +46,9 @@ public class StageMenuUI : MonoBehaviour {
         Submit();
     }
 
+    /// <summary>
+    /// 選択更新
+    /// </summary>
     private void UpdateCursor(){
         float input;
         if(GameInputManager.Instance.GetUISelectInput(out input)){
@@ -79,6 +86,9 @@ public class StageMenuUI : MonoBehaviour {
         _oldInput = input; //前フレームの入力記録
     }
 
+    /// <summary>
+    /// 確認ボタンを押す時、対応のメソッドを実行する
+    /// </summary>
     private void Submit(){
         if (GameInputManager.Instance.GetUISubmitInput())
         {
@@ -100,7 +110,6 @@ public class StageMenuUI : MonoBehaviour {
         }
     }
 
-    #region 選択
     /// <summary>
     /// メニューを閉じる
     /// </summary>
@@ -122,8 +131,10 @@ public class StageMenuUI : MonoBehaviour {
     private void StageSelect(){
         EventCenter.FadeNotify(SceneType.StageSelect);
     }
-    #endregion
 
+    /// <summary>
+    /// ステージの情報パネル更新
+    /// </summary>
     private void UpdateStageInfoUI(){
         StageInfo info = StageDataManager.Instance.GetCurrentStageInfo();
         string s = String.Format("{0:00}:{1:00}:{2:00}",
@@ -134,15 +145,18 @@ public class StageMenuUI : MonoBehaviour {
         _getItemText.text = info.SecretItemCount.ToString() + " / " + info.SecretItemMaxCount.ToString();
     }
 
+    /// <summary>
+    /// UI動画確認
+    /// </summary>
     public void MenuUIAnimationEnd(){
         _enabled = !_enabled;
     }
 
     /// <summary>
-    /// 外部のイベントに登録
+    /// EventCenterから呼び出す関数
     /// </summary>
-    /// <param name="uiName"></param>
-    public void Notify(string uiName){
+    /// <param name="uiName">ui名</param>
+    public void OnNotify(string uiName){
         if (uiName != "Menu") { return; }
         if (GameManager.Pause) { return; }
 

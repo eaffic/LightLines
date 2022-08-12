@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   _playerInputSpace: {fileID: 0}
-  _turnSmoothTime: 0.1
+  _turnSmoothTime: 0.05
   _maxWalkSpeed: 1
   _maxRunSpeed: 3.5
   _maxAirSpeed: 3

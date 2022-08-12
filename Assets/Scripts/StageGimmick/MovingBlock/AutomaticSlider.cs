@@ -12,32 +12,24 @@ public class AutomaticSlider : BaseStageGimmick
     public class OnValueChangedEvent : UnityEvent<float> { }
     [SerializeField] OnValueChangedEvent _onValueChanged = default;
     [SerializeField, Min(0.01f)] float _duration = 1f; //移動時間
-    [SerializeField] bool _autoReversed = false;
-    [SerializeField] bool _offToReturn = false;
-    [SerializeField] bool _smoothstep = false; //スムーズ移動
+    [SerializeField] bool _autoReversed = false; //往復移動
+    [SerializeField] bool _offToReturn = false; //停止後原位置に戻る
+    [SerializeField] bool _smoothstep = false; //よりスムーズの移動
 
-    float _value;
+    float _value; //現在位置の割合（0原位置 1目標位置）
     float _smoothedValue => 3f * _value * _value - 2f * _value * _value * _value; //スムーズ関数
     private bool _reversed; //往復確認
-    bool AutoReverse //往復移動
-    {
-        get => _autoReversed;
-        set => _autoReversed = value;
-    }
-    bool OffToReturn //off状態は元の位置に戻る
-    {
-        get => _offToReturn;
-        set => _offToReturn = value;
-    }
 
     private void OnEnable()
     {
-        EventCenter.AddButtonListener(Notify);
+        //起動時、EventCenterに登録する
+        EventCenter.AddButtonListener(OnNotify);
     }
 
     private void OnDisable()
     {
-        EventCenter.RemoveButtonListener(Notify);
+        //終了時、登録を外す
+        EventCenter.RemoveButtonListener(OnNotify);
     }
 
     void FixedUpdate()
@@ -50,19 +42,25 @@ public class AutomaticSlider : BaseStageGimmick
             return;
         }
 
-        if (AutoReverse)
+        
+        if (_autoReversed)
         {
+            //往復移動
             AutoReserveseMove();
         }
         else
         {
+            //単方向移動
             NormalMove();
         }
     }
 
+    /// <summary>
+    /// 原位置に戻す
+    /// </summary>
     void ReturnToDefaultPosition()
     {
-        if (!OffToReturn || _value <= 0f) { return; }
+        if (_offToReturn == false || _value <= 0f) { return; }
 
         float delta = Time.deltaTime / _duration;
         _value -= delta;
@@ -77,7 +75,7 @@ public class AutomaticSlider : BaseStageGimmick
         float delta = Time.deltaTime / _duration;
         if (_reversed)
         {
-            // 1-->0
+            // 目標位置(1)-->原位置(0)
             _value -= delta;
             if (_value <= 0f)
             {
@@ -87,7 +85,7 @@ public class AutomaticSlider : BaseStageGimmick
         }
         else
         {
-            // 0-->1
+            // 原位置(0)-->目標位置(1)
             _value += delta;
             if (_value >= 1f)
             {
@@ -99,10 +97,13 @@ public class AutomaticSlider : BaseStageGimmick
         _onValueChanged.Invoke(_smoothstep ? _smoothedValue : _value);
     }
 
+    /// <summary>
+    /// 単方向移動
+    /// </summary>
     void NormalMove()
     {
         float delta = Time.deltaTime / _duration;
-        // 0-->1
+        // 原位置(0)-->目標位置(1)
         _value += delta;
         if (_value >= 1f)
         {
@@ -111,9 +112,14 @@ public class AutomaticSlider : BaseStageGimmick
         _onValueChanged.Invoke(_smoothstep ? _smoothedValue : _value);
     }
 
-    public override void Notify(int num, bool state)
+    /// <summary>
+    /// EventCenterから呼び出す
+    /// </summary>
+    /// <param name="num"></param>
+    /// <param name="state"></param>
+    public override void OnNotify(int num, bool state)
     {
-        if (Number != num) { return; }
+        if (ID != num) { return; }
         _isOpen = state;
     }
 }

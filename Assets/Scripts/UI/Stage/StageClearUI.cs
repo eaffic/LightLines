@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using GameEnumList;
 
 public class StageClearUI : MonoBehaviour {
+
+    //色、位置変更など必要なオブジェクト
     [SerializeField] private Text _againText;
     [SerializeField] private Text _nextStageText;
     [SerializeField] private Text _stageSelectText;
@@ -14,20 +16,22 @@ public class StageClearUI : MonoBehaviour {
     [SerializeField] private Image _starIcon;
     [SerializeField] private ParticleSystem _effectParticle;
 
-    private enum StageClearUISelect { Again, NextStage, StageSelect };
-    private StageClearUISelect _currentSelect;
+    private enum StageClearUISelect { Again, NextStage, StageSelect }; //選択肢の種類
+    private StageClearUISelect _currentSelect; //現在の選択
     private Animator _animator;
     private bool _enabled;
-    private float _oldInput;
+    private float _oldInput; //前フレームの入力
 
-    private bool _isLastStage => (GameManager.CurrentScene + 1) == SceneType.NULLSCENE;
+    private bool _isLastStage => (GameManager.CurrentScene + 1) == SceneType.NULLSCENE; //次のステージの存在確認
 
     private void OnEnable() {
-        EventCenter.AddUIListener(Notify);
+        //EventCenterに登録
+        EventCenter.AddUIListener(OnNotify);
     }
 
     private void OnDisable() {
-        EventCenter.RemoveUIListener(Notify);
+        //登録を外す
+        EventCenter.RemoveUIListener(OnNotify);
     }
 
     private void Awake() {
@@ -35,6 +39,7 @@ public class StageClearUI : MonoBehaviour {
     }
 
     private void Update() {
+        //TODO UI管理システムの構築
         if (_enabled == false) { return; }
         _starIcon.transform.Rotate(Vector3.forward);
 
@@ -42,6 +47,9 @@ public class StageClearUI : MonoBehaviour {
         Submit();
     }
 
+    /// <summary>
+    /// 選択更新
+    /// </summary>
     private void UpdateCursor(){
         float input;
         if(GameInputManager.Instance.GetUISelectInput(out input)){
@@ -102,9 +110,12 @@ public class StageClearUI : MonoBehaviour {
 
         }
 
-        _oldInput = input;
+        _oldInput = input; //前フレームの入力記録
     }
 
+    /// <summary>
+    /// 確認ボタンを押す時、対応のメソッドを実行する
+    /// </summary>
     private void Submit(){
         if(GameInputManager.Instance.GetUISubmitInput()){
             AudioManager.Instance.Play("UI", "Submit", false);
@@ -122,11 +133,16 @@ public class StageClearUI : MonoBehaviour {
         }
     }
 
-    #region 選択
+    /// <summary>
+    /// 現在のステージを再ロードする
+    /// </summary>
     private void Again(){
         EventCenter.FadeNotify(GameManager.CurrentScene);
     }
 
+    /// <summary>
+    /// 次のステージに移行する
+    /// </summary>
     private void NextStage(){
         if(_isLastStage){
             EventCenter.FadeNotify(SceneType.StageSelect);
@@ -135,11 +151,16 @@ public class StageClearUI : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// セレクト画面に移行する
+    /// </summary>
     private void StageSelect(){
         EventCenter.FadeNotify(SceneType.StageSelect);
     }
-    #endregion
 
+    /// <summary>
+    /// ステージの情報パネル更新
+    /// </summary>
     private void UpdateStageInfoUI(){
         StageInfo info = StageDataManager.Instance.GetCurrentStageInfo();
         string s = String.Format("{0:00}:{1:00}:{2:00}",
@@ -150,15 +171,25 @@ public class StageClearUI : MonoBehaviour {
         _getItemText.text = info.SecretItemCount.ToString() + " / " + info.SecretItemMaxCount.ToString();
     }
 
+    /// <summary>
+    /// UI動画確認
+    /// </summary>
     public void ClearUIAnimationEnd(){
         _enabled = !_enabled;
     }
 
+    /// <summary>
+    /// エフェクトPlay
+    /// </summary>
     public void PlayClearParticle(){
         _effectParticle.Play();
     }
 
-    public void Notify(string uiName){
+    /// <summary>
+    /// EventCenterから呼び出す関数
+    /// </summary>
+    /// <param name="uiName">ui名</param>
+    public void OnNotify(string uiName){
         if (uiName != "ClearUI") { return; }
         if (GameManager.Pause) { return; }
 

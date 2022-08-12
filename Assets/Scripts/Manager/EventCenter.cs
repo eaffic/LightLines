@@ -4,11 +4,22 @@ using System.Collections.Generic;
 using GameEnumList;
 using UnityEngine;
 
+public struct CommandEvent
+{
+    public int EventId;
+    public SceneType Scene;
+    public object Content;
+    public int NumberParam;
+    public bool State;
+}
+
 /// <summary>
 /// ステージ内のイベント管理
 /// </summary>
 public class EventCenter
 {
+    
+
     public static bool Enabled = true;
 
     //クリア目標リスト

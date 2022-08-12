@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// アニメションのTrigger変数リセットする
+/// </summary>
 public class FSMClearSignals : StateMachineBehaviour
 {
     public string[] clearAtEnter;

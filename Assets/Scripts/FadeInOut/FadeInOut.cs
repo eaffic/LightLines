@@ -17,11 +17,11 @@ public class FadeInOut : MonoBehaviour
     private Image _theImage;
 
     private void OnEnable() {
-        EventCenter.AddFadeListener(Notify);
+        EventCenter.AddFadeListener(OnNotify);
     }
 
     private void OnDisable() {
-        EventCenter.RemoveFadeListener(Notify);
+        EventCenter.RemoveFadeListener(OnNotify);
     }
 
     void Start()
@@ -70,7 +70,7 @@ public class FadeInOut : MonoBehaviour
     }
 
     //----------------------------------------------------
-    public void Notify(SceneType type){
+    public void OnNotify(SceneType type){
         GameManager.OnSceneChange = true;
         _sceneToLoad = type;
         StartCoroutine(FadeOut());

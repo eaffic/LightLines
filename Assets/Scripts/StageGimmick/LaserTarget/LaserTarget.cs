@@ -16,6 +16,18 @@ public class LaserTarget : BaseStageGimmick
     private MeshRenderer _meshRenderer;
     private ParticleSystem.MainModule _particle;
 
+    private void OnEnable()
+    {
+        //EventCenterに登録
+        EventCenter.AddLaserTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        //登録を外す
+        EventCenter.RemoveLaserTarget(this);
+    }
+
     void Start()
     {
         TryGetComponent(out _light);
@@ -27,27 +39,22 @@ public class LaserTarget : BaseStageGimmick
         _particle.startColor = Color.white;
     }
 
-    private void OnEnable() {
-        EventCenter.AddLaserTarget(this);
-    }
-
-    private void OnDisable(){
-        EventCenter.RemoveLaserTarget(this);
-    }
-
-    public override void Notify(int num, bool state)
+    public override void OnNotify(int num, bool state)
     {
-        if (this.Number != num) { return; }
+        if (this.ID != num) { return; }
 
         //状態切り替え
-        if(state){
+        if (state)
+        {
             _isOpen = true;
             _light.color = _openColor;
             _meshRenderer.material.color = _openColor;
             _particle.startColor = _openColor;
             EventCenter.StageClearCheckNotify();
             AudioManager.Instance.Play("LaserTarget", "OpenTarget", false);
-        }else{
+        }
+        else
+        {
             _isOpen = false;
             _light.color = _closeColor;
             _meshRenderer.material.color = _closeColor;

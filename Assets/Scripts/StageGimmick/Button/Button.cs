@@ -52,7 +52,7 @@ public class Button : BaseStageGimmick {
         if(_isOpen == false && TopCheck()){
             _isOpen = true;
             transform.position = _position - new Vector3(0, 0.02f, 0);
-            EventCenter.ButtonNotify(Number, IsOpen);
+            EventCenter.ButtonNotify(ID, IsOpen);
             AudioManager.Instance.Play("Button", "ButtonClick", false);
         }
     }
@@ -61,7 +61,7 @@ public class Button : BaseStageGimmick {
         if(_isOpen == true && TopCheck() == false){
             _isOpen = false;
             transform.position = _position;
-            EventCenter.ButtonNotify(Number, IsOpen);
+            EventCenter.ButtonNotify(ID, IsOpen);
             AudioManager.Instance.Play("Button", "ButtonClick", false);
         }
     }

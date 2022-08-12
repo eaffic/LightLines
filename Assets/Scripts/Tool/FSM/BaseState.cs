@@ -1,3 +1,7 @@
+/// <summary>
+/// 状態マシンの基本クラス
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class BaseState<T> : IState<T>
 {
     private T _oldState;

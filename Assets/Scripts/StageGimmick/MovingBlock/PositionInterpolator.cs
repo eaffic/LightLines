@@ -8,12 +8,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PositionInterpolator : MonoBehaviour
 {
-    [Tooltip("移動量"), SerializeField] private Vector3 _offset = default;
-    [SerializeField] private Transform _relativeTo = default; //現在地(参考目標)
+    [Tooltip("移動量"), SerializeField] private Vector3 _offset = default; //原位置との距離差
+    [SerializeField] private Transform _relativeTo = default; //参考座標(なかったら世界座標を使う)
 
     private Rigidbody _rigidbody = default;
-    private Vector3 _from = default;
-    private Vector3 _to = default;
+    private Vector3 _from = default; //現位置
+    private Vector3 _to = default; //目標位置
 
     void Start()
     {
@@ -22,6 +22,10 @@ public class PositionInterpolator : MonoBehaviour
         _to = _from + _offset;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="t"></param>
     public void Interpolate(float t)
     {
         Vector3 p;
@@ -34,17 +38,32 @@ public class PositionInterpolator : MonoBehaviour
         {
             p = Vector3.LerpUnclamped(_from, _to, t);
         }
-        _rigidbody.MovePosition(p);
+        _rigidbody.MovePosition(p); //rigidBodyを利用して移動させる
     }
 
-    private void OnCollisionEnter(Collision other) {
-        if(other.gameObject.tag == "Player"){
+    private void OnCollisionEnter(Collision other)
+    {
+        //このブロックの上に移動できるため、一時的に親オブジェクトを設定する
+        if (other.gameObject.tag == "Player")
+        {
+            other.transform.SetParent(this.transform);
+        }
+
+        if (other.gameObject.tag == "Box")
+        {
             other.transform.SetParent(this.transform);
         }
     }
 
-    private void OnCollisionExit(Collision other) {
-        if(other.gameObject.tag == "Player"){
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            other.transform.SetParent(null);
+        }
+
+        if (other.gameObject.tag == "Box")
+        {
             other.transform.SetParent(null);
         }
     }
