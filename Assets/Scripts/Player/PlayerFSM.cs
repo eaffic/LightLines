@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameEnumList;
 
+// [RequireComponent(typeof(PlayerMovement))]
+// [RequireComponent(typeof(PlayerAnimation))]
+// [RequireComponent(typeof(PlayerActions))]
 public class PlayerFSM : MonoBehaviour {
     public CharacterData_SO PlayerData; //キャラデータ
     public PlayerMovement PlayerMovementController; //移動制御
@@ -17,6 +20,7 @@ public class PlayerFSM : MonoBehaviour {
     private void Awake() {
         PlayerData.PlayerInputSpace = Camera.main.gameObject.transform;
         
+
         TryGetComponent(out PlayerMovementController);
         TryGetComponent(out PlayerAnimationController);
         TryGetComponent(out PlayerActionsController);

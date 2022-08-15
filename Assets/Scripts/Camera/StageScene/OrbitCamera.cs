@@ -7,14 +7,14 @@ using UnityEngine;
 /// </summary>
 public class OrbitCamera : MonoBehaviour
 {
-    public bool _NeedAutomaticRotation = false;
+    public bool NeedAutomaticRotation = false;
 
     [Tooltip("注視点"), SerializeField] Transform _focus = default;
     [Tooltip("距離"), SerializeField, Range(1f, 20f)] float _distance = 5f;
     [Tooltip("最小距離"), SerializeField, Range(1f, 20f)] float _minDistance = 2f;
     [Tooltip("最大距離"), SerializeField, Range(1f, 20f)] float _maxDistance = 8f;
     [Tooltip("注視点半径"), SerializeField, Min(0f)] float _focusRadius = 1f;
-    [Tooltip("注視点を追跡する >0は追跡する"), SerializeField, Range(0f, 1f)] float _focusCentering = 0.5f;
+    [Tooltip("注視点にそろえる速度"), SerializeField, Range(0f, 1f)] float _focusCentering = 0.5f;
     [Tooltip("回転速度/秒"), SerializeField, Range(1f, 360f)] float _rotationSpeed = 90f;
     [Tooltip("垂直回転最小角度"), SerializeField, Range(-89f, 89f)] float _minVerticalAngle = -30f;
     [Tooltip("垂直回転最大角度"), SerializeField, Range(-89f, 89f)] float _maxVerticalAngle = 60f;
@@ -37,10 +37,10 @@ public class OrbitCamera : MonoBehaviour
         get
         {
             Vector3 halfExtends;
-            //nearClipPlane 近い視錐台面の距離 regularCamera.fieldOfView カメラ視野
+            //nearClipPlane 近い視錐台面の距離 regularCamera.fieldOfView カメラ視野角
             //yは近い視錐台面高度の半分(中心高度)
             halfExtends.y = _regularCamera.nearClipPlane * Mathf.Tan(0.5f * Mathf.Deg2Rad * _regularCamera.fieldOfView);
-            //アスペクト比から計算する
+            //xはアスペクト比から計算する
             halfExtends.x = halfExtends.y * _regularCamera.aspect;
             halfExtends.z = 0f;
             return halfExtends;
@@ -111,7 +111,7 @@ public class OrbitCamera : MonoBehaviour
         Vector3 castDirection = castLine / castDistance; //単位ベクトル化
 
         //ブロックされたとき、カメラ位置を移動する
-        //箱型の検知エリアで障害物検査
+        //Cubeのレイを飛ばして障害物検査
         if (Physics.BoxCast(castFrom, CameraHalfExtends, castDirection, out RaycastHit hit, lookRotation, castDistance, _obstructionMask))
         {
             rectPosition = castFrom + castDirection * hit.distance;
@@ -164,7 +164,7 @@ public class OrbitCamera : MonoBehaviour
         if (_isStageSelect) return false;
 
         Vector2 playerInput = GameInputManager.Instance.GetCameraRotateInput();
-
+        
         const float e = 1e-3f; //誤差範囲
         if (Mathf.Abs(playerInput.x) > e || Mathf.Abs(playerInput.y) > e)
         {
@@ -215,7 +215,7 @@ public class OrbitCamera : MonoBehaviour
     /// <returns></returns>
     bool AutomaticRotation()
     {
-        if(!_NeedAutomaticRotation)
+        if(!NeedAutomaticRotation)
         {
             return false;
         }
@@ -257,48 +257,15 @@ public class OrbitCamera : MonoBehaviour
         return true;
     }
 
-    //角度を取得する
+    /// <summary>
+    /// 方向からxz平面の角度を取得する
+    /// </summary>
+    /// <param name="direction_"></param>
+    /// <returns></returns>
     static float GetAngle(Vector2 direction_)
     {
         float angle = Mathf.Acos(direction_.y) * Mathf.Rad2Deg;
 
         return direction_.x < 0f ? 360f - angle : angle;
-    }
-
-    //---------------------------------------------------------------------------------
-    public void StageSelectPeriod(bool state)
-    {
-        StopAllCoroutines();
-        StartCoroutine(StageSelectFocusPointSetting(state));
-    }
-
-    /// <summary>
-    /// ステージ選択中、リザルト画面の注視点位置更新
-    /// </summary>
-    IEnumerator StageSelectFocusPointSetting(bool state)
-    {
-        if (state)
-        {
-            _isStageSelect = true;
-            float distance = Vector3.Distance(_focusPoint, _focus.position + transform.right * 3);
-            while (distance > 0.5f)
-            {
-                _focusPoint = Vector3.Lerp(_focusPoint, _focus.position + transform.right * 3, Time.deltaTime * 2);
-                distance = Vector3.Distance(_focusPoint, _focus.position + transform.right * 3);
-                yield return null;
-            }
-        }
-        else
-        {
-            float distance = Vector3.Distance(_focusPoint, _focus.position);
-            while (distance > 0.5f)
-            {
-                _focusPoint = Vector3.Lerp(_focusPoint, _focus.position, Time.deltaTime * 5);
-                distance = Vector3.Distance(_focusPoint, _focus.position);
-                yield return null;
-            }
-            _isStageSelect = false;
-        }
-        yield return null;
     }
 }

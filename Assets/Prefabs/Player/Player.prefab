@@ -3000,7 +3000,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
@@ -3047,6 +3047,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f0e5b06cb8813f49bb9540fb1766134, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rigidBody: {fileID: 0}
   _rippleParticle: {fileID: 266024200625604811}
 --- !u!114 &6564758151210911315
 MonoBehaviour:

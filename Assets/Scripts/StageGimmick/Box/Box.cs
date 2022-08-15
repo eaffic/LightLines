@@ -122,7 +122,7 @@ public class Box : MonoBehaviour
 
         float targetAngle = transform.eulerAngles.y + angle;
         while(Mathf.Abs(transform.eulerAngles.y - targetAngle) > 0.5f){
-            float tmp = Mathf.LerpAngle(transform.eulerAngles.y, targetAngle, Time.deltaTime * 2);
+            float tmp = Mathf.LerpAngle(transform.eulerAngles.y, targetAngle, Time.deltaTime * 3.5f);
             transform.eulerAngles = new Vector3(0, tmp, 0);
             yield return null;
         }

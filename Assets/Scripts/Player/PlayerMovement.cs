@@ -7,7 +7,7 @@ using GameEnumList;
 public class PlayerMovement : MonoBehaviour
 {
     private PlayerFSM _fsm;
-    private Rigidbody _rigidBody;
+    [SerializeField] private Rigidbody _rigidBody;
 
     [SerializeField] private GameObject _rippleParticle;
 
@@ -58,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Debug.Log(OnGround);
         switch (_fsm.CurrentState)
         {
             case PlayerState.Idle:
@@ -67,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
             case PlayerState.Fall:
                 _velocity = _rigidBody.velocity;
                 SnapToGround();
+                Fall();
                 AdjustVelocity();
                 ClearState();
                 _rigidBody.velocity = _velocity;
@@ -75,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
         _fsm.PlayerData.Velocity = _rigidBody.velocity;
-        CheckGravity();
+        //CheckGravity();
     }
 
     /// <summary>
@@ -170,6 +172,22 @@ public class PlayerMovement : MonoBehaviour
             _velocity = (_velocity - hit.normal * dot).normalized * speed;
         }
         return true;
+    }
+
+    /// <summary>
+    /// 階段を自動に登る、降りる
+    /// </summary>
+    private void CheckStep(){
+        //TODO
+    }
+
+    /// <summary>
+    /// 重力判定
+    /// </summary>
+    private void Fall(){
+        if(OnGround == false){
+            _velocity += Physics.gravity * Time.fixedDeltaTime;
+        }
     }
 
     /// <summary>
@@ -286,12 +304,11 @@ public class PlayerMovement : MonoBehaviour
 
     /// <summary>
     /// 重力使用設定
-    /// 
     /// </summary>
     private void CheckGravity()
     {
         //坂道の上に止まる
-        if (OnSlope && OnGround)
+        if (OnSlope)
         {
             _rigidBody.useGravity = false;
         }
