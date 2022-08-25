@@ -9,11 +9,14 @@ using GameEnumList;
 public class SaveData
 {
     [SerializeField]
-    private int _clearStageCount; //クリアのステージ数
+    private int _lastClearStage; //クリアしたの最新ステージ
     [SerializeField]
     private List<StageInfo> _stageInfoList = new List<StageInfo>(); //各ステージの記録
 
-    public int ClearStageCount { get => _clearStageCount; set => _clearStageCount = value; }
+    public int LastClearStage { 
+        get => _lastClearStage;
+        set => _lastClearStage = _lastClearStage < value ? value : _lastClearStage;
+    }
     public List<StageInfo> StageInfoList
     {
         get => _stageInfoList;
@@ -21,11 +24,11 @@ public class SaveData
 
     public SaveData()
     {
-        this.ClearStageCount = 0;
+        this.LastClearStage = 0;
     }
     public SaveData(int clearStage, List<StageInfo> stageInfo)
     {
-        this.ClearStageCount = clearStage;
+        this.LastClearStage = clearStage;
     }
 }
 
@@ -117,7 +120,7 @@ public class DataManager : UnitySingleton<DataManager>
         if (!checkdata)
         {
             _saveData.StageInfoList.Add(stageInfo);
-            _saveData.ClearStageCount++;
+            _saveData.LastClearStage++;
         }
 
         SaveByJson("savedata.json", _saveData);
@@ -140,6 +143,7 @@ public class DataManager : UnitySingleton<DataManager>
             }
         }
 
+        // 該当ステージは存在していない場合、空白の記録データを返す
         return new StageInfo();
     }
 

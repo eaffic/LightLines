@@ -38,8 +38,6 @@ public class PlayerMovement : MonoBehaviour
     {
         TryGetComponent(out _rigidBody);
         TryGetComponent(out _fsm);
-
-        _rippleParticle.transform.parent = null;
     }
 
     private void Update()
@@ -221,17 +219,17 @@ public class PlayerMovement : MonoBehaviour
     {
         EvaluateCollision(other);
 
+        // 壁の接触エフェクト位置、角度更新
         if (other.gameObject.tag == "Wall")
         {
             Vector3 player = new Vector3(transform.position.x, 0f, transform.position.z);
-            Vector3 contact = new Vector3(other.contacts[0].point.x, 0f, other.contacts[0].point.z);
+            Vector3 contact = other.collider.ClosestPoint(player);
 
             float angle = Vector3.Angle(player - contact, Vector3.right);
 
             _rippleParticle.transform.eulerAngles = new Vector3(0, angle + 90, 0);
-            _rippleParticle.transform.position = new Vector3(other.contacts[0].point.x, this.transform.position.y + 1f, other.contacts[0].point.z);
+            _rippleParticle.transform.position = other.collider.ClosestPoint(player);
             _lastTouchWallPosition = other.contacts[0].point;
-            //_rippleParticle.transform.LookAt(new Vector3(transform.position.x, _rippleParticle.transform.position.y, transform.position.z));
             _rippleParticle.SetActive(true);
         }
     }
@@ -240,6 +238,7 @@ public class PlayerMovement : MonoBehaviour
     {
         EvaluateCollision(other);
 
+        //壁接触エフェクト位置更新  
         if (other.gameObject.tag == "Wall")
         {
             _rippleParticle.transform.position = new Vector3(_lastTouchWallPosition.x, this.transform.position.y + 1f, _lastTouchWallPosition.z);

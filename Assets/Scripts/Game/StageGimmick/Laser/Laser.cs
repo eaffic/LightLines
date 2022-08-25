@@ -142,7 +142,7 @@ public class Laser : BaseStageGimmick
         _endBeam.SetActive(!_endBeam.activeSelf);
     }
 
-    public override void OnNotify(int num, bool state)
+    public override void OnNotify(int id, bool state)
     {
         _isOpen = state;
         SetParticalEffect();

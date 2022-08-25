@@ -345,30 +345,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1381211502917443841, guid: b34a059ccc0de44478fd80c807f084ce, type: 3}
-      propertyPath: m_Depth
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 1381211502917443843, guid: b34a059ccc0de44478fd80c807f084ce, type: 3}
-      propertyPath: m_CameraType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1381211502917443843, guid: b34a059ccc0de44478fd80c807f084ce, type: 3}
-      propertyPath: m_ClearDepth
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1381211502917443843, guid: b34a059ccc0de44478fd80c807f084ce, type: 3}
-      propertyPath: m_RenderShadows
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1381211502917443843, guid: b34a059ccc0de44478fd80c807f084ce, type: 3}
-      propertyPath: m_RendererIndex
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1381211502917443843, guid: b34a059ccc0de44478fd80c807f084ce, type: 3}
-      propertyPath: m_RenderPostProcessing
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1381211502917443844, guid: b34a059ccc0de44478fd80c807f084ce, type: 3}
       propertyPath: m_Name
       value: UICamera

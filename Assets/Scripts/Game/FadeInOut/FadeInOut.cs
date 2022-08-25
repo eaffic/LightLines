@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using GameEnumList;
 
 /// <summary>
@@ -69,7 +68,6 @@ public class FadeInOut : UnitySingleton<FadeInOut>
         }
         _theImage.material.SetFloat("_Cutoff", -1.1f);
         //新しいシーンに遷移する
-        SceneManager.UnloadSceneAsync((int)GameManager.CurrentScene);
         GameManager.Instance.StartToLoadNewScene(_sceneToLoad);
         yield return null;
     }

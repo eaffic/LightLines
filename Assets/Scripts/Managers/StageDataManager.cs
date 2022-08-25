@@ -6,7 +6,7 @@ using UnityEngine;
 public class StageDataManager : UnitySingleton<StageDataManager> {
 
     public int TotalScretItemCountInStage = 0;
-    private StageInfo _currentStageInfo;
+    private StageInfo _currentStageClearInfo;
 
     private float _timer = 0f;
     [SerializeField]private int _getItemCount;
@@ -23,10 +23,6 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
         base.Awake();
     }
 
-    private void Start() {
-        _currentStageInfo = DataManager.GetStageInfo(GameManager.CurrentScene);
-    }
-
     private void Update() {
         if (GameManager.Pause) { return; }
 
@@ -38,14 +34,20 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
         ++_getItemCount;
     }
 
+    /// <summary>
+    /// 今回のクリアデータと過去のクリアデータを比較して、セーブする
+    /// </summary>
     public void SaveStageClearData(){
-        _currentStageInfo.StageType = GameManager.CurrentScene;
-        _currentStageInfo.ClearTime = _timer;
-        _currentStageInfo.SecretItemMaxCount = TotalScretItemCountInStage;
-        _currentStageInfo.SecretItemCount = _getItemCount;
-        DataManager.SaveStageClearData(_currentStageInfo);
+        _currentStageClearInfo.ClearTime = _timer;
+        _currentStageClearInfo.SecretItemMaxCount = TotalScretItemCountInStage;
+        _currentStageClearInfo.SecretItemCount = _getItemCount;
+        DataManager.SaveStageClearData(_currentStageClearInfo);
     }
 
+    /// <summary>
+    /// 現在のステージ状況を返す
+    /// </summary>
+    /// <returns></returns>
     public StageInfo GetCurrentStageInfo(){
         StageInfo info = new StageInfo();
         info.StageType = GameManager.CurrentScene;
@@ -53,5 +55,16 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
         info.SecretItemMaxCount = TotalScretItemCountInStage;
         info.SecretItemCount = _getItemCount;
         return info;
+    }
+
+    // ステージ入る前のリセット
+    public void StartNewStage(){
+        // ステージのクリア状況を取得する
+        _currentStageClearInfo = DataManager.GetStageInfo(GameManager.CurrentScene);
+        _currentStageClearInfo.StageType = GameManager.CurrentScene;
+
+        _timer = 0f;
+        _getItemCount = 0;
+        TotalScretItemCountInStage = 0;
     }
 }

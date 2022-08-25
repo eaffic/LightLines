@@ -115,11 +115,11 @@ public class AutomaticSlider : BaseStageGimmick
     /// <summary>
     /// EventCenterから呼び出す
     /// </summary>
-    /// <param name="num"></param>
+    /// <param name="id"></param>
     /// <param name="state"></param>
-    public override void OnNotify(int num, bool state)
+    public override void OnNotify(int id, bool state)
     {
-        if (ID != num) { return; }
+        if (ID != id) { return; }
         _isOpen = state;
     }
 }

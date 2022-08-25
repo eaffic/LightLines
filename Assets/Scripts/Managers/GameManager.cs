@@ -49,6 +49,7 @@ public class GameManager : UnitySingleton<GameManager>
             case SceneType.Stage1_2:
             case SceneType.Stage1_3:
                 AudioManager.Instance.Play("BackGround", "BGMStage", true);
+                StageDataManager.Instance.StartNewStage();
                 UIManager.Instance.ShowUIView("Stage/UIStageMenu");
                 UIManager.Instance.ShowUIView("Stage/UIStageClear");
                 UIManager.Instance.ShowUIView("InputHint/UIGameInputHint");
@@ -68,7 +69,6 @@ public class GameManager : UnitySingleton<GameManager>
     /// <returns></returns> 
     IEnumerator LoadNewScene(SceneType targetScene)
     {
-        _currentScene = targetScene;
         GameManager.Pause = true;
         UIManager.Instance.ClearUI(); //前シーンのUIを削除する
 
@@ -81,18 +81,17 @@ public class GameManager : UnitySingleton<GameManager>
         }
 
         AudioManager.Instance.StopAllSource();
-        SceneManager.LoadSceneAsync((int)targetScene, LoadSceneMode.Additive); //シーン遷移
-        StartCoroutine(SetActiveScene()); 
+        //Debug.Log((int)GameManager.CurrentScene);
+        SceneManager.UnloadSceneAsync((int)CurrentScene); //移行前のシーンを外す
 
-        SceneStartSetting();
-        AudioManager.Instance.StartNewScene();
-        FadeInOut.Instance.StartFadeIn(); //シーンロード終了、シーン開始
-        GameManager.Pause = false;
+        _currentScene = targetScene;
+        SceneManager.LoadSceneAsync((int)CurrentScene, LoadSceneMode.Additive); //シーン遷移
+        StartCoroutine(SetActiveScene()); 
         yield return null;
     }
 
     /// <summary>
-    /// メイン活動シーン設置(ライト設定など)
+    /// 移行シーンのロード待ち
     /// </summary>
     /// <returns></returns>
     IEnumerator SetActiveScene(){
@@ -102,6 +101,10 @@ public class GameManager : UnitySingleton<GameManager>
             yield return null;
         }
         SceneManager.SetActiveScene(scene);
+        SceneStartSetting();
+        AudioManager.Instance.StartNewScene();
+        FadeInOut.Instance.StartFadeIn(); //シーンロード終了、シーン開始
+        GameManager.Pause = false;
         yield return null;
     }
 

@@ -135,10 +135,14 @@ MonoBehaviour:
     m_Bits: 451
   _groundLayer:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 704
   _duration: 2
   IsPlayerPushTarget: 0
   IsSecretItemInBox: 0
+  IsContactBeltConveyor: 0
+  OnMove: 0
+  OnRotate: 0
+  OnGround: 0
 --- !u!1 &7710880112394529881
 GameObject:
   m_ObjectHideFlags: 0

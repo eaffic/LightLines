@@ -102,6 +102,7 @@ public class PlayerActions : MonoBehaviour {
     public bool CheckTargetBox()
     {
         if (_targetBox == null) { return false; }
+        if (_targetBox.GetComponent<Box>().IsContactAccelerator) { return false; }
 
         bool check = false;
         float angle = 0f;

@@ -18,5 +18,5 @@ public abstract class BaseStageGimmick : MonoBehaviour, IStageGimmick
         get => _isOpen;
     }
 
-    public virtual void OnNotify(int num, bool state) { }
+    public virtual void OnNotify(int id, bool state) { }
 }

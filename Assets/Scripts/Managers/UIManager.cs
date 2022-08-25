@@ -55,6 +55,9 @@ public class UIManager : UnitySingleton<UIManager>
         return control;
     }
 
+    /// <summary>
+    /// 現在のUIパネルを外す
+    /// </summary>
     public void ClearUI(){
         foreach(var item in _uiList){
             Destroy(item.gameObject);

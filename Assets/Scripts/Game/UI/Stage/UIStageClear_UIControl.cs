@@ -225,8 +225,10 @@ public class UIStageClear_UIControl : UIControl {
 
         GameManager.Pause = true;
         AudioManager.Instance.Play("BackGround", "BGMClear", false);
-        StageDataManager.Instance.SaveStageClearData();
-        _animator.Play("OpenStageClear", 0);
+        StageDataManager.Instance.SaveStageClearData(); //クリアデータをセーブする
+        _animator.Play("OpenStageClear", 0); //UIアニメション
+
+        // UI初期設定
         _currentSelect = StageClearUISelect.Again;
         _againText.color = Color.red;
         _nextStageText.color = _isLastStage ? Color.gray : Color.white;

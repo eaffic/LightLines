@@ -12,19 +12,21 @@ public class Box : MonoBehaviour
     [Tooltip("移動時間"), SerializeField] private float _moveTime = 0.3f;
     [Tooltip("障害物Layer"), SerializeField] private LayerMask _wallLayer = default;
     [Tooltip("地面Layer"), SerializeField] private LayerMask _groundLayer = default;
-    [SerializeField] private float _duration = 2f;
+    [SerializeField] private float _colorDuration = 2f;
 
     [SerializeField] public bool IsPlayerPushTarget;// { get; set; }
     [SerializeField] public bool IsSecretItemInBox;// { get; set; }
+    [SerializeField] public bool IsContactAccelerator; //加速器
 
     private Rigidbody _rigidBody;
     private Renderer _renderer;
-    private float timer;
+    private float _timer;
+    private int _contactCollider;
 
-    private bool _onMove; //移動中
-    private bool _onRotate; //回転中
-    private bool _onHead => Physics.Raycast(transform.position, Vector3.up, 0.5f, _wallLayer);   //上方向確認
-    private bool _onGround => Physics.Raycast(transform.position + new Vector3 (0, 0.1f, 0), Vector3.down, 0.1f, _groundLayer);   //地面確認
+    public bool OnMove; //移動中
+    public bool OnRotate; //回転中
+    //public bool OnHead => Physics.Raycast(transform.position, Vector3.up, 0.5f, _wallLayer);   //上方向確認
+    public bool OnGround;   //地面確認
 
     void Awake()
     {
@@ -35,8 +37,19 @@ public class Box : MonoBehaviour
     void Update()
     {
         SetColor();
+        StateCheck();
 
-        //Debug.DrawRay(transform.position + new Vector3(0, 0.1f, 0), Vector3.down * 0.1f, _onGround ? Color.red : Color.green);
+        Debug.DrawRay(transform.position + new Vector3(0, 0.1f, 0), Vector3.down * 0.15f, OnGround ? Color.red : Color.green);
+    }
+
+    private void StateCheck(){
+        OnGround = GroundCheck();
+
+        if(IsContactAccelerator){
+            _rigidBody.useGravity = false;
+        }else{
+            _rigidBody.useGravity = true;
+        }
     }
 
     /// <summary>
@@ -44,7 +57,7 @@ public class Box : MonoBehaviour
     /// </summary>
     private void SetColor()
     {
-        float lerp = Mathf.PingPong(Time.time, _duration) / _duration;
+        float lerp = Mathf.PingPong(Time.time, _colorDuration) / _colorDuration;
 
         if (IsPlayerPushTarget)
         {
@@ -54,20 +67,27 @@ public class Box : MonoBehaviour
         {
             _renderer.material.SetColor("_Color", Color.Lerp(Color.yellow, new Color(0.5f, 0.5f, 0.5f, 1), lerp));
         }
+        else if (IsContactAccelerator)
+        {
+            _renderer.material.SetColor("_Color", Color.Lerp(Color.green, new Color(0.5f, 0.5f, 0.5f, 1), lerp));
+        }
         else
         {
             _renderer.material.SetColor("_Color", Color.Lerp(Color.white, new Color(0.5f, 0.5f, 0.5f, 1), lerp));
         }
     }
 
-    public void MoveBox(Vector3 direction)
+    public bool MoveBox(Vector3 direction)
     {
-        if (_onMove || _onRotate) { return; }
+        if (OnMove || OnRotate) { return false; }
 
         if(MoveChecked(direction))
         {
             StartCoroutine(BoxMove(transform.position + direction));
+            return true;
         }
+
+        return false;
     }
 
     /// <summary>
@@ -76,7 +96,7 @@ public class Box : MonoBehaviour
     /// <param name="angle"></param>
     public void RotateBox(float angle)
     {
-        if (_onMove || _onRotate) { return; }
+        if (OnMove || OnRotate) { return; }
 
         StartCoroutine(BoxRotate(angle));
     }
@@ -96,41 +116,45 @@ public class Box : MonoBehaviour
         return !Physics.Raycast(center, direction, out RaycastHit hitInfo, direction.magnitude, _wallLayer);
     }   
 
+    public bool GroundCheck(){
+        return Physics.Raycast(transform.position + new Vector3(0, 0.1f, 0), Vector3.down, 0.15f, _groundLayer);
+    }
+
     /// <summary>
     /// 箱移動
     /// </summary>
-    /// <param name="movePosition"></param>
+    /// <param name="targetOffset"></param>
     /// <returns></returns>
-    IEnumerator BoxMove(Vector3 movePosition)
+    IEnumerator BoxMove(Vector3 targetOffset)
     {
         //while(_onMove || _onRotate) { yield return null; }
 
         _rigidBody.isKinematic = true;
-        _onMove = true;
+        OnMove = true;
         AudioManager.Instance.Play("Box", "BoxSlide", false);
 
         //移動
         Vector3 velocity = Vector3.zero;
-        float distance = new Vector3(transform.position.x - movePosition.x, 0f, transform.position.z - movePosition.z).magnitude;
+        float distance = new Vector3(transform.position.x - targetOffset.x, transform.position.y - targetOffset.y, transform.position.z - targetOffset.z).magnitude;
         while (distance > 0.01f)
         {
-            transform.position = Vector3.SmoothDamp(transform.position, movePosition, ref velocity, _moveTime);
-            distance = new Vector3(transform.position.x - movePosition.x, 0f, transform.position.z - movePosition.z).magnitude;
+            transform.position = Vector3.SmoothDamp(transform.position, targetOffset, ref velocity, _moveTime);
+            distance = new Vector3(transform.position.x - targetOffset.x, transform.position.y - targetOffset.y, transform.position.z - targetOffset.z).magnitude;
             yield return null;
         }
 
-        transform.position = movePosition;
-        _onMove = false;
+        transform.position = targetOffset;
+        OnMove = false;
         _rigidBody.isKinematic = false;
         yield return null;
     }
 
     //箱回転
     IEnumerator BoxRotate(float angle){
-        while(_onMove || _onRotate) { yield return null; }
+        while(OnMove || OnRotate) { yield return null; }
 
         _rigidBody.isKinematic = true;
-        _onRotate = true;
+        OnRotate = true;
 
         float targetAngle = transform.eulerAngles.y + angle;
         while(Mathf.Abs(transform.eulerAngles.y - targetAngle) > 0.5f){
@@ -140,16 +164,19 @@ public class Box : MonoBehaviour
         }
 
         transform.eulerAngles = new Vector3(0, targetAngle, 0);
-        _onRotate = false;
+        OnRotate = false;
         _rigidBody.isKinematic = false;
         yield return null;
     }
 
     private void OnCollisionEnter(Collision other)
     {
+        //if(IsContactBeltConveyor) { return; }
+
         RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position + new Vector3(0, 0.1f, 0), Vector3.down, out hitInfo, 0.1f, _groundLayer)){
+        if (Physics.Raycast(transform.position + new Vector3(0, 0.1f, 0), Vector3.down, out hitInfo, 0.2f, _groundLayer)){
             transform.position = hitInfo.point;
+            //OnGround = true;
         }
     }
 }
