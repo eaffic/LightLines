@@ -5,12 +5,15 @@ using GameEnumList;
 
 public class UIStageMenu_UIControl : UIControl {
     //色、位置変更など必要なオブジェクト
+    [SerializeField] private Text _titleText;
     [SerializeField] private Text _returnText;
     [SerializeField] private Text _restartText;
     [SerializeField] private Text _stageSelectText;
     [SerializeField] private Text _clearTimeText;
     [SerializeField] private Text _getItemText;
-    [SerializeField] private Image _starIcon;
+    [SerializeField] private Image _highLightImage;
+    [SerializeField] private Image _starImage;
+    [SerializeField] private ParticleSystem _selectParticle;
 
     private enum StageMenuUISelect { Return, Restart, StageSelect }; //選択肢の種類
     private StageMenuUISelect _currentSelect; //現在の選択
@@ -37,18 +40,21 @@ public class UIStageMenu_UIControl : UIControl {
     }
 
     private void Start() {
+        _titleText = DictView["Text_Title"].GetComponent<Text>();
         _returnText = DictView["Text_Return"].GetComponent<Text>();
         _restartText = DictView["Text_Restart"].GetComponent<Text>();
         _stageSelectText = DictView["Text_StageSelect"].GetComponent<Text>();
         _clearTimeText = DictView["Text_ClearTime"].GetComponent<Text>();
         _getItemText = DictView["Text_GetItem"].GetComponent<Text>();
-        _starIcon = DictView["Image_Star"].GetComponent<Image>();
+        _highLightImage = DictView["Image_HighLight"].GetComponent<Image>();
+        _starImage = DictView["Image_Star"].GetComponent<Image>();
+        _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
     }
 
     private void Update()
     {
         if (_enabled == false) { return; }
-        _starIcon.transform.Rotate(Vector3.forward);
+        _starImage.transform.Rotate(Vector3.forward);
 
         UpdateCursor();
         Submit();
@@ -76,23 +82,36 @@ public class UIStageMenu_UIControl : UIControl {
             if (_currentSelect == oldSelect) { return; }
             AudioManager.Instance.Play("UI", "UISelect", false);
 
+            var sh = _selectParticle.shape;
             switch (_currentSelect)
             {
                 case StageMenuUISelect.Return:
                     _returnText.color = Color.red;
                     _restartText.color = Color.white;
-                    _starIcon.rectTransform.localPosition = new Vector2(_returnText.rectTransform.localPosition.x - _returnText.rectTransform.rect.width / 1.8f, _returnText.rectTransform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(_returnText.rectTransform.localPosition.x - _returnText.rectTransform.rect.width / 1.8f, _returnText.rectTransform.localPosition.y);
+                    _highLightImage.rectTransform.localPosition = _returnText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _returnText.rectTransform.rect.size;
+                    _selectParticle.gameObject.transform.position = _returnText.gameObject.transform.position;
+                    sh.scale = new Vector3(2, 1, 1);
                     break;
                 case StageMenuUISelect.Restart:
                     _returnText.color = Color.white;
                     _restartText.color = Color.red;
                     _stageSelectText.color = Color.white;
-                    _starIcon.rectTransform.localPosition = new Vector2(_restartText.rectTransform.localPosition.x - _restartText.rectTransform.rect.width / 1.8f, _restartText.rectTransform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(_restartText.rectTransform.localPosition.x - _restartText.rectTransform.rect.width / 1.8f, _restartText.rectTransform.localPosition.y);
+                    _highLightImage.rectTransform.localPosition = _restartText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _restartText.rectTransform.rect.size;
+                    _selectParticle.gameObject.transform.position = _restartText.gameObject.transform.position;
+                    sh.scale = new Vector3(2, 1, 1);
                     break;
                 case StageMenuUISelect.StageSelect:
                     _restartText.color = Color.white;
                     _stageSelectText.color = Color.red;
-                    _starIcon.rectTransform.localPosition = new Vector2(_stageSelectText.rectTransform.localPosition.x - _stageSelectText.rectTransform.rect.width / 1.8f, _stageSelectText.rectTransform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(_stageSelectText.rectTransform.localPosition.x - _stageSelectText.rectTransform.rect.width / 1.8f, _stageSelectText.rectTransform.localPosition.y);
+                    _highLightImage.rectTransform.localPosition = _stageSelectText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _stageSelectText.rectTransform.rect.size;
+                    _selectParticle.gameObject.transform.position = _stageSelectText.gameObject.transform.position;
+                    sh.scale = new Vector3(3, 1, 1);
                     break;
             }
         }
@@ -132,6 +151,7 @@ public class UIStageMenu_UIControl : UIControl {
     {
         GameManager.Pause = false;
         _animator.Play("CloseStageMenu", 0);
+        _selectParticle.Stop();
     }
 
     /// <summary>
@@ -160,6 +180,7 @@ public class UIStageMenu_UIControl : UIControl {
             (int)info.ClearTime / 60,
             (int)info.ClearTime % 60,
             (info.ClearTime - (int)info.ClearTime) * 100);
+        _titleText.text = info.StageType.ToString();
         _clearTimeText.text = s;
         _getItemText.text = info.SecretItemCount.ToString() + " / " + info.SecretItemMaxCount.ToString();
     }
@@ -183,12 +204,19 @@ public class UIStageMenu_UIControl : UIControl {
 
         AudioManager.Instance.Play("UI", "UIOpenMenu", false);
         GameManager.Pause = true;
+        _animator.Play("OpenStageMenu", 0);
+        UpdateStageInfoUI();
+
         _currentSelect = StageMenuUISelect.Return;
-        _starIcon.rectTransform.localPosition = new Vector2(_returnText.rectTransform.localPosition.x - _returnText.rectTransform.rect.width / 1.8f, _returnText.rectTransform.localPosition.y);
+        _starImage.rectTransform.localPosition = new Vector2(_returnText.rectTransform.localPosition.x - _returnText.rectTransform.rect.width / 1.8f, _returnText.rectTransform.localPosition.y);
         _returnText.color = Color.red;
         _restartText.color = Color.white;
         _stageSelectText.color = Color.white;
-        _animator.Play("OpenStageMenu", 0);
-        UpdateStageInfoUI();
+        _highLightImage.rectTransform.localPosition = _returnText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _returnText.rectTransform.rect.size;
+        _selectParticle.gameObject.transform.position = _returnText.gameObject.transform.position;
+        _selectParticle.Play();
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(2, 1, 1);
     }
 }

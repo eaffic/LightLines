@@ -7,7 +7,9 @@ public class UITitle_UIControl : UIControl {
     [SerializeField] private Text _deleteText;
     [SerializeField] private Text _deleteHintText;
     [SerializeField] private Text _exitText;
-    [SerializeField] private Image _starIcon; //選択のカーソルマーク
+    [SerializeField] private Image _highLightImage;
+    [SerializeField] private Image _starImage; //選択のカーソルマーク
+    [SerializeField] private ParticleSystem _selectParticle;
 
     private enum TitleSelect { GameStart, DeleteData, ExitGame }; //選択肢の種類
     private TitleSelect _currentSelect = default; //現在の選択
@@ -22,19 +24,29 @@ public class UITitle_UIControl : UIControl {
         _deleteText = DictView["Text_DeleteData"].GetComponent<Text>();
         _deleteHintText = DictView["Text_DeleteHint"].GetComponent<Text>();
         _exitText = DictView["Text_Exit"].GetComponent<Text>();
-        _starIcon = DictView["Image_Star"].GetComponent<Image>();
+        _highLightImage = DictView["Image_HighLight"].GetComponent<Image>();
+        _starImage = DictView["Image_Star"].GetComponent<Image>();
+        _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
 
         //初期色、位置設定
         _startText.color = Color.red;
         _deleteText.color = Color.white;
         _exitText.color = Color.white;
-        _starIcon.rectTransform.localPosition = new Vector2(-_startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
+        _starImage.rectTransform.localPosition = new Vector2(-_startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
+        
+        _highLightImage.rectTransform.localPosition = _startText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
+
+        _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(2.2f, 0.8f, 1);
+        _selectParticle.Play();
     }
 
     private void Update()
     {
         //カーソルマークをゆっくり回転させる
-        _starIcon.transform.Rotate(Vector3.forward);
+        _starImage.transform.Rotate(Vector3.forward);
 
         UpdateCursor();
         Submit();
@@ -67,24 +79,43 @@ public class UITitle_UIControl : UIControl {
             if (_currentSelect == oldSelect) { return; }
             AudioManager.Instance.Play("UI", "UISelect", false); //カーソルの移動音
 
+            var sh = _selectParticle.shape;
             //テキストの色変更
             switch (_currentSelect)
             {
                 case TitleSelect.GameStart:
                     _startText.color = Color.red;
                     _deleteText.color = Color.white;
-                    _starIcon.rectTransform.localPosition = new Vector2(-_startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(-_startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
+                    
+                    _highLightImage.rectTransform.localPosition = _startText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
+
+                    _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
+                    sh.scale = new Vector3(2.2f, 0.8f, 1);
                     break;
                 case TitleSelect.DeleteData:
                     _startText.color = Color.white;
                     _deleteText.color = Color.red;
                     _exitText.color = Color.white;
-                    _starIcon.rectTransform.localPosition = new Vector2(-_deleteText.rectTransform.rect.width / 1.8f, _deleteText.transform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(-_deleteText.rectTransform.rect.width / 1.8f, _deleteText.transform.localPosition.y);
+                    
+                    _highLightImage.rectTransform.localPosition = _deleteText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _deleteText.rectTransform.rect.size;
+
+                    _selectParticle.gameObject.transform.position = _deleteText.gameObject.transform.position;
+                    sh.scale = new Vector3(2.2f, 0.8f, 1);
                     break;
                 case TitleSelect.ExitGame:
                     _deleteText.color = Color.white;
                     _exitText.color = Color.red;
-                    _starIcon.rectTransform.localPosition = new Vector2(-_exitText.rectTransform.rect.width / 1.8f, _exitText.transform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(-_exitText.rectTransform.rect.width / 1.8f, _exitText.transform.localPosition.y);
+                    
+                    _highLightImage.rectTransform.localPosition = _exitText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _exitText.rectTransform.rect.size;
+
+                    _selectParticle.gameObject.transform.position = _exitText.gameObject.transform.position;
+                    sh.scale = new Vector3(1, 0.8f, 1);
                     break;
             }
         }

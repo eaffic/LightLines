@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7358348919761975923}
   - component: {fileID: 7358348919761975922}
   m_Layer: 0
-  m_Name: WalkParticle
+  m_Name: Particle_Walk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

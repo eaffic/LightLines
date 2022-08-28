@@ -6,7 +6,9 @@ public class UIStageSelectMenu_UIControl : UIControl {
     //色、位置変更など必要なオブジェクト
     [SerializeField] private Text _returnText;
     [SerializeField] private Text _titleText;
-    [SerializeField] private Image _starIcon;
+    [SerializeField] private Image _highLightImage;
+    [SerializeField] private Image _starImage;
+    [SerializeField] private ParticleSystem _selectParticle;
 
     private enum StageSelectMenuUISelect { Return, Title }; //選択肢の種類
     private StageSelectMenuUISelect _currentSelect; //現在の選択
@@ -35,7 +37,9 @@ public class UIStageSelectMenu_UIControl : UIControl {
     private void Start() {
         _returnText = DictView["Text_Return"].GetComponent<Text>();
         _titleText = DictView["Text_Title"].GetComponent<Text>();
-        _starIcon = DictView["Image_Star"].GetComponent<Image>();
+        _highLightImage = DictView["Image_HighLight"].GetComponent<Image>();
+        _starImage = DictView["Image_Star"].GetComponent<Image>();
+        _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
     }
 
     private void Update()
@@ -43,7 +47,7 @@ public class UIStageSelectMenu_UIControl : UIControl {
         //入力があると、特定のUIを呼び出す
         //TODO UI管理システムの構築
         if (_enabled == false) { return; }
-        _starIcon.transform.Rotate(Vector3.forward);
+        _starImage.transform.Rotate(Vector3.forward);
 
         UpdateCursor();
         Submit();
@@ -71,18 +75,31 @@ public class UIStageSelectMenu_UIControl : UIControl {
             if (_currentSelect == oldSelect) { return; }
             AudioManager.Instance.Play("UI", "UISelect", false);
 
+            var sh = _selectParticle.shape;
             //テキストの色変更
             switch (_currentSelect)
             {
                 case StageSelectMenuUISelect.Return:
                     _returnText.color = Color.red;
                     _titleText.color = Color.white;
-                    _starIcon.rectTransform.localPosition = new Vector2(_returnText.rectTransform.localPosition.x - _returnText.rectTransform.rect.width / 1.8f, _returnText.rectTransform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(_returnText.rectTransform.localPosition.x - _returnText.rectTransform.rect.width / 1.8f, _returnText.rectTransform.localPosition.y);
+
+                    _highLightImage.rectTransform.localPosition = _returnText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _returnText.rectTransform.rect.size;
+
+                    _selectParticle.gameObject.transform.position = _returnText.gameObject.transform.position;
+                    sh.scale = new Vector3(2.2f, 1, 1);
                     break;
                 case StageSelectMenuUISelect.Title:
                     _returnText.color = Color.white;
                     _titleText.color = Color.red;
-                    _starIcon.rectTransform.localPosition = new Vector2(_titleText.rectTransform.localPosition.x - _titleText.rectTransform.rect.width / 1.8f, _titleText.rectTransform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(_titleText.rectTransform.localPosition.x - _titleText.rectTransform.rect.width / 1.8f, _titleText.rectTransform.localPosition.y);
+                    
+                    _highLightImage.rectTransform.localPosition = _titleText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _titleText.rectTransform.rect.size;
+
+                    _selectParticle.gameObject.transform.position = _titleText.gameObject.transform.position;
+                    sh.scale = new Vector3(1.5f, 1, 1);
                     break;
             }
         }
@@ -118,6 +135,7 @@ public class UIStageSelectMenu_UIControl : UIControl {
     {
         GameManager.Pause = false;
         _animator.Play("CloseMenuUI", 0);
+        _selectParticle.Stop();
     }
 
     /// <summary>
@@ -147,6 +165,12 @@ public class UIStageSelectMenu_UIControl : UIControl {
         _currentSelect = StageSelectMenuUISelect.Return;
         _returnText.color = Color.red;
         _titleText.color = Color.white;
+        _highLightImage.rectTransform.localPosition = _returnText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _returnText.rectTransform.rect.size;
+        _selectParticle.gameObject.transform.position = _returnText.gameObject.transform.position;
+        _selectParticle.Play();
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(2.2f, 1, 1);
         _animator.Play("OpenMenuUI", 0);
     }
 }

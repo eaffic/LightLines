@@ -10,9 +10,11 @@ public class UIStageInformation_UIControl : UIControl {
     [SerializeField] private Text _getItemText;
     [SerializeField] private Text _startText;
     [SerializeField] private Text _cancelText;
-    [SerializeField] private Image _starIcon;
+    [SerializeField] private Image _highLightImage;
+    [SerializeField] private Image _starImage;
     [SerializeField] private Image _stageImage;
-    //[SerializeField] private Sprite[] _stageImageList; //ステージ内容を簡単表示用のプレビュー画像
+    [SerializeField] private ParticleSystem _selectParticle;
+
     //TODO プレビュー画像ではなく、動画表示をする
 
     private enum StageSelectUISelect { Start, Cancel };
@@ -47,20 +49,19 @@ public class UIStageInformation_UIControl : UIControl {
         _getItemText = DictView["Text_GetItme"].GetComponent<Text>();
         _startText = DictView["Text_Start"].GetComponent<Text>();
         _cancelText = DictView["Text_Cancel"].GetComponent<Text>();
-        _starIcon = DictView["Image_Star"].GetComponent<Image>();
+
+        _highLightImage = DictView["Image_HighLight"].GetComponent<Image>();
+        _starImage = DictView["Image_Star"].GetComponent<Image>();
         _stageImage = DictView["Image_Stage"].GetComponent<Image>();
 
-        _currentSelect = StageSelectUISelect.Start;
-        _startText.color = Color.red;
-        _cancelText.color = Color.white;
-        _starIcon.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
+        _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
     }
 
     private void Update()
     {
         //TODO UI管理システムの構築
         if (_enabled == false) { return; }
-        _starIcon.transform.Rotate(Vector3.forward);
+        _starImage.transform.Rotate(Vector3.forward);
 
         UpdateCursor();
         Submit();
@@ -88,17 +89,30 @@ public class UIStageInformation_UIControl : UIControl {
             if (_currentSelect == oldSelect) { return; }
             AudioManager.Instance.Play("UI", "UISelect", false);
 
+            var sh = _selectParticle.shape;
             switch (_currentSelect)
             {
                 case StageSelectUISelect.Start:
                     _startText.color = Color.red;
                     _cancelText.color = Color.white;
-                    _starIcon.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
+                    
+                    _highLightImage.rectTransform.localPosition = _startText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
+
+                    _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
+                    sh.scale = new Vector3(1, 0.8f, 1);
                     break;
                 case StageSelectUISelect.Cancel:
                     _startText.color = Color.white;
                     _cancelText.color = Color.red;
-                    _starIcon.rectTransform.localPosition = new Vector2(_cancelText.rectTransform.localPosition.x - _cancelText.rectTransform.rect.width / 1.8f, _cancelText.transform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(_cancelText.rectTransform.localPosition.x - _cancelText.rectTransform.rect.width / 1.8f, _cancelText.transform.localPosition.y);
+
+                    _highLightImage.rectTransform.localPosition = _cancelText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
+
+                    _selectParticle.gameObject.transform.position = _cancelText.gameObject.transform.position;
+                    sh.scale = new Vector3(1, 0.8f, 1);
                     break;
             }
         }
@@ -142,6 +156,7 @@ public class UIStageInformation_UIControl : UIControl {
     {
         _animator.Play("CloseMenu", 0);
         GameManager.Pause = false;
+        _selectParticle.Stop();
     }
 
     /// <summary>
@@ -175,6 +190,19 @@ public class UIStageInformation_UIControl : UIControl {
         GameManager.Pause = true;
         _targetScene = scene;
         UpdateStageInfomation();
+
+        _currentSelect = StageSelectUISelect.Start;
+        _startText.color = Color.red;
+        _cancelText.color = Color.white;
+        _starImage.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
+        
+        _highLightImage.rectTransform.localPosition = _startText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
+        
+        _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
+        _selectParticle.Play();
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(2.2f, 1, 1);
     }
 
     /// <summary>

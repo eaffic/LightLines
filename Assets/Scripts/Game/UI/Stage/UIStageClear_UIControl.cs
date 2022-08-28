@@ -10,8 +10,10 @@ public class UIStageClear_UIControl : UIControl {
     [SerializeField] private Text _stageSelectText;
     [SerializeField] private Text _clearTimeText;
     [SerializeField] private Text _getItemText;
-    [SerializeField] private Image _starIcon;
+    [SerializeField] private Image _highLightImage;
+    [SerializeField] private Image _starImage;
     [SerializeField] private ParticleSystem _effectParticle;
+    [SerializeField] private ParticleSystem _selectParticle;
 
     private enum StageClearUISelect { Again, NextStage, StageSelect }; //選択肢の種類
     private StageClearUISelect _currentSelect; //現在の選択
@@ -45,14 +47,16 @@ public class UIStageClear_UIControl : UIControl {
         _stageSelectText = DictView["Text_StageSelect"].GetComponent<Text>();
         _clearTimeText = DictView["Text_ClearTime"].GetComponent<Text>();
         _getItemText = DictView["Text_GetItem"].GetComponent<Text>();
-        _starIcon = DictView["Image_Star"].GetComponent<Image>();
+        _highLightImage = DictView["Image_HighLight"].GetComponent<Image>();
+        _starImage = DictView["Image_Star"].GetComponent<Image>();
         _effectParticle = DictView["Particle_Clear"].GetComponent<ParticleSystem>();
+        _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
     }
 
     private void Update()
     {
         if (_enabled == false) { return; }
-        _starIcon.transform.Rotate(Vector3.forward);
+        _starImage.transform.Rotate(Vector3.forward);
 
         UpdateCursor();
         Submit();
@@ -87,6 +91,7 @@ public class UIStageClear_UIControl : UIControl {
             if (_currentSelect == oldSelect) { return; }
             AudioManager.Instance.Play("UI", "UISelect", false);
 
+            var sh = _selectParticle.shape;
             switch (_currentSelect)
             {
                 case StageClearUISelect.Again:
@@ -101,13 +106,21 @@ public class UIStageClear_UIControl : UIControl {
                         _againText.color = Color.red;
                         _nextStageText.color = Color.white;
                     }
-                    _starIcon.rectTransform.localPosition = new Vector2(_againText.rectTransform.localPosition.x - _againText.rectTransform.rect.width / 1.8f, _againText.rectTransform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(_againText.rectTransform.localPosition.x - _againText.rectTransform.rect.width / 1.8f, _againText.rectTransform.localPosition.y);
+                    _highLightImage.rectTransform.localPosition = _againText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _againText.rectTransform.rect.size;
+                    _selectParticle.gameObject.transform.position = _againText.gameObject.transform.position;
+                    sh.scale = new Vector3(1, 1, 1);
                     break;
                 case StageClearUISelect.NextStage:
                     _againText.color = Color.white;
                     _nextStageText.color = Color.red;
                     _stageSelectText.color = Color.white;
-                    _starIcon.rectTransform.localPosition = new Vector2(_nextStageText.rectTransform.localPosition.x - _nextStageText.rectTransform.rect.width / 1.8f, _nextStageText.rectTransform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(_nextStageText.rectTransform.localPosition.x - _nextStageText.rectTransform.rect.width / 1.8f, _nextStageText.rectTransform.localPosition.y);
+                    _highLightImage.rectTransform.localPosition = _nextStageText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _nextStageText.rectTransform.rect.size;
+                    _selectParticle.gameObject.transform.position = _nextStageText.gameObject.transform.position;
+                    sh.scale = new Vector3(2.2f, 1, 1);
                     break;
                 case StageClearUISelect.StageSelect:
                     if (_isLastStage)
@@ -121,7 +134,11 @@ public class UIStageClear_UIControl : UIControl {
                         _nextStageText.color = Color.white;
                         _stageSelectText.color = Color.red;
                     }
-                    _starIcon.rectTransform.localPosition = new Vector2(_stageSelectText.rectTransform.localPosition.x - _stageSelectText.rectTransform.rect.width / 1.8f, _stageSelectText.rectTransform.localPosition.y);
+                    _starImage.rectTransform.localPosition = new Vector2(_stageSelectText.rectTransform.localPosition.x - _stageSelectText.rectTransform.rect.width / 1.8f, _stageSelectText.rectTransform.localPosition.y);
+                    _highLightImage.rectTransform.localPosition = _stageSelectText.rectTransform.localPosition;
+                    _highLightImage.rectTransform.sizeDelta = _stageSelectText.rectTransform.rect.size;
+                    _selectParticle.gameObject.transform.position = _stageSelectText.gameObject.transform.position;
+                    sh.scale = new Vector3(3.2f, 1, 1);
                     break;
             }
 
@@ -227,13 +244,19 @@ public class UIStageClear_UIControl : UIControl {
         AudioManager.Instance.Play("BackGround", "BGMClear", false);
         StageDataManager.Instance.SaveStageClearData(); //クリアデータをセーブする
         _animator.Play("OpenStageClear", 0); //UIアニメション
-
+        UpdateStageInfoUI();
+        
         // UI初期設定
         _currentSelect = StageClearUISelect.Again;
         _againText.color = Color.red;
         _nextStageText.color = _isLastStage ? Color.gray : Color.white;
         _stageSelectText.color = Color.white;
-        _starIcon.rectTransform.localPosition = new Vector2(_againText.rectTransform.localPosition.x - _againText.rectTransform.rect.width / 1.8f, _againText.rectTransform.localPosition.y);
-        UpdateStageInfoUI();
+        _starImage.rectTransform.localPosition = new Vector2(_againText.rectTransform.localPosition.x - _againText.rectTransform.rect.width / 1.8f, _againText.rectTransform.localPosition.y);
+        _highLightImage.rectTransform.localPosition = _againText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _againText.rectTransform.rect.size;
+        _selectParticle.gameObject.transform.position = _againText.gameObject.transform.position;
+        _selectParticle.Play();
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(1, 1, 1);
     }
 }
