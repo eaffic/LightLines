@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7710880111850918841}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 0.5, z: -0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 7710880112752470823}
@@ -136,10 +136,10 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 704
-  _duration: 2
+  _colorDuration: 2
   IsPlayerPushTarget: 0
   IsSecretItemInBox: 0
-  IsContactBeltConveyor: 0
+  IsContactAccelerator: 0
   OnMove: 0
   OnRotate: 0
   OnGround: 0

@@ -14,7 +14,7 @@ public class PlayerActions : MonoBehaviour {
     [Tooltip("前方レイの長さ(箱判定用)"), SerializeField] 
     private float _forwardRayLength = 0.5f;
 
-    private GameObject _targetBox;    
+    private GameObject _targetBox;
     private bool _inBoxPushArea;    //箱のプッシュ可能範囲との接触
     private Vector3 _pushPoint;
 
@@ -23,6 +23,7 @@ public class PlayerActions : MonoBehaviour {
     }
 
     private void Update() {
+        SearchBox();
         if(_pushInputHintPanel.activeSelf){
         }
     }

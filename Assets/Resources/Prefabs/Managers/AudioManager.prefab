@@ -116,6 +116,7 @@ MonoBehaviour:
   - Source: {fileID: 0}
     Clips:
     - {fileID: 8300000, guid: 3a2780d4b2eeb2348a0ed4be0d139c3c, type: 3}
+    - {fileID: 8300000, guid: 7b8de6b3ce98060429d1620b082d1023, type: 3}
     Group: {fileID: 0}
     Name: Item
     MaxVolume: 1

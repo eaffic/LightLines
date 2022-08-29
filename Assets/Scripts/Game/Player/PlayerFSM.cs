@@ -39,7 +39,6 @@ public class PlayerFSM : MonoBehaviour {
     }
 
     private void Update() {
-        PlayerActionsControl.SearchBox();
         _currentState.OnUpdate(Time.deltaTime);
         
         //Debug.Log(_currentState.ThisState);

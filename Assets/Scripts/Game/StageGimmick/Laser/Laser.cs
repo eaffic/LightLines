@@ -83,6 +83,11 @@ public class Laser : BaseStageGimmick
                     reflectCount++;
                     continue;
                 }
+                else if(hitInfo.collider.tag == "SecretItem"){
+                    //取集アイテム
+                    //アイテムを破壊する
+                    hitInfo.transform.gameObject.GetComponent<SecretItem>().StartDissolve();
+                }
 
                 //エフェクト位置を決める
                 _endBeam.transform.position = hitInfo.point;

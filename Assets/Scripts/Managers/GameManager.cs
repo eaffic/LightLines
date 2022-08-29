@@ -48,8 +48,12 @@ public class GameManager : UnitySingleton<GameManager>
             case SceneType.Stage1_1:
             case SceneType.Stage1_2:
             case SceneType.Stage1_3:
+            case SceneType.Stage1_4:
+            case SceneType.Stage1_5:
+            case SceneType.Stage1_6:
+            case SceneType.Stage1_7:
+            case SceneType.Stage1_8:
                 AudioManager.Instance.Play("BackGround", "BGMStage", true);
-                StageDataManager.Instance.StartNewStage();
                 UIManager.Instance.ShowUIView("Stage/UIStageMenu");
                 UIManager.Instance.ShowUIView("Stage/UIStageClear");
                 UIManager.Instance.ShowUIView("InputHint/UIGameInputHint");
@@ -81,7 +85,7 @@ public class GameManager : UnitySingleton<GameManager>
         }
 
         AudioManager.Instance.StopAllSource();
-        //Debug.Log((int)GameManager.CurrentScene);
+        StageDataManager.Instance.StartNewStage();
         SceneManager.UnloadSceneAsync((int)CurrentScene); //移行前のシーンを外す
 
         _currentScene = targetScene;

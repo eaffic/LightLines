@@ -38,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
     {
         TryGetComponent(out _rigidBody);
         TryGetComponent(out _fsm);
+
+        _rippleParticle.transform.parent = null;
     }
 
     private void Update()
@@ -241,9 +243,10 @@ public class PlayerMovement : MonoBehaviour
         //壁接触エフェクト位置更新  
         if (other.gameObject.tag == "Wall")
         {
+            Vector3 player = new Vector3(transform.position.x, 0f, transform.position.z);
             _rippleParticle.transform.position = new Vector3(_lastTouchWallPosition.x, this.transform.position.y + 1f, _lastTouchWallPosition.z);
             _rippleParticle.SetActive(true);
-            _lastTouchWallPosition = other.contacts[0].point;
+            _lastTouchWallPosition = other.collider.ClosestPoint(player);
         }
     }
 
