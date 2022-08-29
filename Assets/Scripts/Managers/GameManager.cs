@@ -28,6 +28,10 @@ public class GameManager : UnitySingleton<GameManager>
         AudioManager.Instance.StartNewScene();
     }
 
+    private void Update() {
+        Debug.Log(_currentScene);
+    }
+
     /// <summary>
     /// 新しいシーンの開始設定
     /// </summary>
