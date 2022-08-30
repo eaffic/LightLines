@@ -51,7 +51,7 @@ public class PlayerActions : MonoBehaviour {
     /// </summary>
     /// <returns></returns>
     public bool SearchBox(){
-        if (_inBoxPushArea == false) { return false; } //指定位置に入らないと確認しない
+        //if (_inBoxPushArea == false) { return false; } //指定位置に入らないと確認しない
 
         //目先の確認レイ
         Ray ray = new Ray(transform.position + new Vector3(0f, _eyeHeight, 0f), transform.forward);

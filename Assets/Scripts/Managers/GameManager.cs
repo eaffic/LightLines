@@ -79,6 +79,7 @@ public class GameManager : UnitySingleton<GameManager>
     {
         GameManager.Pause = true;
         UIManager.Instance.ClearUI(); //前シーンのUIを削除する
+        SceneManager.UnloadSceneAsync((int)CurrentScene); //移行前のシーンを外す
 
         float volume = 1f;
         while (volume > 0.1f)
@@ -87,12 +88,10 @@ public class GameManager : UnitySingleton<GameManager>
             AudioManager.Instance.SetAllVolume(volume);
             yield return null;
         }
-
         AudioManager.Instance.StopAllSource();
-        StageDataManager.Instance.StartNewStage();
-        SceneManager.UnloadSceneAsync((int)CurrentScene); //移行前のシーンを外す
 
         _currentScene = targetScene;
+        StageDataManager.Instance.StartNewStage();
         SceneManager.LoadSceneAsync((int)CurrentScene, LoadSceneMode.Additive); //シーン遷移
         StartCoroutine(SetActiveScene()); 
         yield return null;

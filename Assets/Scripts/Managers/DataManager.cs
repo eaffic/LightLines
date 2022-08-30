@@ -84,7 +84,7 @@ public struct StageInfo
 /// </summary>
 public class DataManager : UnitySingleton<DataManager>
 {
-    [SerializeField] private static SaveData _saveData;
+    [SerializeField] private  SaveData _saveData;
 
     protected override void Awake()
     {
@@ -98,7 +98,7 @@ public class DataManager : UnitySingleton<DataManager>
     /// クリア記録を保存、または更新する
     /// </summary>
     /// <param name="stageInfo"></param>
-    public static void SaveStageClearData(StageInfo stageInfo)
+    public void SaveStageClearData(StageInfo stageInfo)
     {
         bool checkdata = false;
         for (int i = 0; i < _saveData.StageInfoList.Count; ++i)
@@ -131,7 +131,7 @@ public class DataManager : UnitySingleton<DataManager>
     /// </summary>
     /// <param name="stageName"></param>
     /// <returns></returns>
-    public static StageInfo GetStageInfo(SceneType type)
+    public StageInfo GetStageInfo(SceneType type)
     {
         if (_saveData == null) return new StageInfo();
 
@@ -152,9 +152,9 @@ public class DataManager : UnitySingleton<DataManager>
     /// </summary>
     /// <param name="fileName">ファイル名</param>
     /// <param name="data">セーブデータ</param>
-    public static void SaveByJson(string fileName, object data)
+    public void SaveByJson(string fileName, object data)
     {
-        DeleteSaveFile(fileName);
+        //DeleteSaveFile(fileName);
         var json = JsonUtility.ToJson(data);
         //保存位置、デバイスによって変更する
         var path = Path.Combine(Application.persistentDataPath, fileName);
@@ -176,7 +176,7 @@ public class DataManager : UnitySingleton<DataManager>
     /// <typeparam name="T">データタイプ</typeparam>
     /// <param name="fileName">ファイル名</param>
     /// <returns>データ</returns>
-    public static T LoadFromJson<T>(string fileName)
+    public T LoadFromJson<T>(string fileName)
     {
         var path = Path.Combine(Application.persistentDataPath, fileName);
 
@@ -206,13 +206,14 @@ public class DataManager : UnitySingleton<DataManager>
     /// セーブデータ削除
     /// </summary>
     /// <param name="fileName">ファイル名</param>
-    public static void DeleteSaveFile(string fileName)
+    public void DeleteSaveFile(string fileName)
     {
         var path = Path.Combine(Application.persistentDataPath, fileName);
 
         try
         {
             File.Delete(path);
+            _saveData = LoadFromJson<SaveData>("savedata.json");
             Debug.Log("delete success");
         }
         catch (Exception e)

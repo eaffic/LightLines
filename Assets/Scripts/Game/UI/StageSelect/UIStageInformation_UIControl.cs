@@ -23,7 +23,7 @@ public class UIStageInformation_UIControl : UIControl {
     private bool _enabled;
     private float _oldInput;
 
-    private Animator _animator;
+    [SerializeField] private Animator _animator;
 
     private void OnEnable()
     {
@@ -40,10 +40,10 @@ public class UIStageInformation_UIControl : UIControl {
     protected override void Awake()
     {
         base.Awake();
-        TryGetComponent(out _animator);
     }
 
     private void Start() {
+        TryGetComponent(out _animator);
         _titleText = DictView["Text_Title"].GetComponent<Text>();
         _clearTimeText = DictView["Text_ClearTime"].GetComponent<Text>();
         _getItemText = DictView["Text_GetItme"].GetComponent<Text>();
@@ -55,6 +55,19 @@ public class UIStageInformation_UIControl : UIControl {
         _stageImage = DictView["Image_Stage"].GetComponent<Image>();
 
         _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
+
+        //初期設定
+        _currentSelect = StageSelectUISelect.Start;
+        _startText.color = Color.red;
+        _cancelText.color = Color.white;
+        _starImage.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
+
+        _highLightImage.rectTransform.localPosition = _startText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
+
+        _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(1.2f, 0.8f, 1);
     }
 
     private void Update()
@@ -101,7 +114,7 @@ public class UIStageInformation_UIControl : UIControl {
                     _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
 
                     _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
-                    sh.scale = new Vector3(1, 0.8f, 1);
+                    sh.scale = new Vector3(1.2f, 0.8f, 1);
                     break;
                 case StageSelectUISelect.Cancel:
                     _startText.color = Color.white;
@@ -112,7 +125,7 @@ public class UIStageInformation_UIControl : UIControl {
                     _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
 
                     _selectParticle.gameObject.transform.position = _cancelText.gameObject.transform.position;
-                    sh.scale = new Vector3(1, 0.8f, 1);
+                    sh.scale = new Vector3(1.4f, 0.8f, 1);
                     break;
             }
         }
@@ -164,7 +177,7 @@ public class UIStageInformation_UIControl : UIControl {
     /// </summary>
     private void UpdateStageInfomation()
     {
-        StageInfo info = DataManager.GetStageInfo(_targetScene);
+        StageInfo info = DataManager.Instance.GetStageInfo(_targetScene);
         _stageImage.sprite = Resources.Load<Sprite>("Textures/UI/Stage/" + _targetScene.ToString());
         _titleText.text = _targetScene.ToString();
         string s = String.Format("{0:00}:{1:00}:{2:00}",
@@ -190,19 +203,7 @@ public class UIStageInformation_UIControl : UIControl {
         GameManager.Pause = true;
         _targetScene = scene;
         UpdateStageInfomation();
-
-        _currentSelect = StageSelectUISelect.Start;
-        _startText.color = Color.red;
-        _cancelText.color = Color.white;
-        _starImage.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
-        
-        _highLightImage.rectTransform.localPosition = _startText.rectTransform.localPosition;
-        _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
-        
-        _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
         _selectParticle.Play();
-        var sh = _selectParticle.shape;
-        sh.scale = new Vector3(2.2f, 1, 1);
     }
 
     /// <summary>

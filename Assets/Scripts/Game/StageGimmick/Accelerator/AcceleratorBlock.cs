@@ -9,7 +9,7 @@ public class AcceleratorBlock : BaseStageGimmick
     [SerializeField] private Vector3 _moveOffset = Vector3.zero;
 
     [SerializeField] private List<GameObject> _targetBox;
-    [SerializeField] private GameObject _nextBeltConveyor; //次の移動先のベルトコンペア
+    [SerializeField] private GameObject _nextAccelerator; //次の移動先の加速器
 
     private Vector3 _targetPositon;
     private LineRenderer _lineRenderer;
@@ -31,7 +31,7 @@ public class AcceleratorBlock : BaseStageGimmick
             if (item.transform.tag == "AcceleratorBlock")
             {
                 if ((item.transform.position - (transform.position + _moveOffset)).magnitude < 0.1f){
-                    _nextBeltConveyor = item.transform.gameObject;
+                    _nextAccelerator = item.transform.gameObject;
                 }
             }
         }
@@ -92,7 +92,7 @@ public class AcceleratorBlock : BaseStageGimmick
                     if (item.GetComponent<Box>().MoveBox(_moveOffset))
                     {
                         //次の加速器はない場合、連結を除去する
-                        if (_nextBeltConveyor == null)
+                        if (_nextAccelerator == null)
                         {
                             item.GetComponent<Box>().IsContactAccelerator = false;
                         }

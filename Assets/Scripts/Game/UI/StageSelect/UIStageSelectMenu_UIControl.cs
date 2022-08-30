@@ -31,15 +31,25 @@ public class UIStageSelectMenu_UIControl : UIControl {
     protected override void Awake()
     {
         base.Awake();
-        TryGetComponent(out _animator);
     }
 
     private void Start() {
+        TryGetComponent(out _animator);
         _returnText = DictView["Text_Return"].GetComponent<Text>();
         _titleText = DictView["Text_Title"].GetComponent<Text>();
         _highLightImage = DictView["Image_HighLight"].GetComponent<Image>();
         _starImage = DictView["Image_Star"].GetComponent<Image>();
         _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
+
+        //初期設定
+        _currentSelect = StageSelectMenuUISelect.Return;
+        _returnText.color = Color.red;
+        _titleText.color = Color.white;
+        _highLightImage.rectTransform.localPosition = _returnText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _returnText.rectTransform.rect.size;
+        _selectParticle.gameObject.transform.position = _returnText.gameObject.transform.position;
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(2.4f, 1, 1);
     }
 
     private void Update()
@@ -88,7 +98,7 @@ public class UIStageSelectMenu_UIControl : UIControl {
                     _highLightImage.rectTransform.sizeDelta = _returnText.rectTransform.rect.size;
 
                     _selectParticle.gameObject.transform.position = _returnText.gameObject.transform.position;
-                    sh.scale = new Vector3(2.2f, 1, 1);
+                    sh.scale = new Vector3(2.4f, 1, 1);
                     break;
                 case StageSelectMenuUISelect.Title:
                     _returnText.color = Color.white;
@@ -162,15 +172,7 @@ public class UIStageSelectMenu_UIControl : UIControl {
 
         AudioManager.Instance.Play("UI", "UIOpenMenu", false);
         GameManager.Pause = true;
-        _currentSelect = StageSelectMenuUISelect.Return;
-        _returnText.color = Color.red;
-        _titleText.color = Color.white;
-        _highLightImage.rectTransform.localPosition = _returnText.rectTransform.localPosition;
-        _highLightImage.rectTransform.sizeDelta = _returnText.rectTransform.rect.size;
-        _selectParticle.gameObject.transform.position = _returnText.gameObject.transform.position;
         _selectParticle.Play();
-        var sh = _selectParticle.shape;
-        sh.scale = new Vector3(2.2f, 1, 1);
         _animator.Play("OpenMenuUI", 0);
     }
 }

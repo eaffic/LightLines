@@ -6,7 +6,7 @@ using UnityEngine;
 public class StageDataManager : UnitySingleton<StageDataManager> {
 
     public int TotalScretItemCountInStage = 0;
-    private StageInfo _currentStageClearInfo;
+    [SerializeField] private StageInfo _currentStageClearInfo;
 
     private float _timer = 0f;
     [SerializeField]private int _getItemCount;
@@ -41,7 +41,7 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
         _currentStageClearInfo.ClearTime = _timer;
         _currentStageClearInfo.SecretItemMaxCount = TotalScretItemCountInStage;
         _currentStageClearInfo.SecretItemCount = _getItemCount;
-        DataManager.SaveStageClearData(_currentStageClearInfo);
+        DataManager.Instance.SaveStageClearData(_currentStageClearInfo);
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
     // ステージ入る前のリセット
     public void StartNewStage(){
         // ステージのクリア状況を取得する
-        _currentStageClearInfo = DataManager.GetStageInfo(GameManager.CurrentScene);
+        _currentStageClearInfo = DataManager.Instance.GetStageInfo(GameManager.CurrentScene);
         _currentStageClearInfo.StageType = GameManager.CurrentScene;
 
         _timer = 0f;

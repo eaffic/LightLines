@@ -39,7 +39,7 @@ public class UITitle_UIControl : UIControl {
 
         _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
         var sh = _selectParticle.shape;
-        sh.scale = new Vector3(2.2f, 0.8f, 1);
+        sh.scale = new Vector3(3f, 0.8f, 1);
         _selectParticle.Play();
     }
 
@@ -92,7 +92,7 @@ public class UITitle_UIControl : UIControl {
                     _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
 
                     _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
-                    sh.scale = new Vector3(2.2f, 0.8f, 1);
+                    sh.scale = new Vector3(3f, 0.8f, 1);
                     break;
                 case TitleSelect.DeleteData:
                     _startText.color = Color.white;
@@ -104,7 +104,7 @@ public class UITitle_UIControl : UIControl {
                     _highLightImage.rectTransform.sizeDelta = _deleteText.rectTransform.rect.size;
 
                     _selectParticle.gameObject.transform.position = _deleteText.gameObject.transform.position;
-                    sh.scale = new Vector3(2.2f, 0.8f, 1);
+                    sh.scale = new Vector3(3f, 0.8f, 1);
                     break;
                 case TitleSelect.ExitGame:
                     _deleteText.color = Color.white;
@@ -161,7 +161,7 @@ public class UITitle_UIControl : UIControl {
     private void DeleteData()
     {
         _deleteHintText.enabled = true;
-        DataManager.DeleteSaveFile("savedata.json");
+        DataManager.Instance.DeleteSaveFile("savedata.json");
     }
 
     private void ExitGame()

@@ -35,15 +35,6 @@ namespace GameEnumList
     }
 
     /// <summary>
-    /// ギミックタイプ
-    /// </summary>
-    public enum GimmickType
-    {
-        RotateBlock,
-        MoveBlock,
-    }
-
-    /// <summary>
     /// ステージ内のカメラ状態
     /// </summary>
     public enum StageCameraState

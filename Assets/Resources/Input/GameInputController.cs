@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Input/GameInputController.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Resources/Input/GameInputController.inputactions'
 
 using System;
 using System.Collections;
@@ -296,7 +296,7 @@ public class @GameInputController : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""34a96238-a3b2-4238-9497-6393bdf6129d"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -318,7 +318,7 @@ public class @GameInputController : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1f7cd1f3-44c8-4d4c-b3ed-1d455bc79579"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

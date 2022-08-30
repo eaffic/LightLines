@@ -37,10 +37,18 @@ public class FadeInOut : UnitySingleton<FadeInOut>
     }
 
     public void StartFadeIn(){
+        //テスト
+        IntoNewScene.Instance.IntoScene();
+        //
+
         StartCoroutine(FadeIn());
     }
 
     public void StartFadeOut(){
+        //テスト
+        IntoNewScene.Instance.ExitScene();
+        //
+
         StartCoroutine(FadeOut());
     }
 

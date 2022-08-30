@@ -97,9 +97,9 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.18571472
-        inSlope: 0
-        outSlope: 0
+        value: 0.19686809
+        inSlope: 0.0076802215
+        outSlope: 0.0076802215
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -160,6 +160,6 @@ MonoBehaviour:
   _isOpen: 0
   _moveTime: 0.3
   _colorDuration: 2
-  _moveOffset: {x: 0, y: 0, z: -1}
+  _moveOffset: {x: 0, y: 0, z: 6}
   _targetBox: []
   _nextBeltConveyor: {fileID: 0}

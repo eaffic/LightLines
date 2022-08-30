@@ -36,10 +36,10 @@ public class UIStageMenu_UIControl : UIControl {
     protected override void Awake()
     {
         base.Awake();
-        TryGetComponent(out _animator);
     }
 
     private void Start() {
+        TryGetComponent(out _animator);
         _titleText = DictView["Text_Title"].GetComponent<Text>();
         _returnText = DictView["Text_Return"].GetComponent<Text>();
         _restartText = DictView["Text_Restart"].GetComponent<Text>();
@@ -49,6 +49,19 @@ public class UIStageMenu_UIControl : UIControl {
         _highLightImage = DictView["Image_HighLight"].GetComponent<Image>();
         _starImage = DictView["Image_Star"].GetComponent<Image>();
         _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
+
+        //初期設定
+        _currentSelect = StageMenuUISelect.Return;
+        _starImage.rectTransform.localPosition = new Vector2(_returnText.rectTransform.localPosition.x - _returnText.rectTransform.rect.width / 1.8f, _returnText.rectTransform.localPosition.y);
+        _returnText.color = Color.red;
+        _restartText.color = Color.white;
+        _stageSelectText.color = Color.white;
+        _highLightImage.rectTransform.localPosition = _returnText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _returnText.rectTransform.rect.size;
+        _selectParticle.gameObject.transform.position = _returnText.gameObject.transform.position;
+        
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(2.4f, 1, 1);
     }
 
     private void Update()
@@ -92,7 +105,7 @@ public class UIStageMenu_UIControl : UIControl {
                     _highLightImage.rectTransform.localPosition = _returnText.rectTransform.localPosition;
                     _highLightImage.rectTransform.sizeDelta = _returnText.rectTransform.rect.size;
                     _selectParticle.gameObject.transform.position = _returnText.gameObject.transform.position;
-                    sh.scale = new Vector3(2, 1, 1);
+                    sh.scale = new Vector3(2.4f, 1, 1);
                     break;
                 case StageMenuUISelect.Restart:
                     _returnText.color = Color.white;
@@ -102,7 +115,7 @@ public class UIStageMenu_UIControl : UIControl {
                     _highLightImage.rectTransform.localPosition = _restartText.rectTransform.localPosition;
                     _highLightImage.rectTransform.sizeDelta = _restartText.rectTransform.rect.size;
                     _selectParticle.gameObject.transform.position = _restartText.gameObject.transform.position;
-                    sh.scale = new Vector3(2, 1, 1);
+                    sh.scale = new Vector3(2.6f, 1, 1);
                     break;
                 case StageMenuUISelect.StageSelect:
                     _restartText.color = Color.white;
@@ -111,7 +124,7 @@ public class UIStageMenu_UIControl : UIControl {
                     _highLightImage.rectTransform.localPosition = _stageSelectText.rectTransform.localPosition;
                     _highLightImage.rectTransform.sizeDelta = _stageSelectText.rectTransform.rect.size;
                     _selectParticle.gameObject.transform.position = _stageSelectText.gameObject.transform.position;
-                    sh.scale = new Vector3(3, 1, 1);
+                    sh.scale = new Vector3(4f, 1, 1);
                     break;
             }
         }
@@ -206,17 +219,6 @@ public class UIStageMenu_UIControl : UIControl {
         GameManager.Pause = true;
         _animator.Play("OpenStageMenu", 0);
         UpdateStageInfoUI();
-
-        _currentSelect = StageMenuUISelect.Return;
-        _starImage.rectTransform.localPosition = new Vector2(_returnText.rectTransform.localPosition.x - _returnText.rectTransform.rect.width / 1.8f, _returnText.rectTransform.localPosition.y);
-        _returnText.color = Color.red;
-        _restartText.color = Color.white;
-        _stageSelectText.color = Color.white;
-        _highLightImage.rectTransform.localPosition = _returnText.rectTransform.localPosition;
-        _highLightImage.rectTransform.sizeDelta = _returnText.rectTransform.rect.size;
-        _selectParticle.gameObject.transform.position = _returnText.gameObject.transform.position;
         _selectParticle.Play();
-        var sh = _selectParticle.shape;
-        sh.scale = new Vector3(2, 1, 1);
     }
 }
