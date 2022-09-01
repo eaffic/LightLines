@@ -35,6 +35,7 @@ Material:
     - Vector1_6b3cd8d4e3254b838826e9c37f10dfbe: 0.49999
     - Vector1_d2534eb38216442e861f08c0388a6f4c: 12.39
     - _CufoffHeight: 1
+    - _CutoffHeight: -0.35
     - _EdgeWidth: 0.1
     - _NoiseSrength: 1
     m_Colors:

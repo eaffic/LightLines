@@ -299,7 +299,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: 0, y: 0, z: -5}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &38186000
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -423,7 +423,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 30
+  m_RootOrder: 29
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &41774041
 GameObject:
@@ -557,7 +557,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: -1, y: 0, z: 0}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &73375290
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -1087,7 +1087,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: 6, y: 0, z: 0}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &200510573
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -1211,7 +1211,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 35
+  m_RootOrder: 34
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &252640207
 GameObject:
@@ -3218,7 +3218,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: -5, y: 0, z: 0}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &516826703
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -3342,7 +3342,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 31
+  m_RootOrder: 30
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &567850269
 GameObject:
@@ -3476,7 +3476,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: 3, y: 0, z: 0}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &570566849
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -5129,7 +5129,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: 0, y: 1, z: 0}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &735176462
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -5292,7 +5292,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: 0, y: 0, z: 4}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &738068393
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -5416,7 +5416,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 34
+  m_RootOrder: 33
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &756270399
 GameObject:
@@ -7042,7 +7042,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: 0, y: 0, z: 2}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &858436702
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -7166,7 +7166,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 32
+  m_RootOrder: 31
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &924885790
 Mesh:
@@ -8005,7 +8005,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: 0, y: 10, z: 0}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &1132303203
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -8263,7 +8263,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: 0, y: 0, z: 1}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &1229539566
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -10364,7 +10364,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: -2, y: 0, z: -2}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &1418896563
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -10884,7 +10884,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: 0, y: 3, z: 0}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &1469192547
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -11488,7 +11488,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: 0, y: 0, z: -1}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &1692395643
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -11807,7 +11807,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: -2, y: 0, z: 2}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &1722511503
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -12558,7 +12558,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: 1, y: 0, z: 0}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &1911075932
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -13273,7 +13273,7 @@ MonoBehaviour:
   _colorDuration: 2
   _moveOffset: {x: -1, y: 0, z: 0}
   _targetBox: []
-  _nextBeltConveyor: {fileID: 0}
+  _nextAccelerator: {fileID: 0}
 --- !u!120 &2087238808
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -13397,7 +13397,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 33
+  m_RootOrder: 32
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2099564216
 GameObject:
@@ -19865,9 +19865,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: AcceleratorBlock
       objectReference: {fileID: 0}
+    - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
+      propertyPath: _moveOffset.z
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373883, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: m_RootOrder
-      value: 29
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373883, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -19887,15 +19891,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373883, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373883, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373883, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373883, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
