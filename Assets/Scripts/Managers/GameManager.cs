@@ -32,7 +32,10 @@ public class GameManager : UnitySingleton<GameManager>
     }
 
     private void Update() {
-        Debug.Log(_currentScene);
+        //Debug.Log(_currentScene);
+        if(GameInputManager.Instance.GetExitGameInput()){
+            Application.Quit();
+        }
     }
 
     /// <summary>

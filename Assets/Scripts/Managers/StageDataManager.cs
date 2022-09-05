@@ -67,4 +67,12 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
         _getItemCount = 0;
         TotalScretItemCountInStage = 0;
     }
+
+    public bool NewTimeRecord(){
+        return _currentStageClearInfo.ClearTime == 0 || _currentStageClearInfo.ClearTime > _timer;
+    }
+
+    public bool NewItemRecord(){
+        return _currentStageClearInfo.SecretItemCount < _getItemCount;
+    }
 }

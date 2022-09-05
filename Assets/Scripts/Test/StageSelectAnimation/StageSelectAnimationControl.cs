@@ -18,6 +18,8 @@ public class StageSelectAnimationControl : UnitySingleton<StageSelectAnimationCo
     }
 
     private void Start() {
+        if (GameManager.CurrentScene != SceneType.StageSelect) { return; }
+
         SetPlayerPosition();
         StartToAreaAnimation();
     }
@@ -271,6 +273,7 @@ public class StageSelectAnimationControl : UnitySingleton<StageSelectAnimationCo
 
         item.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
         item.layer = LayerMask.NameToLayer("Ground");
+        item.transform.parent = this.transform;
         return item;
     }
 
@@ -296,6 +299,7 @@ public class StageSelectAnimationControl : UnitySingleton<StageSelectAnimationCo
 
         item.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
         item.layer = LayerMask.NameToLayer("Ground");
+        item.transform.parent = this.transform;
         return item;
     }
 }

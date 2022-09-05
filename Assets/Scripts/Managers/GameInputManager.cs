@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using GameEnumList;
+using UnityEngine.InputSystem.Controls;
+using System.Linq;
 
 /// <summary>
 /// 入力管理クラス
@@ -110,9 +111,15 @@ public class GameInputManager : UnitySingleton<GameInputManager>
         return _gameInputController.UI.OpenCLoseMenu.triggered;
     }
 
-    public void GetExitGameInput()
+    public bool GetExitGameInput()
     {
-        Application.Quit();
+        return _gameInputController.UI.ExitGame.triggered;
+    }
+
+    public bool GetAnyButtonInput(){
+        bool check = false;
+        check =  Keyboard.current.anyKey.wasPressedThisFrame || Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic);
+        return check;
     }
 
     /// <summary>

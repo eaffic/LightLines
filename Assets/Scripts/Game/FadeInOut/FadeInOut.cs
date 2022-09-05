@@ -37,20 +37,12 @@ public class FadeInOut : UnitySingleton<FadeInOut>
     }
 
     public void StartFadeIn(){
-        //テスト
-        IntoNewScene.Instance.IntoScene();
-        //
-
         StartCoroutine(FadeIn());
     }
 
-    public void StartFadeOut(){
-        //テスト
-        IntoNewScene.Instance.ExitScene();
-        //
-
-        StartCoroutine(FadeOut());
-    }
+    // public void StartFadeOut(){
+    //     StartCoroutine(FadeOut());
+    // }
 
     IEnumerator FadeIn(){
         float cutoff = _theImage.material.GetFloat("_Cutoff");
@@ -82,6 +74,13 @@ public class FadeInOut : UnitySingleton<FadeInOut>
 
     //----------------------------------------------------
     public void OnNotify(SceneType type){
+        //テスト
+        try
+        {
+            GameObject.Find("Player").GetComponent<PlayerMaterial>().ExitScene();
+        }catch{}
+        //
+
         GameManager.OnSceneChange = true;
         _sceneToLoad = type;
         StartCoroutine(FadeOut());

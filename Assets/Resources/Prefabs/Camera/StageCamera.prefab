@@ -135,7 +135,7 @@ MonoBehaviour:
   _focus: {fileID: 0}
   _distance: 5
   _minDistance: 2
-  _maxDistance: 8
+  _maxDistance: 10
   _focusRadius: 1
   _focusCentering: 0.5
   _rotationSpeed: 90

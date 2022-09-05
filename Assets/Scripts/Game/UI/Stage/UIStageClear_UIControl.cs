@@ -10,6 +10,8 @@ public class UIStageClear_UIControl : UIControl {
     [SerializeField] private Text _stageSelectText;
     [SerializeField] private Text _clearTimeText;
     [SerializeField] private Text _getItemText;
+    [SerializeField] private Text _newTimeText;
+    [SerializeField] private Text _newItemText;
     [SerializeField] private Image _highLightImage;
     [SerializeField] private Image _starImage;
     [SerializeField] private ParticleSystem _effectParticle;
@@ -22,6 +24,8 @@ public class UIStageClear_UIControl : UIControl {
     private float _oldInput; //前フレームの入力
 
     private bool _isLastStage => (GameManager.CurrentScene + 1) == SceneType.NULLSCENE; //次のステージの存在確認
+    private bool _newTimeRecord;
+    private bool _newItemRecord;
 
     private void OnEnable()
     {
@@ -47,6 +51,8 @@ public class UIStageClear_UIControl : UIControl {
         _stageSelectText = DictView["Text_StageSelect"].GetComponent<Text>();
         _clearTimeText = DictView["Text_ClearTime"].GetComponent<Text>();
         _getItemText = DictView["Text_GetItem"].GetComponent<Text>();
+        _newTimeText = DictView["Text_NewTime"].GetComponent<Text>();
+        _newItemText = DictView["Text_NewItem"].GetComponent<Text>();
         _highLightImage = DictView["Image_HighLight"].GetComponent<Image>();
         _starImage = DictView["Image_Star"].GetComponent<Image>();
         _effectParticle = DictView["Particle_Clear"].GetComponent<ParticleSystem>();
@@ -251,6 +257,9 @@ public class UIStageClear_UIControl : UIControl {
     {
         if (uiName != "ClearUI") { return; }
         if (GameManager.Pause) { return; }
+
+        if (StageDataManager.Instance.NewTimeRecord()) { _newTimeText.gameObject.SetActive(true); }
+        if (StageDataManager.Instance.NewItemRecord()) { _newItemText.gameObject.SetActive(true); }
 
         GameManager.Pause = true;
         AudioManager.Instance.Play("BackGround", "BGMClear", false);

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using GameEnumList;
+using UnityEngine.InputSystem;
 
 public class UITitle_UIControl : UIControl {
     [SerializeField] private Text _startText;
@@ -14,12 +15,18 @@ public class UITitle_UIControl : UIControl {
     private enum TitleSelect { GameStart, DeleteData, ExitGame }; //選択肢の種類
     private TitleSelect _currentSelect = default; //現在の選択
     private float _oldinput; //前回の選択
+    private bool _enabled;
+
+    private Animator _animator;
+    private bool _isStart; //最初のボタン
 
     protected override void Awake() {
         base.Awake();
     }
 
     private void Start() {
+        TryGetComponent(out _animator);
+
         _startText = DictView["Text_Start"].GetComponent<Text>();
         _deleteText = DictView["Text_DeleteData"].GetComponent<Text>();
         _deleteHintText = DictView["Text_DeleteHint"].GetComponent<Text>();
@@ -40,11 +47,22 @@ public class UITitle_UIControl : UIControl {
         _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
         var sh = _selectParticle.shape;
         sh.scale = new Vector3(3f, 0.8f, 1);
-        _selectParticle.Play();
+        //_selectParticle.Play();
     }
 
     private void Update()
     {
+        if(_isStart == false){
+            if(GameInputManager.Instance.GetAnyButtonInput()){
+                _isStart = true;
+                _animator.Play("TitleNormal");
+                AudioManager.Instance.Play("UI", "UISubmit", false);
+            }
+            return;
+        }
+
+        if (_enabled == false) { return; }
+
         //カーソルマークをゆっくり回転させる
         _starImage.transform.Rotate(Vector3.forward);
 
@@ -168,5 +186,14 @@ public class UITitle_UIControl : UIControl {
     {
         //ゲーム終了
         Application.Quit();
+    }
+
+    /// <summary>
+    /// アニメションの終了確認
+    /// </summary>
+    public void TitleUIAnimationEnd()
+    {
+        _enabled = !_enabled;
+        _selectParticle.Play();
     }
 }
