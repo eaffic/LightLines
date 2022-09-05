@@ -86,7 +86,7 @@ public class Laser : BaseStageGimmick
                 else if(hitInfo.collider.tag == "SecretItem"){
                     //取集アイテム
                     //アイテムを破壊する
-                    hitInfo.transform.gameObject.GetComponent<SecretItem>().StartDissolve();
+                    hitInfo.transform.gameObject.GetComponent<Item>().StartDissolve();
                 }
 
                 //エフェクト位置を決める

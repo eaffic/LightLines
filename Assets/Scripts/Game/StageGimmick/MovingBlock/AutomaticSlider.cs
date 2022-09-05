@@ -32,6 +32,13 @@ public class AutomaticSlider : BaseStageGimmick
         EventCenter.RemoveButtonListener(OnNotify);
     }
 
+    private void Awake() {
+        Renderer renderer;
+        if(TryGetComponent(out renderer)){
+            renderer.material.SetColor("_Color", Color.red);
+        }
+    }
+
     void FixedUpdate()
     {
         float delta = Time.deltaTime / _duration;
@@ -119,7 +126,7 @@ public class AutomaticSlider : BaseStageGimmick
     /// <param name="state"></param>
     public override void OnNotify(int id, bool state)
     {
-        if (ID != id) { return; }
+        if (ID != id) { if (ID == 1 && id == 1) { Debug.Log(id); } return; }
         _isOpen = state;
     }
 }

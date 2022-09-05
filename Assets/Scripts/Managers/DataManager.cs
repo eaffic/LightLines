@@ -9,11 +9,11 @@ using GameEnumList;
 public class SaveData
 {
     [SerializeField]
-    private int _lastClearStage; //クリアしたの最新ステージ
+    private SceneType _lastClearStage; //クリアしたの最新ステージ
     [SerializeField]
     private List<StageInfo> _stageInfoList = new List<StageInfo>(); //各ステージの記録
 
-    public int LastClearStage { 
+    public SceneType LastClearStage { 
         get => _lastClearStage;
         set => _lastClearStage = _lastClearStage < value ? value : _lastClearStage;
     }
@@ -26,7 +26,7 @@ public class SaveData
     {
         this.LastClearStage = 0;
     }
-    public SaveData(int clearStage, List<StageInfo> stageInfo)
+    public SaveData(SceneType clearStage, List<StageInfo> stageInfo)
     {
         this.LastClearStage = clearStage;
     }
@@ -84,7 +84,7 @@ public struct StageInfo
 /// </summary>
 public class DataManager : UnitySingleton<DataManager>
 {
-    [SerializeField] private  SaveData _saveData;
+    [SerializeField] private SaveData _saveData;
 
     protected override void Awake()
     {
@@ -94,12 +94,18 @@ public class DataManager : UnitySingleton<DataManager>
         _saveData = LoadFromJson<SaveData>("savedata.json"); //既有データをロードする
     }
 
+    public SceneType GetLastClearStage(){
+        return _saveData.LastClearStage;
+    }
+
     /// <summary>
     /// クリア記録を保存、または更新する
     /// </summary>
     /// <param name="stageInfo"></param>
     public void SaveStageClearData(StageInfo stageInfo)
     {
+        
+
         bool checkdata = false;
         for (int i = 0; i < _saveData.StageInfoList.Count; ++i)
         {
@@ -120,7 +126,7 @@ public class DataManager : UnitySingleton<DataManager>
         if (!checkdata)
         {
             _saveData.StageInfoList.Add(stageInfo);
-            _saveData.LastClearStage++;
+            _saveData.LastClearStage = GameManager.CurrentScene;
         }
 
         SaveByJson("savedata.json", _saveData);

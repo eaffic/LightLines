@@ -225,11 +225,11 @@ public class PlayerMovement : MonoBehaviour
         if (other.gameObject.tag == "Wall")
         {
             Vector3 player = new Vector3(transform.position.x, 0f, transform.position.z);
-            Vector3 contact = other.collider.ClosestPoint(player);
+            Vector3 contact = new Vector3(other.collider.ClosestPoint(player).x, 0, other.collider.ClosestPoint(player).z);
 
-            float angle = Vector3.Angle(player - contact, Vector3.right);
+            float angle = Vector3.Angle(player - contact, Vector3.forward);
 
-            _rippleParticle.transform.eulerAngles = new Vector3(0, angle + 90, 0);
+            _rippleParticle.transform.eulerAngles = new Vector3(0, angle, 0);
             _rippleParticle.transform.position = other.collider.ClosestPoint(player);
             _lastTouchWallPosition = other.contacts[0].point;
             _rippleParticle.SetActive(true);

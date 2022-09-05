@@ -20,7 +20,6 @@ public class IntoNewScene : UnitySingleton<IntoNewScene> {
     }
 
     public void IntoScene(){
-        Debug.Log("into");
         StartCoroutine(StartIntoScene());
     }
 

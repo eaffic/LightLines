@@ -19,7 +19,6 @@ public class PlayerFSM : MonoBehaviour {
 
     private void Awake() {
         PlayerData.PlayerInputSpace = Camera.main.gameObject.transform;
-        
 
         TryGetComponent(out PlayerMovementControl);
         TryGetComponent(out PlayerAnimationControl);

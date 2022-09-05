@@ -987,11 +987,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2789342162673112767}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba9b1db907948314a8ef5f79da334441, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c0455ba92185d741b30b441f9ce9b9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   OnDissolve: 0
-  _rotateSpeed: 120
+  _rotateSpeed: 1
 --- !u!65 &1561819499
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -21,11 +21,11 @@ MonoBehaviour:
   _walkAcceleration: 10
   _runAcceleration: 5
   _airAcceleration: 5
-  _slopeAcceleration: 15
+  _slopeAcceleration: 35
   _jumpHeight: 1.5
   _maxAirJumps: 0
   _probeDistance: 0.2
-  _maxGroundAngle: 45
+  _maxGroundAngle: 60
   _probeMask:
     serializedVersion: 2
     m_Bits: 705

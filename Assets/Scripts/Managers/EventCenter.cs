@@ -14,12 +14,13 @@ public class EventCenter
     private static List<IStageGimmick> _laserTargetList = new List<IStageGimmick>(16);
 
     #region 委託リスト
-    private static List<Action> _stageSecretItemObserver = new List<Action>(8); //ステージ内の隠しアイテム
-    private static List<Action<string>> _uiObserver = new List<Action<string>>(8); //ui
+    private static List<Action> _stageItemObserver = new List<Action>(8); //アイテム獲得時
+    private static List<Action<string>> _uiObserver = new List<Action<string>>(8); //ui呼び出し
     private static List<Action<bool>> _stageClearObserver = new List<Action<bool>>(8); //クリア時
     private static List<Action<int, bool>> _buttonObserver = new List<Action<int, bool>>(256); //サイズは先に決まります
     private static List<Action<SceneType>> _fadeInOutObserver = new List<Action<SceneType>>(8); //フェード効果
     private static List<Action<SceneType>> _stageInfomationObserver = new List<Action<SceneType>>(8); //ステージ情報
+
     #endregion
 
     #region ボタンと連動するギミック
@@ -141,27 +142,27 @@ public class EventCenter
     #endregion
 
     #region ステージ内の収集道具
-    public static void AddStageSecretItemListener(Action action)
+    public static void AddStageItemListener(Action action)
     {
-        if (!_stageSecretItemObserver.Contains(action))
+        if (!_stageItemObserver.Contains(action))
         {
-            _stageSecretItemObserver.Add(action);
+            _stageItemObserver.Add(action);
         }
     }
-    public static void RemoveStageSecretItemListener(Action action)
+    public static void RemoveStageItemListener(Action action)
     {
-        _stageSecretItemObserver.Remove(action);
+        _stageItemObserver.Remove(action);
     }
 
     public static void GetSecretItemNotify()
     {
         if (Enabled == false) { return; }
 
-        for (int i = _stageSecretItemObserver.Count - 1; i >= 0; --i)
+        for (int i = _stageItemObserver.Count - 1; i >= 0; --i)
         {
-            if (_stageSecretItemObserver[i] != null)
+            if (_stageItemObserver[i] != null)
             {
-                _stageSecretItemObserver[i].Invoke();
+                _stageItemObserver[i].Invoke();
             }
         }
     }

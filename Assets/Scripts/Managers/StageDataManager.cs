@@ -12,11 +12,11 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
     [SerializeField]private int _getItemCount;
 
     private void OnEnable() {
-        EventCenter.AddStageSecretItemListener(GetItemNotify);
+        EventCenter.AddStageItemListener(GetItemNotify);
     }
 
     private void OnDisable() {
-        EventCenter.RemoveStageSecretItemListener(GetItemNotify);
+        EventCenter.RemoveStageItemListener(GetItemNotify);
     }
 
     protected override void Awake() {

@@ -7,6 +7,9 @@ using GameEnumList;
 
 public class GameManager : UnitySingleton<GameManager>
 {
+    private static SceneType _previewScene;
+    public static SceneType PreviewScene => _previewScene;
+
     private static SceneType _currentScene;
     public static SceneType CurrentScene => _currentScene;
 
@@ -90,6 +93,7 @@ public class GameManager : UnitySingleton<GameManager>
         }
         AudioManager.Instance.StopAllSource();
 
+        _previewScene = _currentScene >= SceneType.Stage1_1 ? _currentScene : _previewScene;
         _currentScene = targetScene;
         StageDataManager.Instance.StartNewStage();
         SceneManager.LoadSceneAsync((int)CurrentScene, LoadSceneMode.Additive); //シーン遷移
