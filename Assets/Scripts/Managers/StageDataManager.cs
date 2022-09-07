@@ -41,6 +41,7 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
         _currentStageClearInfo.ClearTime = _timer;
         _currentStageClearInfo.SecretItemMaxCount = TotalScretItemCountInStage;
         _currentStageClearInfo.SecretItemCount = _getItemCount;
+        _currentStageClearInfo.IsClear = true;
         DataManager.Instance.SaveStageClearData(_currentStageClearInfo);
     }
 
@@ -54,6 +55,7 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
         info.ClearTime = _timer;
         info.SecretItemMaxCount = TotalScretItemCountInStage;
         info.SecretItemCount = _getItemCount;
+        info.IsClear = _currentStageClearInfo.IsClear;
         return info;
     }
 

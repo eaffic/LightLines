@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using GameEnumList;
+using UnityEngine;
 
 /// <summary>
 /// ステージ内のイベント管理

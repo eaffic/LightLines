@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameEnumList;
 
-public class StageSelectAnimationControl : UnitySingleton<StageSelectAnimationControl>
+public class StageSelectAnimationControl : MonoBehaviour
 {
     [SerializeField] private GameObject _groundBlock;
     [SerializeField] private GameObject _groundStair;
@@ -12,22 +12,21 @@ public class StageSelectAnimationControl : UnitySingleton<StageSelectAnimationCo
     [SerializeField] private GameObject[] _stageMagicCircle;
     [SerializeField] private Transform _player;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
+        SetPlayerPosition();
     }
 
-    private void Start() {
-        if (GameManager.CurrentScene != SceneType.StageSelect) { return; }
-
-        SetPlayerPosition();
-        StartToAreaAnimation();
+    private void Start() 
+    {
+        StartToAreaAnimation(); 
     }
 
     private void SetPlayerPosition(){
         if(GameManager.PreviewScene >= SceneType.Stage1_1){
             _player.transform.position = _stageMagicCircle[GameManager.PreviewScene - SceneType.Stage1_1].transform.position;
             _player.transform.localEulerAngles = _stageMagicCircle[GameManager.PreviewScene - SceneType.Stage1_1].transform.localEulerAngles;
+            Camera.main.transform.localEulerAngles = _player.transform.localEulerAngles;
         }
     }
 

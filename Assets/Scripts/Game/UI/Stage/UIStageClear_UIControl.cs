@@ -19,6 +19,7 @@ public class UIStageClear_UIControl : UIControl {
 
     private enum StageClearUISelect { Again, NextStage, StageSelect }; //選択肢の種類
     private StageClearUISelect _currentSelect; //現在の選択
+    private StageInfo _thisStageInfo; //現在ステージのデータ
     private Animator _animator;
     private bool _enabled;
     private float _oldInput; //前フレームの入力
@@ -42,10 +43,10 @@ public class UIStageClear_UIControl : UIControl {
     protected override void Awake()
     {
         base.Awake();
+        TryGetComponent(out _animator);
     }
 
     private void Start() {
-        TryGetComponent(out _animator);
         _againText = DictView["Text_Again"].GetComponent<Text>();
         _nextStageText = DictView["Text_NextStage"].GetComponent<Text>();
         _stageSelectText = DictView["Text_StageSelect"].GetComponent<Text>();
@@ -57,18 +58,6 @@ public class UIStageClear_UIControl : UIControl {
         _starImage = DictView["Image_Star"].GetComponent<Image>();
         _effectParticle = DictView["Particle_Clear"].GetComponent<ParticleSystem>();
         _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
-
-        //初期設定
-        _currentSelect = StageClearUISelect.Again;
-        _againText.color = Color.red;
-        _nextStageText.color = _isLastStage ? Color.gray : Color.white;
-        _stageSelectText.color = Color.white;
-        _starImage.rectTransform.localPosition = new Vector2(_againText.rectTransform.localPosition.x - _againText.rectTransform.rect.width / 1.8f, _againText.rectTransform.localPosition.y);
-        _highLightImage.rectTransform.localPosition = _againText.rectTransform.localPosition;
-        _highLightImage.rectTransform.sizeDelta = _againText.rectTransform.rect.size;
-        _selectParticle.gameObject.transform.position = _againText.gameObject.transform.position;
-        var sh = _selectParticle.shape;
-        sh.scale = new Vector3(1.8f, 1, 1);
     }
 
     private void Update()
@@ -93,14 +82,14 @@ public class UIStageClear_UIControl : UIControl {
             //最終ステージの場合、nextStageは灰色になる
             if (input > 0.8f && _oldInput < 0.8f)
             {
-                if (_isLastStage)
+                if (_isLastStage || _thisStageInfo.IsClear == false)
                     _currentSelect = StageClearUISelect.Again;
                 else
                     _currentSelect = (StageClearUISelect)Mathf.Max((int)--_currentSelect, 0);
             }
             else if (input < -0.8f && _oldInput > -0.8f)
             {
-                if (_isLastStage)
+                if (_isLastStage || _thisStageInfo.IsClear == false)
                     _currentSelect = StageClearUISelect.StageSelect;
                 else
                     _currentSelect = (StageClearUISelect)Mathf.Min((int)++_currentSelect, 2);
@@ -113,7 +102,7 @@ public class UIStageClear_UIControl : UIControl {
             switch (_currentSelect)
             {
                 case StageClearUISelect.Again:
-                    if (_isLastStage)
+                    if (_isLastStage || _thisStageInfo.IsClear == false)
                     {
                         _againText.color = Color.red;
                         _nextStageText.color = Color.gray;
@@ -141,7 +130,7 @@ public class UIStageClear_UIControl : UIControl {
                     sh.scale = new Vector3(3.6f, 1, 1);
                     break;
                 case StageClearUISelect.StageSelect:
-                    if (_isLastStage)
+                    if (_isLastStage || _thisStageInfo.IsClear == false)
                     {
                         _againText.color = Color.white;
                         _nextStageText.color = Color.gray;
@@ -224,13 +213,12 @@ public class UIStageClear_UIControl : UIControl {
     /// </summary>
     private void UpdateStageInfoUI()
     {
-        StageInfo info = StageDataManager.Instance.GetCurrentStageInfo();
         string s = String.Format("{0:00}:{1:00}:{2:00}",
-            (int)info.ClearTime / 60,
-            (int)info.ClearTime % 60,
-            (info.ClearTime - (int)info.ClearTime) * 100);
+            (int)_thisStageInfo.ClearTime / 60,
+            (int)_thisStageInfo.ClearTime % 60,
+            (_thisStageInfo.ClearTime - (int)_thisStageInfo.ClearTime) * 100);
         _clearTimeText.text = s;
-        _getItemText.text = info.SecretItemCount.ToString() + " / " + info.SecretItemMaxCount.ToString();
+        _getItemText.text = _thisStageInfo.SecretItemCount.ToString() + " / " + _thisStageInfo.SecretItemMaxCount.ToString();
     }
 
     /// <summary>
@@ -263,9 +251,23 @@ public class UIStageClear_UIControl : UIControl {
 
         GameManager.Pause = true;
         AudioManager.Instance.Play("BackGround", "BGMClear", false);
+        _thisStageInfo = StageDataManager.Instance.GetCurrentStageInfo();
         StageDataManager.Instance.SaveStageClearData(); //クリアデータをセーブする
         _animator.Play("OpenStageClear", 0); //UIアニメション
         UpdateStageInfoUI();
         _selectParticle.Play();
+
+
+        //初期設定
+        _currentSelect = StageClearUISelect.Again;
+        _againText.color = Color.red;
+        _nextStageText.color = _isLastStage || _thisStageInfo.IsClear == false ? Color.gray : Color.white;
+        _stageSelectText.color = Color.white;
+        _starImage.rectTransform.localPosition = new Vector2(_againText.rectTransform.localPosition.x - _againText.rectTransform.rect.width / 1.8f, _againText.rectTransform.localPosition.y);
+        _highLightImage.rectTransform.localPosition = _againText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _againText.rectTransform.rect.size;
+        _selectParticle.gameObject.transform.position = _againText.gameObject.transform.position;
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(1.8f, 1, 1);
     }
 }

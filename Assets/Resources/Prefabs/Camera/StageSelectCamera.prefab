@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2bada30357e6194b954f4199fdb7d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NeedAutomaticRotation: 0
+  NeedAutomaticRotation: 1
   _focus: {fileID: 0}
   _distance: 5
   _minDistance: 2

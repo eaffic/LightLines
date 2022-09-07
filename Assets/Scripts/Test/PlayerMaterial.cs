@@ -9,7 +9,7 @@ public class PlayerMaterial : MonoBehaviour {
     [SerializeField] private float _intoDissolveValue;
     [SerializeField] private float _exitDissolveValue;
 
-    private void Awake() {
+    private void Start() {
         _exitDissolveValue = transform.position.y + 3; //キャラが消える高さ
         _intoDissolveValue = transform.position.y - 3; //キャラが現れる高さ
         IntoScene();

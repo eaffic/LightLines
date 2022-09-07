@@ -116,9 +116,14 @@ public class GameInputManager : UnitySingleton<GameInputManager>
         return _gameInputController.UI.ExitGame.triggered;
     }
 
-    public bool GetAnyButtonInput(){
+    public bool GetAnyButtonInput()
+    {
         bool check = false;
-        check =  Keyboard.current.anyKey.wasPressedThisFrame || Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic);
+        try{
+            check = Keyboard.current.anyKey.wasPressedThisFrame || Gamepad.current.allControls.Any(x => x is ButtonControl button && x.IsPressed() && !x.synthetic);
+        }catch{
+            check = Keyboard.current.anyKey.wasPressedThisFrame;
+        }
         return check;
     }
 

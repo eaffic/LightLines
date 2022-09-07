@@ -12,6 +12,9 @@ public class SaveData
     private SceneType _lastClearStage; //クリアしたの最新ステージ
     [SerializeField]
     private List<StageInfo> _stageInfoList = new List<StageInfo>(); //各ステージの記録
+    [SerializeField]
+    private int _itemCount; //取集したすべてのアイテム数
+
 
     public SceneType LastClearStage { 
         get => _lastClearStage;
@@ -21,6 +24,15 @@ public class SaveData
     {
         get => _stageInfoList;
     }
+    public int ItemCount{
+        get{
+            int count = 0;
+            for (int i = 0; i < _stageInfoList.Count; ++i){
+                count += _stageInfoList[i].SecretItemCount;
+            }
+            return count;
+        }
+    }
 
     public SaveData()
     {
@@ -29,6 +41,7 @@ public class SaveData
     public SaveData(SceneType clearStage, List<StageInfo> stageInfo)
     {
         this.LastClearStage = clearStage;
+        _stageInfoList = stageInfo;
     }
 }
 
@@ -37,13 +50,15 @@ public class SaveData
 public struct StageInfo
 {
     [SerializeField]
-    private SceneType _stageType;
+    private SceneType _stageType; //ステージ種類
     [SerializeField]
-    private float _clearTime;
+    private float _clearTime; //クリア時間
     [SerializeField]
-    private int _secretItemCount;
+    private int _secretItemCount; //取ったアイテム数
     [SerializeField]
-    private int _secretItemMaxCount;
+    private int _secretItemMaxCount; // ステージ内のアイテム総数
+    [SerializeField]
+    private bool _isClear; //クリア記録
 
     public SceneType StageType { get => _stageType; set => _stageType = value; }
     public float ClearTime
@@ -76,6 +91,11 @@ public struct StageInfo
     public int SecretItemMaxCount { 
         get => _secretItemMaxCount; 
         set => _secretItemMaxCount = value;
+    }
+
+    public bool IsClear{
+        get => _isClear;
+        set => _isClear |= value;
     }
 }
 

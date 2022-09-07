@@ -36,10 +36,10 @@ public class UIStageMenu_UIControl : UIControl {
     protected override void Awake()
     {
         base.Awake();
+        TryGetComponent(out _animator);
     }
 
     private void Start() {
-        TryGetComponent(out _animator);
         _titleText = DictView["Text_Title"].GetComponent<Text>();
         _returnText = DictView["Text_Return"].GetComponent<Text>();
         _restartText = DictView["Text_Restart"].GetComponent<Text>();

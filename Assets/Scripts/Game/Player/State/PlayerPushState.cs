@@ -29,7 +29,7 @@ public class PlayerPushState : BaseState<PlayerState> {
             _fsm.TransitionState(base.ThisState, PlayerState.Fall);
         }
 
-        if(Timer > 1f){
+        if(Timer > 1.2f){
             _fsm.TransitionState(base.ThisState ,PlayerState.Idle);
         }
 

@@ -96,7 +96,7 @@ public class GameManager : UnitySingleton<GameManager>
         }
         AudioManager.Instance.StopAllSource();
 
-        _previewScene = _currentScene >= SceneType.Stage1_1 ? _currentScene : _previewScene;
+        _previewScene = _currentScene;// >= SceneType.Stage1_1 ? _currentScene : _previewScene;
         _currentScene = targetScene;
         StageDataManager.Instance.StartNewStage();
         SceneManager.LoadSceneAsync((int)CurrentScene, LoadSceneMode.Additive); //シーン遷移

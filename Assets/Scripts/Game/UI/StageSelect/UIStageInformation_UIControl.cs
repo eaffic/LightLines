@@ -34,16 +34,16 @@ public class UIStageInformation_UIControl : UIControl {
     private void OnDisable()
     {
         //終了時、登録を外す
-        EventCenter.AddStageInfomationListener(OnNotify);
+        EventCenter.RemoveStageInfomationListener(OnNotify);
     }
 
     protected override void Awake()
     {
         base.Awake();
+        TryGetComponent(out _animator);
     }
 
     private void Start() {
-        TryGetComponent(out _animator);
         _titleText = DictView["Text_Title"].GetComponent<Text>();
         _clearTimeText = DictView["Text_ClearTime"].GetComponent<Text>();
         _getItemText = DictView["Text_GetItme"].GetComponent<Text>();

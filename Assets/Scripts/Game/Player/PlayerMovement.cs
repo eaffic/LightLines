@@ -46,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
     {
         switch (_fsm.CurrentState)
         {
+            case PlayerState.Idle:
             case PlayerState.Walk:
             case PlayerState.Run:
             case PlayerState.Jump:
@@ -72,6 +73,9 @@ public class PlayerMovement : MonoBehaviour
                 Fall();
                 AdjustVelocity();
                 ClearState();
+                break;
+            case PlayerState.Push:
+                _rigidBody.velocity = Vector3.zero;
                 break;
             default:
                 break;

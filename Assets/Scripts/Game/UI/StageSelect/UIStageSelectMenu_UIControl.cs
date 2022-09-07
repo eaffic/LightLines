@@ -31,10 +31,10 @@ public class UIStageSelectMenu_UIControl : UIControl {
     protected override void Awake()
     {
         base.Awake();
+        TryGetComponent(out _animator);
     }
 
     private void Start() {
-        TryGetComponent(out _animator);
         _returnText = DictView["Text_Return"].GetComponent<Text>();
         _titleText = DictView["Text_Title"].GetComponent<Text>();
         _highLightImage = DictView["Image_HighLight"].GetComponent<Image>();
@@ -173,6 +173,6 @@ public class UIStageSelectMenu_UIControl : UIControl {
         AudioManager.Instance.Play("UI", "UIOpenMenu", false);
         GameManager.Pause = true;
         _selectParticle.Play();
-        _animator.Play("OpenMenuUI", 0);
+        _animator.Play("OpenMenuUI");
     }
 }

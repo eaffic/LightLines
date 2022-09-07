@@ -26,7 +26,7 @@ public class Box : MonoBehaviour
     public bool OnMove; //移動中
     public bool OnRotate; //回転中
     //public bool OnHead => Physics.Raycast(transform.position, Vector3.up, 0.5f, _wallLayer);   //上方向確認
-    public bool OnGround;   //地面確認
+    public bool OnGround => Physics.Raycast(transform.position + new Vector3(0, 0.1f, 0), Vector3.down, 0.2f, _groundLayer);   //地面確認
 
     void Awake()
     {
@@ -42,15 +42,26 @@ public class Box : MonoBehaviour
         Debug.DrawRay(transform.position + new Vector3(0, 0.1f, 0), Vector3.down * 0.15f, OnGround ? Color.red : Color.green);
     }
 
-    private void StateCheck(){
-        OnGround = GroundCheck();
-
-        if(IsContactAccelerator){
-            _rigidBody.useGravity = false;
-        }else{
+    private void StateCheck()
+    {
+        if (OnGround == false)
+        {
             _rigidBody.useGravity = true;
         }
-    }
+
+        if (IsContactAccelerator)
+        {
+            _rigidBody.useGravity = false;
+        }
+        else
+        {
+            _rigidBody.useGravity = true;
+        }
+
+        if (transform.position.y < -100){
+            Destroy(gameObject);
+        }
+}
 
     /// <summary>
     /// 点滅
@@ -116,10 +127,6 @@ public class Box : MonoBehaviour
         return !Physics.Raycast(center, direction, out RaycastHit hitInfo, direction.magnitude, _wallLayer);
     }   
 
-    public bool GroundCheck(){
-        return Physics.Raycast(transform.position + new Vector3(0, 0.1f, 0), Vector3.down, 0.15f, _groundLayer);
-    }
-
     /// <summary>
     /// 箱移動
     /// </summary>
@@ -176,7 +183,7 @@ public class Box : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(transform.position + new Vector3(0, 0.1f, 0), Vector3.down, out hitInfo, 0.2f, _groundLayer)){
             transform.position = hitInfo.point;
-            //OnGround = true;
+            _rigidBody.useGravity = false;
         }
     }
 }
