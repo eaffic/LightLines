@@ -1363,6 +1363,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
+      propertyPath: _moveOffset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: _moveOffset.z
       value: -6
       objectReference: {fileID: 0}
@@ -3380,6 +3384,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
+      propertyPath: _moveOffset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: _moveOffset.z
       value: -6
       objectReference: {fileID: 0}
@@ -3866,6 +3874,10 @@ PrefabInstance:
     - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: _moveOffset.x
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
+      propertyPath: _moveOffset.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: _moveOffset.z
@@ -6377,6 +6389,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: AcceleratorBlock
       objectReference: {fileID: 0}
+    - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
+      propertyPath: _moveOffset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
+      propertyPath: _moveOffset.z
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373883, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: m_RootOrder
       value: 20
@@ -8638,6 +8658,10 @@ PrefabInstance:
     - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: _moveOffset.x
       value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
+      propertyPath: _moveOffset.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: _moveOffset.z
@@ -17061,6 +17085,10 @@ PrefabInstance:
     - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: _moveOffset.x
       value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
+      propertyPath: _moveOffset.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000919214672373880, guid: 4efa697dbacb7974a9f52ab4069b306c, type: 3}
       propertyPath: _moveOffset.z

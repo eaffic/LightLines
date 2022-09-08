@@ -50,6 +50,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: a1f5dd35f61c8de4e9144a3f1eeb8f92, type: 3}
     - {fileID: 8300000, guid: fa54d38a540bcfd48a1fb4e0e989b292, type: 3}
     - {fileID: 8300000, guid: 1ddd26604446677499d47692c3cd9d74, type: 3}
+    - {fileID: 8300000, guid: a2956320b17925648b3c29db818bcc79, type: 3}
     - {fileID: 8300000, guid: df8e3ddbe42b70c498c02c7dcdc09c3f, type: 3}
     Group: {fileID: 0}
     Name: BackGround

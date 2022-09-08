@@ -58,7 +58,9 @@ public struct StageInfo
     [SerializeField]
     private int _secretItemMaxCount; // ステージ内のアイテム総数
     [SerializeField]
-    private bool _isClear; //クリア記録
+    private int _clearCount; //クリア回数
+    [SerializeField]
+    private bool _isCompleteClear; //コンプリートクリア記録
 
     public SceneType StageType { get => _stageType; set => _stageType = value; }
     public float ClearTime
@@ -93,9 +95,14 @@ public struct StageInfo
         set => _secretItemMaxCount = value;
     }
 
-    public bool IsClear{
-        get => _isClear;
-        set => _isClear |= value;
+    public int ClearCount {
+        get => _clearCount;
+        set => _clearCount = value;
+    }
+
+    public bool IsCompleteClear{
+        get => _isCompleteClear;
+        set => _isCompleteClear |= value;
     }
 }
 
@@ -138,6 +145,8 @@ public class DataManager : UnitySingleton<DataManager>
                 temp.ClearTime = stageInfo.ClearTime;
                 //隠しアイテム
                 temp.SecretItemCount = stageInfo.SecretItemCount;
+                temp.ClearCount = stageInfo.ClearCount;
+                temp.IsCompleteClear = stageInfo.IsCompleteClear;
                 _saveData.StageInfoList[i] = temp;
             }
         }

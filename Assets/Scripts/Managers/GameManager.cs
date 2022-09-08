@@ -68,6 +68,12 @@ public class GameManager : UnitySingleton<GameManager>
                 UIManager.Instance.ShowUIView("Stage/UIStageClear");
                 UIManager.Instance.ShowUIView("InputHint/UIGameInputHint");
                 break;
+            case SceneType.Stage1_9:
+                AudioManager.Instance.Play("BackGround", "BGMStage2", true);
+                UIManager.Instance.ShowUIView("Stage/UIStageMenu");
+                UIManager.Instance.ShowUIView("Stage/UIStageClear");
+                UIManager.Instance.ShowUIView("InputHint/UIGameInputHint"); 
+                break;
         }
     }
 

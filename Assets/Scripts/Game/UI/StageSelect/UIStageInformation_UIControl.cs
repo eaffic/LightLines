@@ -10,6 +10,7 @@ public class UIStageInformation_UIControl : UIControl {
     [SerializeField] private Text _getItemText;
     [SerializeField] private Text _startText;
     [SerializeField] private Text _cancelText;
+    [SerializeField] private Text _CompleteText;
     [SerializeField] private Image _highLightImage;
     [SerializeField] private Image _starImage;
     [SerializeField] private Image _stageImage;
@@ -49,25 +50,13 @@ public class UIStageInformation_UIControl : UIControl {
         _getItemText = DictView["Text_GetItme"].GetComponent<Text>();
         _startText = DictView["Text_Start"].GetComponent<Text>();
         _cancelText = DictView["Text_Cancel"].GetComponent<Text>();
+        _CompleteText = DictView["Text_Complete"].GetComponent<Text>();
 
         _highLightImage = DictView["Image_HighLight"].GetComponent<Image>();
         _starImage = DictView["Image_Star"].GetComponent<Image>();
         _stageImage = DictView["Image_Stage"].GetComponent<Image>();
 
         _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
-
-        //初期設定
-        _currentSelect = StageSelectUISelect.Start;
-        _startText.color = Color.red;
-        _cancelText.color = Color.white;
-        _starImage.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
-
-        _highLightImage.rectTransform.localPosition = _startText.rectTransform.localPosition;
-        _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
-
-        _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
-        var sh = _selectParticle.shape;
-        sh.scale = new Vector3(1.2f, 0.8f, 1);
     }
 
     private void Update()
@@ -186,6 +175,8 @@ public class UIStageInformation_UIControl : UIControl {
             (info.ClearTime - (int)info.ClearTime) * 100);
         _clearTimeText.text = s;
         _getItemText.text = info.SecretItemCount.ToString() + " / " + info.SecretItemMaxCount.ToString();
+
+        _CompleteText.gameObject.SetActive(info.IsCompleteClear);
     }
 
     /// <summary>
@@ -204,6 +195,19 @@ public class UIStageInformation_UIControl : UIControl {
         _targetScene = scene;
         UpdateStageInfomation();
         _selectParticle.Play();
+
+        //初期設定
+        _currentSelect = StageSelectUISelect.Start;
+        _startText.color = Color.red;
+        _cancelText.color = Color.white;
+        _starImage.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
+
+        _highLightImage.rectTransform.localPosition = _startText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
+
+        _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(1.2f, 0.8f, 1);
     }
 
     /// <summary>

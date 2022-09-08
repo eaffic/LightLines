@@ -17,13 +17,15 @@ public class StageSelectAnimationControl : MonoBehaviour
         SetPlayerPosition();
     }
 
-    private void Start() 
+    private void Start()
     {
-        StartToAreaAnimation(); 
+        StartToAreaAnimation();
     }
 
-    private void SetPlayerPosition(){
-        if(GameManager.PreviewScene >= SceneType.Stage1_1){
+    private void SetPlayerPosition()
+    {
+        if (GameManager.PreviewScene >= SceneType.Stage1_1)
+        {
             _player.transform.position = _stageMagicCircle[GameManager.PreviewScene - SceneType.Stage1_1].transform.position;
             _player.transform.localEulerAngles = _stageMagicCircle[GameManager.PreviewScene - SceneType.Stage1_1].transform.localEulerAngles;
             Camera.main.transform.localEulerAngles = _player.transform.localEulerAngles;
@@ -35,6 +37,9 @@ public class StageSelectAnimationControl : MonoBehaviour
         SceneType scene = DataManager.Instance.GetLastClearStage();
         switch (scene)
         {
+            case SceneType.Stage1_9:
+                StartCoroutine(ToArea10Animation(false));
+                break;
             case SceneType.Stage1_8:
                 StartCoroutine(ToArea9Animation(false));
                 break;
@@ -77,7 +82,7 @@ public class StageSelectAnimationControl : MonoBehaviour
         for (int i = 0; i < loops; ++i)
         {
             CreateBlock(basicPoint, startOffset * Mathf.Pow(-1, i), endOffset * i, duration, isDone);
-            if(isDone == false) yield return new WaitForSeconds(0.1f);
+            if (isDone == false) yield return new WaitForSeconds(0.1f);
         }
         EventCenter.ButtonNotify(0, true);
         _stageMagicCircle[1].SetActive(true);
@@ -99,7 +104,7 @@ public class StageSelectAnimationControl : MonoBehaviour
         for (int i = 0; i < loops; ++i)
         {
             CreateBlock(basicPoint, startOffset * Mathf.Pow(-1, i), endOffset * i, duration, isDone);
-            if(isDone == false) yield return new WaitForSeconds(0.1f);
+            if (isDone == false) yield return new WaitForSeconds(0.1f);
         }
 
         basicPoint = new Vector3(60, -24, -4);
@@ -120,7 +125,8 @@ public class StageSelectAnimationControl : MonoBehaviour
     /// <summary>
     /// Area4までの通路生成
     /// </summary>
-    IEnumerator ToArea4Animation(bool isDone){
+    IEnumerator ToArea4Animation(bool isDone)
+    {
         StartCoroutine(ToArea3Animation(true));
 
         Vector3 basicPoint = new Vector3(49, -20f, -4); //最終位置の基本値
@@ -132,7 +138,7 @@ public class StageSelectAnimationControl : MonoBehaviour
         {
             var item = CreateBlock(basicPoint, startOffset * Mathf.Pow(-1, i), endOffset * i, duration, isDone);
             item.transform.localEulerAngles = new Vector3(0, 90, 0);
-            if(isDone == false) yield return new WaitForSeconds(0.1f);
+            if (isDone == false) yield return new WaitForSeconds(0.1f);
         }
 
         basicPoint = new Vector3(36, -20, -6);
@@ -152,7 +158,8 @@ public class StageSelectAnimationControl : MonoBehaviour
     /// <summary>
     /// Area5までの通路生成
     /// </summary>
-    IEnumerator ToArea5Animation(bool isDone){
+    IEnumerator ToArea5Animation(bool isDone)
+    {
         StartCoroutine(ToArea4Animation(true));
 
         Vector3 basicPoint = new Vector3(34, -19f, -16); //最終位置の基本値
@@ -160,14 +167,15 @@ public class StageSelectAnimationControl : MonoBehaviour
         Vector3 startOffset = new Vector3(0, -10f, 0); //生成位置の移動量
         float duration = 2f; //生成したブロックの移動時間
         float loops = 5; //ループ回数
-        for (int i = 0; i < loops; ++i){
+        for (int i = 0; i < loops; ++i)
+        {
             var stair = CreateStair(basicPoint, startOffset * Mathf.Pow(-1, i), new Vector3(-3, 1, 0) * i, duration, isDone);
             stair.transform.localEulerAngles = new Vector3(0, -90, 0);
-            if(isDone == false) yield return new WaitForSeconds(0.1f);
+            if (isDone == false) yield return new WaitForSeconds(0.1f);
 
             var block = CreateBlock(basicPoint, startOffset * Mathf.Pow(-1, i), endOffset + new Vector3(-3, 1, 0) * i, duration, isDone);
             block.transform.localEulerAngles = new Vector3(0, 90, 0);
-            if(isDone == false) yield return new WaitForSeconds(0.1f);
+            if (isDone == false) yield return new WaitForSeconds(0.1f);
 
             block = CreateBlock(basicPoint, startOffset * Mathf.Pow(-1, i), endOffset * 2 + new Vector3(-3, 1, 0) * i, duration, isDone);
             block.transform.localEulerAngles = new Vector3(0, 90, 0);
@@ -177,9 +185,10 @@ public class StageSelectAnimationControl : MonoBehaviour
         basicPoint = new Vector3(17, -15, -18);
         endOffset = new Vector3(0, 0, -1);
         loops = 7;
-        for (int i = 0; i < loops; ++i){
+        for (int i = 0; i < loops; ++i)
+        {
             CreateBlock(basicPoint, startOffset * Mathf.Pow(-1, i), endOffset * i, duration, isDone);
-            if(isDone == false) yield return new WaitForSeconds(0.1f);
+            if (isDone == false) yield return new WaitForSeconds(0.1f);
         }
 
         EventCenter.ButtonNotify(3, true);
@@ -190,7 +199,8 @@ public class StageSelectAnimationControl : MonoBehaviour
     /// <summary>
     /// Area6までの通路生成
     /// </summary>
-    IEnumerator ToArea6Animation(bool isDone){
+    IEnumerator ToArea6Animation(bool isDone)
+    {
         StartCoroutine(ToArea5Animation(true));
 
         Vector3 basicPoint = new Vector3(17, -15f, -16); //最終位置の基本値
@@ -198,10 +208,11 @@ public class StageSelectAnimationControl : MonoBehaviour
         Vector3 startOffset = new Vector3(0, -10f, 0); //生成位置の移動量
         float duration = 2f; //生成したブロックの移動時間
         float loops = 10; //ループ回数
-        for (int i = 0; i < loops; ++i){
+        for (int i = 0; i < loops; ++i)
+        {
             var block = CreateBlock(basicPoint, startOffset * Mathf.Pow(-1, i), endOffset * i, duration, isDone);
             block.transform.localEulerAngles = new Vector3(0, 90, 0);
-            if(isDone == false) yield return new WaitForSeconds(0.1f);
+            if (isDone == false) yield return new WaitForSeconds(0.1f);
         }
 
         EventCenter.ButtonNotify(4, true);
@@ -212,7 +223,8 @@ public class StageSelectAnimationControl : MonoBehaviour
     /// <summary>
     /// Area7までの通路生成
     /// </summary>
-    IEnumerator ToArea7Animation(bool isDone){
+    IEnumerator ToArea7Animation(bool isDone)
+    {
         StartCoroutine(ToArea6Animation(true));
 
         Vector3 basicPoint = new Vector3(1, -5f, -13); //最終位置の基本値
@@ -220,9 +232,10 @@ public class StageSelectAnimationControl : MonoBehaviour
         Vector3 startOffset = new Vector3(0, -10f, 0); //生成位置の移動量
         float duration = 2f; //生成したブロックの移動時間
         float loops = 7; //ループ回数
-        for (int i = 0; i < loops; ++i){
+        for (int i = 0; i < loops; ++i)
+        {
             CreateBlock(basicPoint, startOffset * Mathf.Pow(-1, i), endOffset * i, duration, isDone);
-            if(isDone == false) yield return new WaitForSeconds(0.1f);
+            if (isDone == false) yield return new WaitForSeconds(0.1f);
         }
 
         EventCenter.ButtonNotify(5, true);
@@ -233,7 +246,8 @@ public class StageSelectAnimationControl : MonoBehaviour
     /// <summary>
     /// Area8までの通路生成
     /// </summary>
-    IEnumerator ToArea8Animation(bool isDone){
+    IEnumerator ToArea8Animation(bool isDone)
+    {
         StartCoroutine(ToArea7Animation(true));
 
         EventCenter.ButtonNotify(6, true);
@@ -244,20 +258,30 @@ public class StageSelectAnimationControl : MonoBehaviour
     /// <summary>
     /// Area9までの通路生成
     /// </summary>
-    IEnumerator ToArea9Animation(bool isDone){
+    IEnumerator ToArea9Animation(bool isDone)
+    {
         StartCoroutine(ToArea8Animation(true));
+        _stageMagicCircle[8].SetActive(true);
         yield return null;
     }
 
     /// <summary>
-    /// 地面ブロック生成
+    /// Area10までの通路生成
     /// </summary>
-    /// <param name="basicPoint">最終位置の基本値</param>
-    /// <param name="endOffset">ループ中の変化量</param>
-    /// <param name="startOffset">生成位置の移動量</param>
-    /// <param name="duration">生成したブロックの移動時間</param>
-    /// <param name="done">移動なし生成</param>
-    private GameObject CreateBlock(Vector3 basicPoint, Vector3 startOffset, Vector3 endOffset, float duration, bool done)
+    IEnumerator ToArea10Animation(bool isDone){
+        StartCoroutine(ToArea9Animation(true));
+        yield return null;
+    }
+
+/// <summary>
+/// 地面ブロック生成
+/// </summary>
+/// <param name="basicPoint">最終位置の基本値</param>
+/// <param name="endOffset">ループ中の変化量</param>
+/// <param name="startOffset">生成位置の移動量</param>
+/// <param name="duration">生成したブロックの移動時間</param>
+/// <param name="done">移動なし生成</param>
+private GameObject CreateBlock(Vector3 basicPoint, Vector3 startOffset, Vector3 endOffset, float duration, bool done)
     {
         var item = GameObject.Instantiate(_groundBlock);
 

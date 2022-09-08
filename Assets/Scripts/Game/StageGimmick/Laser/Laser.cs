@@ -15,7 +15,7 @@ public class Laser : BaseStageGimmick
     [SerializeField] private LineRenderer _lineRenderer;
     [SerializeField] private LayerMask _blockLayer; //障害物レイヤー
     [SerializeField] private float _laserDistance; //レーザー長さ
-    [SerializeField, Range(0, 10)] private int _maxReflectCount = 5; //反射可能回数
+    [SerializeField, Range(0, 50)] private int _maxReflectCount = 5; //反射可能回数
 
     private GameObject _currentHitObject; //現在の当たりもの
     private GameObject _currentHitTarget; 

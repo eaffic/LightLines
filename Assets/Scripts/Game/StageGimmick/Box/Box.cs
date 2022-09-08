@@ -156,7 +156,11 @@ public class Box : MonoBehaviour
         yield return null;
     }
 
-    //箱回転
+    /// <summary>
+    /// 箱回転
+    /// </summary>
+    /// <param name="angle"></param>
+    /// <returns></returns>
     IEnumerator BoxRotate(float angle){
         while(OnMove || OnRotate) { yield return null; }
 

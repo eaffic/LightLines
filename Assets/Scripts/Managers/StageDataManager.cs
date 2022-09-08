@@ -41,7 +41,11 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
         _currentStageClearInfo.ClearTime = _timer;
         _currentStageClearInfo.SecretItemMaxCount = TotalScretItemCountInStage;
         _currentStageClearInfo.SecretItemCount = _getItemCount;
-        _currentStageClearInfo.IsClear = true;
+
+        _currentStageClearInfo.ClearCount++;
+        _currentStageClearInfo.IsCompleteClear = (_getItemCount == TotalScretItemCountInStage); //アイテム全部取得
+        Debug.Log(_getItemCount == TotalScretItemCountInStage);
+        Debug.Log(_currentStageClearInfo.IsCompleteClear);
         DataManager.Instance.SaveStageClearData(_currentStageClearInfo);
     }
 
@@ -55,7 +59,8 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
         info.ClearTime = _timer;
         info.SecretItemMaxCount = TotalScretItemCountInStage;
         info.SecretItemCount = _getItemCount;
-        info.IsClear = _currentStageClearInfo.IsClear;
+        info.ClearCount = _currentStageClearInfo.ClearCount;
+        info.IsCompleteClear = _currentStageClearInfo.IsCompleteClear;
         return info;
     }
 

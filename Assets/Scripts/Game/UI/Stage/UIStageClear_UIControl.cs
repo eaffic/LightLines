@@ -82,14 +82,14 @@ public class UIStageClear_UIControl : UIControl {
             //最終ステージの場合、nextStageは灰色になる
             if (input > 0.8f && _oldInput < 0.8f)
             {
-                if (_isLastStage || _thisStageInfo.IsClear == false)
+                if (_isLastStage || _thisStageInfo.IsCompleteClear == false)
                     _currentSelect = StageClearUISelect.Again;
                 else
                     _currentSelect = (StageClearUISelect)Mathf.Max((int)--_currentSelect, 0);
             }
             else if (input < -0.8f && _oldInput > -0.8f)
             {
-                if (_isLastStage || _thisStageInfo.IsClear == false)
+                if (_isLastStage || _thisStageInfo.IsCompleteClear == false)
                     _currentSelect = StageClearUISelect.StageSelect;
                 else
                     _currentSelect = (StageClearUISelect)Mathf.Min((int)++_currentSelect, 2);
@@ -102,7 +102,7 @@ public class UIStageClear_UIControl : UIControl {
             switch (_currentSelect)
             {
                 case StageClearUISelect.Again:
-                    if (_isLastStage || _thisStageInfo.IsClear == false)
+                    if (_isLastStage || _thisStageInfo.IsCompleteClear == false)
                     {
                         _againText.color = Color.red;
                         _nextStageText.color = Color.gray;
@@ -130,7 +130,7 @@ public class UIStageClear_UIControl : UIControl {
                     sh.scale = new Vector3(3.6f, 1, 1);
                     break;
                 case StageClearUISelect.StageSelect:
-                    if (_isLastStage || _thisStageInfo.IsClear == false)
+                    if (_isLastStage || _thisStageInfo.IsCompleteClear == false)
                     {
                         _againText.color = Color.white;
                         _nextStageText.color = Color.gray;
@@ -261,7 +261,7 @@ public class UIStageClear_UIControl : UIControl {
         //初期設定
         _currentSelect = StageClearUISelect.Again;
         _againText.color = Color.red;
-        _nextStageText.color = _isLastStage || _thisStageInfo.IsClear == false ? Color.gray : Color.white;
+        _nextStageText.color = _isLastStage || _thisStageInfo.IsCompleteClear == false ? Color.gray : Color.white;
         _stageSelectText.color = Color.white;
         _starImage.rectTransform.localPosition = new Vector2(_againText.rectTransform.localPosition.x - _againText.rectTransform.rect.width / 1.8f, _againText.rectTransform.localPosition.y);
         _highLightImage.rectTransform.localPosition = _againText.rectTransform.localPosition;

@@ -133,14 +133,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeedAutomaticRotation: 1
   _focus: {fileID: 0}
-  _distance: 5
+  _distance: 6
   _minDistance: 2
-  _maxDistance: 10
+  _maxDistance: 12
   _focusRadius: 1
   _focusCentering: 0.5
   _rotationSpeed: 90
   _minVerticalAngle: -30
-  _maxVerticalAngle: 60
+  _maxVerticalAngle: 80
   _alignDelay: 5
   _alignSmoothRange: 45
   _obstructionMask:

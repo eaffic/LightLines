@@ -11,7 +11,7 @@ public class PlayerMaterial : MonoBehaviour {
 
     private void Start() {
         _exitDissolveValue = transform.position.y + 3; //キャラが消える高さ
-        _intoDissolveValue = transform.position.y - 3; //キャラが現れる高さ
+        _intoDissolveValue = transform.position.y - 1; //キャラが現れる高さ
         IntoScene();
     }
 

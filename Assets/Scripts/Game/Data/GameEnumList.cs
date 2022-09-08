@@ -17,6 +17,7 @@ namespace GameEnumList
         Stage1_6,
         Stage1_7,
         Stage1_8,
+        Stage1_9,
         NULLSCENE, //nextStageシーン遷移確認用
     }
 

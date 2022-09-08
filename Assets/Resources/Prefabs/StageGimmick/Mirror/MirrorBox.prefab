@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 4993755056080278099}
   m_Layer: 7
   m_Name: MirrorBox
-  m_TagString: Untagged
+  m_TagString: Box
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -187,7 +187,6 @@ MonoBehaviour:
   IsContactAccelerator: 0
   OnMove: 0
   OnRotate: 0
-  OnGround: 0
 --- !u!1 &5641699819161858339
 GameObject:
   m_ObjectHideFlags: 0

@@ -75,8 +75,6 @@ public class AcceleratorBlock : BaseStageGimmick
     private void MoveTargetBox(){
         if (IsOpen == false) { return; }
 
-        //移動方向の障害物判定
-
         if(_targetBox.Count > 0){
             foreach(var item in _targetBox){
                 //加速器と繋がっていなかった場合、状態を確認する
@@ -102,17 +100,14 @@ public class AcceleratorBlock : BaseStageGimmick
         }
     }
 
-    private void OnTriggerEnter(Collider other) {
-        if(other.tag == "Box"){
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Box")
+        {
             if (_targetBox.Contains(other.gameObject) == false)
             {
                 _targetBox.Add(other.gameObject);
 
-                // 移動と回転していない、地面と接触している時だけ連結する
-                if (other.GetComponent<Box>().OnGround && other.GetComponent<Box>().OnMove == false && other.GetComponent<Box>().OnRotate == false)
-                {
-                    other.GetComponent<Box>().IsContactAccelerator = true;
-                }
             }
         }
     }

@@ -132,7 +132,7 @@ MonoBehaviour:
   _moveTime: 0.3
   _wallLayer:
     serializedVersion: 2
-    m_Bits: 451
+    m_Bits: 449
   _groundLayer:
     serializedVersion: 2
     m_Bits: 704
@@ -142,7 +142,6 @@ MonoBehaviour:
   IsContactAccelerator: 0
   OnMove: 0
   OnRotate: 0
-  OnGround: 0
 --- !u!1 &7710880112394529881
 GameObject:
   m_ObjectHideFlags: 0

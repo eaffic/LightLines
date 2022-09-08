@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 7180675342493296988}
   m_Layer: 7
   m_Name: LaserBox_Num0
-  m_TagString: Untagged
+  m_TagString: Box
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -319,7 +319,6 @@ MonoBehaviour:
   IsContactAccelerator: 0
   OnMove: 0
   OnRotate: 0
-  OnGround: 0
 --- !u!1001 &3469154452814323817
 PrefabInstance:
   m_ObjectHideFlags: 0
