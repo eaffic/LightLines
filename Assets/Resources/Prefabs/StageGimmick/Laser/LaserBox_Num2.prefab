@@ -133,7 +133,7 @@ MonoBehaviour:
   _moveTime: 0.3
   _wallLayer:
     serializedVersion: 2
-    m_Bits: 451
+    m_Bits: 455
   _groundLayer:
     serializedVersion: 2
     m_Bits: 704

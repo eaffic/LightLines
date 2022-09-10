@@ -9,6 +9,7 @@ public class StageSelectAnimationControl : MonoBehaviour
     [SerializeField] private GameObject _groundBlock;
     [SerializeField] private GameObject _groundStair;
 
+    [SerializeField] private GameObject _ending;
     [SerializeField] private GameObject[] _stageMagicCircle;
     [SerializeField] private Transform _player;
 
@@ -37,6 +38,9 @@ public class StageSelectAnimationControl : MonoBehaviour
         SceneType scene = DataManager.Instance.GetLastClearStage();
         switch (scene)
         {
+            case SceneType.Stage1_10:
+                Ending();
+                break;
             case SceneType.Stage1_9:
                 StartCoroutine(ToArea10Animation(false));
                 break;
@@ -67,6 +71,8 @@ public class StageSelectAnimationControl : MonoBehaviour
             default:
                 break;
         }
+
+        Ending();
     }
 
     /// <summary>
@@ -270,7 +276,26 @@ public class StageSelectAnimationControl : MonoBehaviour
     /// </summary>
     IEnumerator ToArea10Animation(bool isDone){
         StartCoroutine(ToArea9Animation(true));
+
+        Vector3 basicPoint = new Vector3(1, 0, 25); //最終位置の基本値
+        Vector3 endOffset = new Vector3(0, 0, 1); //ループ中の変化量
+        Vector3 startOffset = new Vector3(0, -10f, 0); //生成位置の移動量
+        float duration = 2f; //生成したブロックの移動時間
+        float loops = 11; //ループ回数
+        for (int i = 0; i < loops; ++i)
+        {
+            CreateBlock(basicPoint, startOffset * Mathf.Pow(-1, i), endOffset * i, duration, isDone);
+            if (isDone == false) yield return new WaitForSeconds(0.1f);
+        }
+
+        _stageMagicCircle[9].SetActive(true);
         yield return null;
+    }
+
+    private void Ending()
+    {
+        StartCoroutine(ToArea10Animation(true));
+        _ending.SetActive(true);
     }
 
 /// <summary>

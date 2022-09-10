@@ -73,7 +73,6 @@ public class UITitle_UIControl : UIControl {
 
         UpdateCursor();
         Submit();
-        Debug.Log(_openCredit);
     }
 
     /// <summary>

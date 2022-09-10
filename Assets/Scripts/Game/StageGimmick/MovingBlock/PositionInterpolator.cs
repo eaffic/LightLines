@@ -48,21 +48,11 @@ public class PositionInterpolator : MonoBehaviour
         {
             other.transform.SetParent(this.transform);
         }
-
-        if (other.gameObject.tag == "Box")
-        {
-            other.transform.SetParent(this.transform);
-        }
     }
 
     private void OnCollisionExit(Collision other)
     {
         if (other.gameObject.tag == "Player")
-        {
-            other.transform.SetParent(null);
-        }
-
-        if (other.gameObject.tag == "Box")
         {
             other.transform.SetParent(null);
         }

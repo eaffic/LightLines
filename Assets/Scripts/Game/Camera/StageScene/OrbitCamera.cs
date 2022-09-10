@@ -24,7 +24,7 @@ public class OrbitCamera : MonoBehaviour
 
     Vector3 _focusPoint; //注視点
     Vector3 _oldFocusPoint; //前フレームの注視点
-    Vector2 _orbitAngles = new Vector2(30f, 0f); //カメラ角度
+    Vector2 _orbitAngles = new Vector2(20f, 0f); //カメラ角度
     float _lastManuaRotationTime; //最後一回カメラ位置を操作した時間記録
 
     bool _isStageSelect;
