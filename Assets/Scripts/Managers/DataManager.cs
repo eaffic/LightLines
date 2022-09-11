@@ -197,11 +197,11 @@ public class DataManager : UnitySingleton<DataManager>
         try
         {
             File.WriteAllText(path, json);
-            Debug.Log("save success");
+            //Debug.Log("save success");
         }
         catch (Exception e)
         {
-            Debug.LogError(e);
+            //Debug.LogError(e);
         }
     }
 
@@ -221,18 +221,18 @@ public class DataManager : UnitySingleton<DataManager>
             {
                 var json = File.ReadAllText(path);
                 var data = JsonUtility.FromJson<T>(json);
-                Debug.Log("load success");
+                //Debug.Log("load success");
                 return data;
             }
             else
             {
-                Debug.Log("create new data");
+                //Debug.Log("create new data");
                 return System.Activator.CreateInstance<T>();
             }
         }
         catch (Exception e)
         {
-            Debug.LogError(e);
+            //Debug.LogError(e);
             return default;
         }
     }
@@ -249,11 +249,11 @@ public class DataManager : UnitySingleton<DataManager>
         {
             File.Delete(path);
             _saveData = LoadFromJson<SaveData>("savedata.json");
-            Debug.Log("delete success");
+            //Debug.Log("delete success");
         }
         catch (Exception e)
         {
-            Debug.LogError(e);
+            //Debug.LogError(e);
         }
     }
 }

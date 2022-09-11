@@ -57,6 +57,19 @@ public class UIStageInformation_UIControl : UIControl {
         _stageImage = DictView["Image_Stage"].GetComponent<Image>();
 
         _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
+
+        //初期設定
+        _currentSelect = StageSelectUISelect.Start;
+        _startText.color = Color.red;
+        _cancelText.color = Color.white;
+        _starImage.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
+
+        _highLightImage.rectTransform.localPosition = _startText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
+
+        _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(1.2f, 0.8f, 1);
     }
 
     private void Update()
@@ -195,19 +208,6 @@ public class UIStageInformation_UIControl : UIControl {
         _targetScene = scene;
         UpdateStageInfomation();
         _selectParticle.Play();
-
-        //初期設定
-        _currentSelect = StageSelectUISelect.Start;
-        _startText.color = Color.red;
-        _cancelText.color = Color.white;
-        _starImage.rectTransform.localPosition = new Vector2(_startText.rectTransform.localPosition.x - _startText.rectTransform.rect.width / 1.8f, _startText.transform.localPosition.y);
-
-        _highLightImage.rectTransform.localPosition = _startText.rectTransform.localPosition;
-        _highLightImage.rectTransform.sizeDelta = _startText.rectTransform.rect.size;
-
-        _selectParticle.gameObject.transform.position = _startText.gameObject.transform.position;
-        var sh = _selectParticle.shape;
-        sh.scale = new Vector3(1.2f, 0.8f, 1);
     }
 
     /// <summary>

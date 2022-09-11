@@ -69,13 +69,14 @@ public class PlayerMovement : MonoBehaviour
             case PlayerState.Run:
             case PlayerState.Jump:
             case PlayerState.Fall:
+                _rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
                 SnapToGround();
                 Fall();
                 AdjustVelocity();
                 ClearState();
                 break;
             case PlayerState.Push:
-                _rigidBody.velocity = Vector3.zero;
+                _rigidBody.constraints = RigidbodyConstraints.FreezeAll;
                 break;
             default:
                 break;
@@ -172,7 +173,7 @@ public class PlayerMovement : MonoBehaviour
         //坂道ではない場合、キャラの位置は射線と地面の接触位置に移動する
         if (OnSlope == false) { transform.position = hit.point; }
 
-        //現在速度は地面法線方向の大きさ
+        //現在速度は地面法線方向の内積
         float dot = Vector3.Dot(_velocity, hit.normal);
         //この物体は地面から離れている時、速度を修正する
         if (dot > 0)
@@ -313,21 +314,21 @@ public class PlayerMovement : MonoBehaviour
         return vector - _contactNormal * Vector3.Dot(vector, _contactNormal);
     }
 
-    /// <summary>
-    /// 重力使用設定
-    /// </summary>
-    private void CheckGravity()
-    {
-        //坂道の上に止まる
-        if (OnSlope)
-        {
-            _rigidBody.useGravity = false;
-        }
-        else
-        {
-            _rigidBody.useGravity = true;
-        }
-    }
+    // /// <summary>
+    // /// 重力使用設定
+    // /// </summary>
+    // private void CheckGravity()
+    // {
+    //     //坂道の上に止まる
+    //     if (OnSlope)
+    //     {
+    //         _rigidBody.useGravity = false;
+    //     }
+    //     else
+    //     {
+    //         _rigidBody.useGravity = true;
+    //     }
+    // }
 
     //---------------------------------------------------------------------------
     //---------------------------------------------------------------------------
@@ -367,5 +368,6 @@ public class PlayerMovement : MonoBehaviour
     public void ResetMoveSpeed()
     {
         _rigidBody.velocity = Vector3.zero;
+        _desiredVelocity = Vector3.zero;
     }
 }

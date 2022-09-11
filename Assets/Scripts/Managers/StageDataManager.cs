@@ -44,8 +44,8 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
 
         _currentStageClearInfo.ClearCount++;
         _currentStageClearInfo.IsCompleteClear = (_getItemCount == TotalScretItemCountInStage); //アイテム全部取得
-        Debug.Log(_getItemCount == TotalScretItemCountInStage);
-        Debug.Log(_currentStageClearInfo.IsCompleteClear);
+        //Debug.Log(_getItemCount == TotalScretItemCountInStage);
+        //Debug.Log(_currentStageClearInfo.IsCompleteClear);
         DataManager.Instance.SaveStageClearData(_currentStageClearInfo);
     }
 

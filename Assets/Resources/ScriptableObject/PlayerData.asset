@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerInputSpace: {fileID: 0}
   _turnSmoothTime: 0.05
-  _maxWalkSpeed: 1
+  _maxWalkSpeed: 1.2
   _maxRunSpeed: 3.5
   _maxAirSpeed: 10
   _maxSnapSpeed: 100
-  _walkAcceleration: 10
-  _runAcceleration: 5
+  _walkAcceleration: 20
+  _runAcceleration: 20
   _airAcceleration: 5
   _slopeAcceleration: 35
   _jumpHeight: 1.5

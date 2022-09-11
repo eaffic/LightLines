@@ -71,8 +71,6 @@ public class StageSelectAnimationControl : MonoBehaviour
             default:
                 break;
         }
-
-        Ending();
     }
 
     /// <summary>
@@ -268,6 +266,7 @@ public class StageSelectAnimationControl : MonoBehaviour
     {
         StartCoroutine(ToArea8Animation(true));
         _stageMagicCircle[8].SetActive(true);
+        _ending.SetActive(true);
         yield return null;
     }
 
@@ -295,7 +294,7 @@ public class StageSelectAnimationControl : MonoBehaviour
     private void Ending()
     {
         StartCoroutine(ToArea10Animation(true));
-        _ending.SetActive(true);
+        //_ending.SetActive(true);
     }
 
 /// <summary>

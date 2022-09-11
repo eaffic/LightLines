@@ -58,6 +58,18 @@ public class UIStageClear_UIControl : UIControl {
         _starImage = DictView["Image_Star"].GetComponent<Image>();
         _effectParticle = DictView["Particle_Clear"].GetComponent<ParticleSystem>();
         _selectParticle = DictView["Particle_Select"].GetComponent<ParticleSystem>();
+
+        //初期設定
+        _currentSelect = StageClearUISelect.Again;
+        _againText.color = Color.red;
+        _nextStageText.color = _isLastStage || _thisStageInfo.IsCompleteClear == false ? Color.gray : Color.white;
+        _stageSelectText.color = Color.white;
+        _starImage.rectTransform.localPosition = new Vector2(_againText.rectTransform.localPosition.x - _againText.rectTransform.rect.width / 1.8f, _againText.rectTransform.localPosition.y);
+        _highLightImage.rectTransform.localPosition = _againText.rectTransform.localPosition;
+        _highLightImage.rectTransform.sizeDelta = _againText.rectTransform.rect.size;
+        _selectParticle.gameObject.transform.position = _againText.gameObject.transform.position;
+        var sh = _selectParticle.shape;
+        sh.scale = new Vector3(1.8f, 1, 1);
     }
 
     private void Update()
@@ -256,18 +268,5 @@ public class UIStageClear_UIControl : UIControl {
         _animator.Play("OpenStageClear", 0); //UIアニメション
         UpdateStageInfoUI();
         _selectParticle.Play();
-
-
-        //初期設定
-        _currentSelect = StageClearUISelect.Again;
-        _againText.color = Color.red;
-        _nextStageText.color = _isLastStage || _thisStageInfo.IsCompleteClear == false ? Color.gray : Color.white;
-        _stageSelectText.color = Color.white;
-        _starImage.rectTransform.localPosition = new Vector2(_againText.rectTransform.localPosition.x - _againText.rectTransform.rect.width / 1.8f, _againText.rectTransform.localPosition.y);
-        _highLightImage.rectTransform.localPosition = _againText.rectTransform.localPosition;
-        _highLightImage.rectTransform.sizeDelta = _againText.rectTransform.rect.size;
-        _selectParticle.gameObject.transform.position = _againText.gameObject.transform.position;
-        var sh = _selectParticle.shape;
-        sh.scale = new Vector3(1.8f, 1, 1);
     }
 }

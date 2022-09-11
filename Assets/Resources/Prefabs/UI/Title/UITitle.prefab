@@ -1628,11 +1628,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8977071646778672252, guid: abb6012f67beb9b43980172c640487be, type: 3}
       propertyPath: m_Text
-      value: "Programmer:\nHSU CHUNG WEI\n\nSource Material:\nChara :\nMuryotaisu
-        (Unity Asset Store)\nItem :\nSci-Fi Styled Modular Pack (Unity Asset Store),\nFREE
-        Suburban Structure Kit (Unity Asset Store),\nSkyBox : \nReal Stars Skybox
-        Lite (Unity Asset Store)\nBGM, SE :\n\xA9\rUnity Technologies Japan/UCL\nHURT
-        RECORD\nDOVA-SYNDROME\nPocketSound\n\n"
+      value: "Programmer:\nHSU CHUNG WEI\n\nSource\nChara :\nMuryotaisu (Unity Asset
+        Store)\nItem :\nSci-Fi Styled Modular Pack (Unity Asset Store),\nFREE Suburban
+        Structure Kit (Unity Asset Store),\nSkyBox : \nReal Stars Skybox Lite (Unity
+        Asset Store)\nBGM, SE :\n\xA9\rUnity Technologies Japan/UCL\nHURT RECORD\nDOVA-SYNDROME\nPocketSound\n\n"
       objectReference: {fileID: 0}
     - target: {fileID: 8977071646778672252, guid: abb6012f67beb9b43980172c640487be, type: 3}
       propertyPath: m_FontData.m_FontStyle
