@@ -1,6 +1,9 @@
 using UnityEngine;
 using GameEnumList;
 
+/// <summary>
+/// メニュー画面のカメラ動画
+/// </summary>
 public class CameraMenuState : BaseState<StageCameraState> {
     private CameraFSM _fsm;
 

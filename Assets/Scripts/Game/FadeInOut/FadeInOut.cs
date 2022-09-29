@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using GameEnumList;
 
 /// <summary>
-/// シーン切り替え用エフェクト
+/// シーン切り替え用フェードエフェクト
 /// </summary>
 public class FadeInOut : UnitySingleton<FadeInOut>
 {

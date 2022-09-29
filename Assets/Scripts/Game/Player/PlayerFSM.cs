@@ -4,18 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameEnumList;
 
-// [RequireComponent(typeof(PlayerMovement))]
-// [RequireComponent(typeof(PlayerAnimation))]
-// [RequireComponent(typeof(PlayerActions))]
+
+/// <summary>
+/// プレイヤー状態制御
+/// </summary>
+[RequireComponent(typeof(PlayerMovement))]
+[RequireComponent(typeof(PlayerAnimation))]
+[RequireComponent(typeof(PlayerActions))]
 public class PlayerFSM : MonoBehaviour {
     public CharacterData_SO PlayerData; //キャラデータ
     public PlayerMovement PlayerMovementControl; //移動制御
     public PlayerAnimation PlayerAnimationControl; //動画制御
     public PlayerActions PlayerActionsControl; //動作制御
     
-    private IState<PlayerState> _currentState;
+    private IState<PlayerState> _currentState; //現在状態
     public PlayerState CurrentState => _currentState.ThisState;
-    private Dictionary<PlayerState, IState<PlayerState>> _states = new Dictionary<PlayerState, IState<PlayerState>>();
+
+    private Dictionary<PlayerState, IState<PlayerState>> _states = new Dictionary<PlayerState, IState<PlayerState>>(); //状態リスト
 
     private void Awake() {
         PlayerData.PlayerInputSpace = Camera.main.gameObject.transform;
@@ -39,8 +44,6 @@ public class PlayerFSM : MonoBehaviour {
 
     private void Update() {
         _currentState.OnUpdate(Time.deltaTime);
-        
-        //Debug.Log(_currentState.ThisState);
     }
 
     /// <summary>

@@ -29,6 +29,7 @@ public class Item : MonoBehaviour
         transform.Rotate(new Vector3(0f, 0f, _rotateSpeed * Time.deltaTime));
     }
 
+#region 接触処理
     private void OnTriggerEnter(Collider other)
     {
         if (OnDissolve) { return; }
@@ -67,13 +68,22 @@ public class Item : MonoBehaviour
             _attachBox = null;
         }
     }
+#endregion
 
+    /// <summary>
+    /// 消滅エフェクト
+    /// </summary>
     public void StartDissolve(){
         if (OnDissolve) { return; }
+        
         OnDissolve = true;
         StartCoroutine(Dissolve());
     }
 
+    /// <summary>
+    /// 消滅エフェクト
+    /// </summary>
+    /// <returns></returns>
     IEnumerator Dissolve(){
         AudioManager.Instance.Play("Item", "ItemDissolve", false);
 

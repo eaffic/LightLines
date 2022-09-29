@@ -1,6 +1,9 @@
 using UnityEngine;
 using GameEnumList;
 
+/// <summary>
+/// 落下状態
+/// </summary>
 public class PlayerFallState : BaseState<PlayerState> {
     private PlayerFSM _fsm;
 

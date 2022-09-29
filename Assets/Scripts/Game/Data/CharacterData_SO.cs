@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// プレイヤーの基本設定データ
+/// </summary>
 [CreateAssetMenu(fileName = "CharacterData_SO", menuName = "LightLines/CharacterData_SO", order = 0)]
 public class CharacterData_SO : ScriptableObject {
     [Tooltip("プレイヤー入力空間"), SerializeField] 

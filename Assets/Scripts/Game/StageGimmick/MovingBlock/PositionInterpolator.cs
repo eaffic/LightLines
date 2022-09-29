@@ -41,6 +41,7 @@ public class PositionInterpolator : MonoBehaviour
         _rigidbody.MovePosition(p); //rigidBodyを利用して移動させる
     }
 
+#region 接触処理
     private void OnCollisionEnter(Collision other)
     {
         //このブロックの上に移動できるため、一時的に親オブジェクトを設定する
@@ -57,4 +58,5 @@ public class PositionInterpolator : MonoBehaviour
             other.transform.SetParent(null);
         }
     }
+#endregion
 }

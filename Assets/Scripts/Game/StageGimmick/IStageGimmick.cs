@@ -3,16 +3,10 @@
 /// </summary>
 public interface IStageGimmick
 {
-    /// <summary>
-    /// ギミックのId
-    /// </summary>
-    int ID { get; set; }
-    
-    /// <summary>
-    /// ギミックの現在状態
-    /// </summary>
-    bool IsOpen { get; }
-    
+    int ID { get; set; } //ギミックのId
+
+    bool IsOpen { get; } // ギミックの現在状態
+
     /// <summary>
     /// EventCenterに登録、他のギミックからの呼び出しを対応する
     /// </summary>

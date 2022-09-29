@@ -1,12 +1,15 @@
 using UnityEngine;
 using GameEnumList;
 
-public class CameraOrbitState : BaseState<StageCameraState>
+/// <summary>
+/// カメラ操作状態
+/// </summary>
+public class CameraControlState : BaseState<StageCameraState>
 {
 
     private CameraFSM _fsm;
 
-    public CameraOrbitState(CameraFSM manager, StageCameraState type){
+    public CameraControlState(CameraFSM manager, StageCameraState type){
         base.ThisState = type;
         _fsm = manager;
     }

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameEnumList;
 
+/// <summary>
+/// セレクトシーンの動画制御
+/// </summary>
 public class StageSelectAnimationControl : MonoBehaviour
 {
     [SerializeField] private GameObject _groundBlock;
@@ -11,7 +14,7 @@ public class StageSelectAnimationControl : MonoBehaviour
 
     [SerializeField] private GameObject _ending;
     [SerializeField] private GameObject[] _stageMagicCircle;
-    [SerializeField] private Transform _player;
+    [SerializeField] private Transform _player; //プレイヤー位置
 
     private void Awake()
     {
@@ -265,8 +268,8 @@ public class StageSelectAnimationControl : MonoBehaviour
     IEnumerator ToArea9Animation(bool isDone)
     {
         StartCoroutine(ToArea8Animation(true));
+
         _stageMagicCircle[8].SetActive(true);
-        _ending.SetActive(true);
         yield return null;
     }
 
@@ -287,6 +290,7 @@ public class StageSelectAnimationControl : MonoBehaviour
             if (isDone == false) yield return new WaitForSeconds(0.1f);
         }
 
+        EventCenter.ButtonNotify(8, true);
         _stageMagicCircle[9].SetActive(true);
         yield return null;
     }
@@ -294,18 +298,18 @@ public class StageSelectAnimationControl : MonoBehaviour
     private void Ending()
     {
         StartCoroutine(ToArea10Animation(true));
-        //_ending.SetActive(true);
+        _ending.SetActive(true);
     }
 
-/// <summary>
-/// 地面ブロック生成
-/// </summary>
-/// <param name="basicPoint">最終位置の基本値</param>
-/// <param name="endOffset">ループ中の変化量</param>
-/// <param name="startOffset">生成位置の移動量</param>
-/// <param name="duration">生成したブロックの移動時間</param>
-/// <param name="done">移動なし生成</param>
-private GameObject CreateBlock(Vector3 basicPoint, Vector3 startOffset, Vector3 endOffset, float duration, bool done)
+    /// <summary>
+    /// 地面ブロック生成
+    /// </summary>
+    /// <param name="basicPoint">最終位置の基本値</param>
+    /// <param name="endOffset">ループ中の変化量</param>
+    /// <param name="startOffset">生成位置の移動量</param>
+    /// <param name="duration">生成したブロックの移動時間</param>
+    /// <param name="done">移動なし生成</param>
+    private GameObject CreateBlock(Vector3 basicPoint, Vector3 startOffset, Vector3 endOffset, float duration, bool done)
     {
         var item = GameObject.Instantiate(_groundBlock);
 

@@ -17,8 +17,8 @@ public class Laser : BaseStageGimmick
     [SerializeField] private float _laserDistance; //レーザー長さ
     [SerializeField, Range(0, 50)] private int _maxReflectCount = 5; //反射可能回数
 
-    private GameObject _currentHitObject; //現在の当たりもの
-    private GameObject _currentHitTarget; 
+    private GameObject _currentHitObject; //当たったもの
+    private GameObject _currentHitTarget; //当たったターゲット
 
     void Start()
     {
@@ -36,8 +36,10 @@ public class Laser : BaseStageGimmick
     /// </summary>
     void OnRay()
     {
-        ResetLaser();
+        //レンダラー位置リセット
+        _lineRenderer.positionCount = 2;
 
+        //初期方向、位置
         Vector3 direction = transform.forward;
         Vector3 pos = transform.position;
 
@@ -73,7 +75,6 @@ public class Laser : BaseStageGimmick
                 }
                 else if (reflectCount < _maxReflectCount && hitInfo.collider.tag == "Mirror")
                 {
-                    //ミラー
                     //反射方向を決める
                     direction = Vector3.Reflect((hitInfo.point - laserPoint[i]).normalized, hitInfo.normal);
                     laserPoint.Add(hitInfo.point);
@@ -81,15 +82,12 @@ public class Laser : BaseStageGimmick
 
                     _lineRenderer.positionCount++;
                     reflectCount++;
-                    continue;
                 }
                 else if(hitInfo.collider.tag == "SecretItem"){
-                    //取集アイテム
                     //アイテムを破壊する
                     hitInfo.transform.gameObject.GetComponent<Item>().StartDissolve();
                 }
 
-                //エフェクト位置を決める
                 _endBeam.transform.position = hitInfo.point;
                 _endPartical.transform.position = hitInfo.point;
 
@@ -115,14 +113,8 @@ public class Laser : BaseStageGimmick
                     _endPartical.transform.LookAt(hitInfo.point);
                 }
             }
-            Debug.DrawRay(rays[i].origin, rays[i].direction * _laserDistance, Color.green, 0.1f);
+            //Debug.DrawRay(rays[i].origin, rays[i].direction * _laserDistance, Color.green, 0.1f);
         }
-    }
-
-    void ResetLaser()
-    {
-        //laserPoint.Clear();
-        _lineRenderer.positionCount = 2;
     }
 
     /// <summary>
@@ -139,6 +131,9 @@ public class Laser : BaseStageGimmick
         }
     }
 
+    /// <summary>
+    /// エフェクト表示設定
+    /// </summary>
     void SetParticalEffect()
     {
         _startPartical.SetActive(!_startPartical.activeSelf);
@@ -147,6 +142,11 @@ public class Laser : BaseStageGimmick
         _endBeam.SetActive(!_endBeam.activeSelf);
     }
 
+    /// <summary>
+    /// EventCenterから呼び出す
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="state"></param>
     public override void OnNotify(int id, bool state)
     {
         _isOpen = state;

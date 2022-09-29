@@ -15,8 +15,8 @@ public class AudioManager : UnitySingleton<AudioManager>
     protected override void Awake()
     {
         base.Awake();
-        //DontDestroyOnLoad(gameObject);
 
+        //初期設定
         foreach (var item in AudioTypes)
         {
             item.Source = gameObject.AddComponent<AudioSource>();
@@ -39,6 +39,11 @@ public class AudioManager : UnitySingleton<AudioManager>
         StartNewScene();
     }
 
+    /// <summary>
+    /// 指定音源
+    /// </summary>
+    /// <param name="sourceName">音源名</param>
+    /// <param name="loop">ループ</param>
     public void Play(string sourceName, bool loop)
     {
         foreach (var item in AudioTypes)
@@ -55,7 +60,7 @@ public class AudioManager : UnitySingleton<AudioManager>
     }
 
     /// <summary>
-    /// 指定clipをplay
+    /// 指定音源、クリップ
     /// </summary>
     /// <param name="sourceName">音源名</param>
     /// <param name="clipName">clip名</param>
@@ -99,7 +104,7 @@ public class AudioManager : UnitySingleton<AudioManager>
     }
 
     /// <summary>
-    /// 指定source停止
+    /// 指定音源停止
     /// </summary>
     /// <param name="sourceName"></param>
     public void Pause(string sourceName)
@@ -117,7 +122,7 @@ public class AudioManager : UnitySingleton<AudioManager>
     }
 
     /// <summary>
-    /// 指定source終了
+    /// 指定音源終了
     /// </summary>
     /// <param name="sourceName"></param>
     public void Stop(string sourceName)
@@ -135,7 +140,7 @@ public class AudioManager : UnitySingleton<AudioManager>
     }
 
     /// <summary>
-    /// すべてのsourceを終了する
+    /// すべての音源を終了する
     /// </summary>
     public void StopAllSource()
     {
@@ -146,10 +151,10 @@ public class AudioManager : UnitySingleton<AudioManager>
     }
 
     /// <summary>
-    /// 音量調整
+    /// 瞬時音量調整
     /// </summary>
-    /// <param name="sourceName"></param>
-    /// <param name="volume"></param>
+    /// <param name="sourceName">音源名</param>
+    /// <param name="volume">目標音量</param>
     public void SetVolume(string sourceName, float volume)
     {
         foreach (var item in AudioTypes)
@@ -172,6 +177,10 @@ public class AudioManager : UnitySingleton<AudioManager>
         Debug.LogWarning("not found source");
     }
 
+    /// <summary>
+    /// すべての音源の瞬時音量調整
+    /// </summary>
+    /// <param name="volume">指定音量</param>
     public void SetAllVolume(float volume)
     {
         foreach (var item in AudioTypes)
@@ -186,6 +195,11 @@ public class AudioManager : UnitySingleton<AudioManager>
         }
     }
 
+    /// <summary>
+    /// 指定音源の音高調整
+    /// </summary>
+    /// <param name="sourceName">音源名</param>
+    /// <param name="pitch">指定音高</param>
     public void SetPitch(string sourceName, float pitch)
     {
         foreach (var item in AudioTypes)
@@ -201,7 +215,7 @@ public class AudioManager : UnitySingleton<AudioManager>
     }
 
     /// <summary>
-    /// 滑らかな音量変化
+    /// 滑らかの音量調整
     /// </summary>
     /// <param name="sourceName">音源名</param>
     /// <param name="volume">指定音量</param>
@@ -219,11 +233,21 @@ public class AudioManager : UnitySingleton<AudioManager>
         Debug.LogWarning("not found source");
     }
 
+    /// <summary>
+    /// 新しいシーンに入る時の音声調整
+    /// </summary>
     public void StartNewScene()
     {
         StartCoroutine(NewSceneSetting());
     }
 
+    /// <summary>
+    /// 滑らかの音量調整
+    /// </summary>
+    /// <param name="type">音源クラス</param>
+    /// <param name="volume">指定音量</param>
+    /// <param name="duration">調整期間</param>
+    /// <returns></returns>
     IEnumerator ChangeSourceVolume(AudioType type, float volume, float duration){
         float delta = Time.deltaTime / duration;
         if(type.Source.volume > volume){

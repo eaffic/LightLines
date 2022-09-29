@@ -2,12 +2,12 @@ using UnityEngine;
 using GameEnumList;
 
 /// <summary>
-/// 移動制御クラス
+/// プレイヤー移動制御クラス、コリジョン接触処理
 /// </summary>
 public class PlayerMovement : MonoBehaviour
 {
     private PlayerFSM _fsm;
-    [SerializeField] private Rigidbody _rigidBody;
+    private Rigidbody _rigidBody;
 
     [SerializeField] private GameObject _rippleParticle;
 
@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
     private int _groundContactCount; //接触した地面の数
 
     public Vector3 Velocity { get => _velocity; }
-    public bool OnAir { get; set; } //ジャンプ状態
+    public bool OnAir { get; set; } //空中状態
     public bool OnGround => _groundContactCount > 0 || SnapToGround();  //地面確認
     public bool OnSlope //坂道確認
     {
@@ -93,7 +93,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 moveVector = GameInputManager.Instance.GetPlayerMoveInput();
 
-        //カメラ方向を基に進行方向を調整する
+        //参考方向と合わせて前方向を調整する
         if (_fsm.PlayerData.PlayerInputSpace)
         {
             Vector3 forward = _fsm.PlayerData.PlayerInputSpace.forward;
@@ -145,10 +145,10 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// 地面接触判断(一瞬地面で離しても戻れるように)
     /// </summary>
-    /// <returns>true OnGroundと同じ意味/false 空中移動</returns>
+    /// <returns>true OnGroundと同じ意味/false 空中状態</returns>
     private bool SnapToGround()
     {
-        //ジャンプ中
+        //空中
         if (OnAir)
         {
             return false;
@@ -173,9 +173,8 @@ public class PlayerMovement : MonoBehaviour
         //坂道ではない場合、キャラの位置は射線と地面の接触位置に移動する
         if (OnSlope == false) { transform.position = hit.point; }
 
-        //現在速度は地面法線方向の内積
-        float dot = Vector3.Dot(_velocity, hit.normal);
         //この物体は地面から離れている時、速度を修正する
+        float dot = Vector3.Dot(_velocity, hit.normal);        
         if (dot > 0)
         {
             _velocity = (_velocity - hit.normal * dot).normalized * speed;
@@ -209,19 +208,19 @@ public class PlayerMovement : MonoBehaviour
 
         //ジャンプ初期速度は設定した高さから計算する v = √-2gh
         float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * _fsm.PlayerData.JumpHeight);
-        float alignedSpeed = Vector3.Dot(_velocity, jumpDirection); //現在速度のジャンプ方向の長さ（大きさ）
+        float alignedSpeed = Vector3.Dot(_velocity, jumpDirection); 
+
         //現在速度とジャンプ速度の調整
         if (alignedSpeed > 0f)
         {
-            //ジャンプ速度をマイナスにならないように制限する
             jumpSpeed = Mathf.Max(jumpSpeed - alignedSpeed, 0f);
         }
 
-        _velocity += jumpDirection * jumpSpeed; //ジャンプ速度を追加する
+        _velocity += jumpDirection * jumpSpeed;
         _rigidBody.velocity = _velocity;
     }
 
-    #region 接触コライダー更新
+    #region 接触処理
     private void OnCollisionEnter(Collision other)
     {
         EvaluateCollision(other);
@@ -261,6 +260,7 @@ public class PlayerMovement : MonoBehaviour
             _rippleParticle.SetActive(false);
         }
     }
+    #endregion
 
     /// <summary>
     /// 接触コライダーの法線、地面判断など
@@ -283,7 +283,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-    #endregion 
+    
 
     /// <summary>
     /// 壁の接触情報と法線をリセットする
@@ -314,26 +314,9 @@ public class PlayerMovement : MonoBehaviour
         return vector - _contactNormal * Vector3.Dot(vector, _contactNormal);
     }
 
-    // /// <summary>
-    // /// 重力使用設定
-    // /// </summary>
-    // private void CheckGravity()
-    // {
-    //     //坂道の上に止まる
-    //     if (OnSlope)
-    //     {
-    //         _rigidBody.useGravity = false;
-    //     }
-    //     else
-    //     {
-    //         _rigidBody.useGravity = true;
-    //     }
-    // }
-
-    //---------------------------------------------------------------------------
     //---------------------------------------------------------------------------
     /// <summary>
-    /// キャラ状態設定
+    /// キャラ状態変更後の設定更新
     /// </summary>
     public void SetCurrentState()
     {
@@ -365,6 +348,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 速度リセット
+    /// </summary>
     public void ResetMoveSpeed()
     {
         _rigidBody.velocity = Vector3.zero;

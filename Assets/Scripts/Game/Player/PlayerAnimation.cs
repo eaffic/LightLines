@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// プレイヤーアニメション制御
+/// </summary>
 public class PlayerAnimation : MonoBehaviour {
     private PlayerFSM _fsm;
     private Animator _animator;

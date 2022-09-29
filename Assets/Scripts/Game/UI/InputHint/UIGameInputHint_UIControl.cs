@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// UI 入力提示
+/// </summary>
 public class UIGameInputHint_UIControl : UIControl {
     private Animator _animator;
 

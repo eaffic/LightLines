@@ -4,9 +4,9 @@ using UnityEngine;
 using GameEnumList;
 
 /// <summary>
-/// ステージ名表示、入力提示
+/// ステージ選択用魔法陣
 /// </summary>
-public class StageIconUI : MonoBehaviour
+public class StageMagicCircle : MonoBehaviour
 {
     [SerializeField] private SceneType _targetStage; //移行先のステージ
     [SerializeField] private GameObject _canvas; //ステージ名などのUi
@@ -34,6 +34,7 @@ public class StageIconUI : MonoBehaviour
         }
     }
 
+#region 接触処理
     private void OnTriggerEnter(Collider other) {
         if(other.tag == "Player"){
             _enabled = true;
@@ -47,4 +48,5 @@ public class StageIconUI : MonoBehaviour
             _inputPanels.SetActive(_enabled);
         }
     }
+#endregion
 }

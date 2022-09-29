@@ -1,7 +1,7 @@
 namespace GameEnumList
 {
     /// <summary>
-    /// ビルド中のシーンリスト
+    /// ビルドしたのシーンリスト
     /// </summary>
     public enum SceneType
     {
@@ -42,7 +42,7 @@ namespace GameEnumList
     public enum StageCameraState
     {
         IntoStage, //ステージの開始動画カメラ
-        Orbit, //プレイヤー操作可能
+        Control, //プレイヤー操作可能
         Clear, //クリア動画カメラ
     }
 }

@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using GameEnumList;
 
+/// <summary>
+/// ゲーム
+/// </summary>
 public class GameManager : UnitySingleton<GameManager>
 {
     private static SceneType _previewScene;

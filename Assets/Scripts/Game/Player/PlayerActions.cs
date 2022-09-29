@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 移動以外のアクション制御
+/// 移動以外のアクション制御、トリガー接触処理
 /// </summary>
 public class PlayerActions : MonoBehaviour { 
     [SerializeField] private GameObject _pushInputHintPanel;
@@ -47,7 +47,7 @@ public class PlayerActions : MonoBehaviour {
     #endregion
 
     /// <summary>
-    /// 前方の箱を探す
+    /// 前方の箱を探し出す
     /// </summary>
     /// <returns></returns>
     public bool SearchBox(){
@@ -56,15 +56,7 @@ public class PlayerActions : MonoBehaviour {
         //目先の確認レイ
         Ray ray = new Ray(transform.position + new Vector3(0f, _eyeHeight, 0f), transform.forward);
         
-        //if(前方の箱は存在しているか){
-        //  if(箱の記録あり && 見た箱と記録の箱は違う)
-        //    記録の箱を更新する
-        //  else if(箱の記録なし)
-        //    箱を記録する 
-        //}
-        //else if(箱の記録あり){
-        //  箱の記録を消す
-        //}
+        //レイ判定
         if (Physics.Raycast(ray.origin, ray.direction, out RaycastHit hitInfo, _forwardRayLength, LayerMask.GetMask("Box")))
         {
             //前フレームと別の箱をハイライトしたとき、リセットする

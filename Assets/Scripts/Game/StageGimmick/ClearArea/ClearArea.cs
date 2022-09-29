@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.Playables;
 
 /// <summary>
-/// クリア地点
+/// クリア魔法陣
 /// </summary>
 public class ClearArea : MonoBehaviour
 {
-    [SerializeField] private GameObject _magicCircle;
-    [SerializeField] private PlayableDirector _timeline;
+    [SerializeField] private GameObject _magicCircle; //魔法陣
+    [SerializeField] private PlayableDirector _timeline; //魔法陣動画
 
     private bool _isOpen;
 
@@ -26,6 +26,7 @@ public class ClearArea : MonoBehaviour
         TryGetComponent(out _timeline);
     }
 
+#region 接触処理
     private void OnTriggerEnter(Collider other)
     {
         if (_isOpen)
@@ -36,7 +37,12 @@ public class ClearArea : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    /// <summary>
+    /// EventCenterから呼び出す
+    /// </summary>
+    /// <param name="check"></param>
     public void Notify(bool check)
     {
         //状態切り替え時のみ実行

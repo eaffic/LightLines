@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using GameEnumList;
 
 [System.Serializable]
-//セーブデータ
+/// <summary>
+/// セーブデータクラス
+/// </summary>
 public class SaveData
 {
     [SerializeField]
@@ -46,7 +48,9 @@ public class SaveData
 }
 
 [System.Serializable]
-//ステージ記録
+/// <summary>
+/// 各ステージの記録
+/// </summary>
 public struct StageInfo
 {
     [SerializeField]
@@ -111,14 +115,13 @@ public struct StageInfo
 /// </summary>
 public class DataManager : UnitySingleton<DataManager>
 {
-    [SerializeField] private SaveData _saveData;
+    [SerializeField] private SaveData _saveData; //現在のデータ
 
     protected override void Awake()
     {
         base.Awake();
-        //DontDestroyOnLoad(this.gameObject);
 
-        _saveData = LoadFromJson<SaveData>("savedata.json"); //既有データをロードする
+        _saveData = LoadFromJson<SaveData>("savedata.json"); //既有データ確認
     }
 
     public SceneType GetLastClearStage(){
@@ -131,8 +134,6 @@ public class DataManager : UnitySingleton<DataManager>
     /// <param name="stageInfo"></param>
     public void SaveStageClearData(StageInfo stageInfo)
     {
-        
-
         bool checkdata = false;
         for (int i = 0; i < _saveData.StageInfoList.Count; ++i)
         {
@@ -141,9 +142,7 @@ public class DataManager : UnitySingleton<DataManager>
             {
                 checkdata = true;
                 StageInfo temp = _saveData.StageInfoList[i];
-                //クリア時間
                 temp.ClearTime = stageInfo.ClearTime;
-                //隠しアイテム
                 temp.SecretItemCount = stageInfo.SecretItemCount;
                 temp.ClearCount = stageInfo.ClearCount;
                 temp.IsCompleteClear = stageInfo.IsCompleteClear;
@@ -201,7 +200,7 @@ public class DataManager : UnitySingleton<DataManager>
         }
         catch (Exception e)
         {
-            //Debug.LogError(e);
+            Debug.LogError(e);
         }
     }
 
@@ -232,7 +231,7 @@ public class DataManager : UnitySingleton<DataManager>
         }
         catch (Exception e)
         {
-            //Debug.LogError(e);
+            Debug.LogError(e);
             return default;
         }
     }
@@ -253,7 +252,7 @@ public class DataManager : UnitySingleton<DataManager>
         }
         catch (Exception e)
         {
-            //Debug.LogError(e);
+            Debug.LogError(e);
         }
     }
 }

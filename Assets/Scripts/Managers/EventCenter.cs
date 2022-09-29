@@ -5,7 +5,7 @@ using GameEnumList;
 using UnityEngine;
 
 /// <summary>
-/// ステージ内のイベント管理
+/// イベント管理中心
 /// </summary>
 public class EventCenter
 {

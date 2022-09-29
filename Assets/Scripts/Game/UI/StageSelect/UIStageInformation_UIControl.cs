@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using GameEnumList;
 
+/// <summary>
+/// UI ステージ状況表示
+/// </summary>
 public class UIStageInformation_UIControl : UIControl {
     //色、位置変更など必要なオブジェクト
     [SerializeField] private Text _titleText;
@@ -20,7 +23,7 @@ public class UIStageInformation_UIControl : UIControl {
 
     private enum StageSelectUISelect { Start, Cancel };
     private StageSelectUISelect _currentSelect;
-    private SceneType _targetScene;
+    private SceneType _targetScene; //移動先シーン
     private bool _enabled;
     private float _oldInput;
 
@@ -28,13 +31,11 @@ public class UIStageInformation_UIControl : UIControl {
 
     private void OnEnable()
     {
-        //起動時、EventCenterに登録する
         EventCenter.AddStageInfomationListener(OnNotify);
     }
 
     private void OnDisable()
     {
-        //終了時、登録を外す
         EventCenter.RemoveStageInfomationListener(OnNotify);
     }
 
@@ -74,7 +75,6 @@ public class UIStageInformation_UIControl : UIControl {
 
     private void Update()
     {
-        //TODO UI管理システムの構築
         if (_enabled == false) { return; }
         _starImage.transform.Rotate(Vector3.forward);
 
@@ -104,6 +104,7 @@ public class UIStageInformation_UIControl : UIControl {
             if (_currentSelect == oldSelect) { return; }
             AudioManager.Instance.Play("UI", "UISelect", false);
 
+            //選択に応じて設定変更
             var sh = _selectParticle.shape;
             switch (_currentSelect)
             {
@@ -193,7 +194,7 @@ public class UIStageInformation_UIControl : UIControl {
     }
 
     /// <summary>
-    /// EventCenterから呼び出すの関数
+    /// EventCenterから呼び出す
     /// </summary>
     /// <param name="scene"></param>
     public void OnNotify(SceneType scene)

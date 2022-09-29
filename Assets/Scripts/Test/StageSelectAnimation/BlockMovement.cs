@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// ブロック位置操作
+/// </summary>
 public class BlockMovement : MonoBehaviour
 {
     private Vector3 _startPosition;

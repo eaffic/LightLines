@@ -8,8 +8,8 @@ using UnityEngine;
 /// </summary>
 public class LaserTarget : BaseStageGimmick
 {
-    [SerializeField] private Color _openColor;
-    [SerializeField] private Color _closeColor;
+    [SerializeField] private Color _openColor; //起動色
+    [SerializeField] private Color _closeColor; //停止色
 
     //状態によって色を変更する
     private Light _light;
@@ -18,13 +18,11 @@ public class LaserTarget : BaseStageGimmick
 
     private void OnEnable()
     {
-        //EventCenterに登録
         EventCenter.AddLaserTarget(this);
     }
 
     private void OnDisable()
     {
-        //登録を外す
         EventCenter.RemoveLaserTarget(this);
     }
 
@@ -39,6 +37,11 @@ public class LaserTarget : BaseStageGimmick
         _particle.startColor = Color.white;
     }
 
+    /// <summary>
+    /// EventCenterから呼び出す
+    /// </summary>
+    /// <param name="num"></param>
+    /// <param name="state"></param>
     public override void OnNotify(int num, bool state)
     {
         if (this.ID != num) { return; }

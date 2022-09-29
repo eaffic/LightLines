@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ステージ内のカメラ
+/// 軌道カメラ
 /// </summary>
 public class OrbitCamera : MonoBehaviour
 {
@@ -233,10 +233,10 @@ public class OrbitCamera : MonoBehaviour
         
         float movementDeltaSqr = movement.sqrMagnitude;
         //誤差範囲
-        //if (movementDeltaSqr < 1e-4f)
-        //{
-        //    return false;
-        //}
+        if (movementDeltaSqr < 1e-4f)
+        {
+           return false;
+        }
 
         //移動ベクトルから角度を取得する(x>0は時計回り x<0は反時計回り)
         float headingAngle = GetAngle(movement / Mathf.Sqrt(movementDeltaSqr));

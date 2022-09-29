@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// プレイヤーの入場エフェクト
+/// </summary>
 public class PlayerMaterial : MonoBehaviour {
     [SerializeField] Renderer[] _renderers;
 
@@ -25,6 +28,10 @@ public class PlayerMaterial : MonoBehaviour {
         StartCoroutine(StartExitScene());
     }
 
+    /// <summary>
+    /// シーンに入るときのエフェクト
+    /// </summary>
+    /// <returns></returns>
     IEnumerator StartIntoScene()
     {
         float height = _exitDissolveValue;

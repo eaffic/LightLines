@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using GameEnumList;
 
+/// <summary>
+/// UI ステージ内のメニュー画面
+/// </summary>
 public class UIStageMenu_UIControl : UIControl {
     //色、位置変更など必要なオブジェクト
     [SerializeField] private Text _titleText;
@@ -18,18 +21,16 @@ public class UIStageMenu_UIControl : UIControl {
     private enum StageMenuUISelect { Return, Restart, StageSelect }; //選択肢の種類
     private StageMenuUISelect _currentSelect; //現在の選択
     private Animator _animator;
-    private bool _enabled;
+    private bool _enabled; //起動確認
     private float _oldInput; //前フレームの入力
 
     private void OnEnable()
     {
-        //EventCenterに登録
         EventCenter.AddUIListener(OnNotify);
     }
 
     private void OnDisable()
     {
-        //登録を外す
         EventCenter.RemoveUIListener(OnNotify);
     }
 
@@ -95,6 +96,7 @@ public class UIStageMenu_UIControl : UIControl {
             if (_currentSelect == oldSelect) { return; }
             AudioManager.Instance.Play("UI", "UISelect", false);
 
+            //選択に応じて設定変更
             var sh = _selectParticle.shape;
             switch (_currentSelect)
             {

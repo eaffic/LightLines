@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameEnumList;
 
+/// <summary>
+/// UI生成、管理クラス
+/// </summary>
 public class UIManager : UnitySingleton<UIManager>
 {
     [SerializeField] private Transform _canvas = null;
-    [SerializeField] private List<UIControl> _uiList = new List<UIControl>();
+    [SerializeField] private List<UIControl> _uiList = new List<UIControl>(); //起動中すべてのUI
 
     protected override void Awake()
     {
         base.Awake();
-        //DontDestroyOnLoad(this);
 
         _canvas = GameObject.Find("Canvas").transform;
     }
@@ -28,14 +30,14 @@ public class UIManager : UnitySingleton<UIManager>
     }
 
     /// <summary>
-    /// 指定のUIを呼び出す
+    /// 指定のUIを呼び出し、対応のスクリプトをアタッチする
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="name">UIオブジェクト名</param>
     /// <returns></returns>
     public UIControl ShowUIView(string name)
     {
         string path = "Prefabs/UI/" + name;
-        GameObject uiPrefab = Resources.Load<GameObject>(path); //ResourcesManager.Instance.GetAssetCache<GameObject>(path);
+        GameObject uiPrefab = Resources.Load<GameObject>(path); 
         GameObject uiView = GameObject.Instantiate(uiPrefab);
         uiView.name = uiPrefab.name;
         uiView.transform.SetParent(_canvas, false);
@@ -56,7 +58,7 @@ public class UIManager : UnitySingleton<UIManager>
     }
 
     /// <summary>
-    /// 現在のUIパネルを外す
+    /// 現在起動中すべてのUIオブジェクトを外す
     /// </summary>
     public void ClearUI(){
         foreach(var item in _uiList){

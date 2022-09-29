@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class StageDataManager : UnitySingleton<StageDataManager> {
 
-    public int TotalScretItemCountInStage = 0;
+    public int TotalScretItemCountInStage = 0; //ステージ内のアイテム総数
     [SerializeField] private StageInfo _currentStageClearInfo;
 
     private float _timer = 0f;
@@ -44,8 +44,6 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
 
         _currentStageClearInfo.ClearCount++;
         _currentStageClearInfo.IsCompleteClear = (_getItemCount == TotalScretItemCountInStage); //アイテム全部取得
-        //Debug.Log(_getItemCount == TotalScretItemCountInStage);
-        //Debug.Log(_currentStageClearInfo.IsCompleteClear);
         DataManager.Instance.SaveStageClearData(_currentStageClearInfo);
     }
 
@@ -60,11 +58,13 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
         info.SecretItemMaxCount = TotalScretItemCountInStage;
         info.SecretItemCount = _getItemCount;
         info.ClearCount = _currentStageClearInfo.ClearCount;
-        info.IsCompleteClear = _currentStageClearInfo.IsCompleteClear;
+        info.IsCompleteClear = (_getItemCount == TotalScretItemCountInStage);
         return info;
     }
 
-    // ステージ入る前のリセット
+    /// <summary>
+    /// ステージ入る前のリセット
+    /// </summary>
     public void StartNewStage(){
         // ステージのクリア状況を取得する
         _currentStageClearInfo = DataManager.Instance.GetStageInfo(GameManager.CurrentScene);
@@ -75,10 +75,18 @@ public class StageDataManager : UnitySingleton<StageDataManager> {
         TotalScretItemCountInStage = 0;
     }
 
+    /// <summary>
+    /// クリア時間の新記録
+    /// </summary>
+    /// <returns></returns>
     public bool NewTimeRecord(){
         return _currentStageClearInfo.ClearTime == 0 || _currentStageClearInfo.ClearTime > _timer;
     }
 
+    /// <summary>
+    /// アイテム獲得の新記録
+    /// </summary>
+    /// <returns></returns>
     public bool NewItemRecord(){
         return _currentStageClearInfo.SecretItemCount < _getItemCount;
     }

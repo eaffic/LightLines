@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 箱
+/// 箱制御
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class Box : MonoBehaviour
@@ -14,8 +14,8 @@ public class Box : MonoBehaviour
     [Tooltip("地面Layer"), SerializeField] private LayerMask _groundLayer = default;
     [SerializeField] private float _colorDuration = 2f;
 
-    [SerializeField] public bool IsPlayerPushTarget;// { get; set; }
-    [SerializeField] public bool IsSecretItemInBox;// { get; set; }
+    [SerializeField] public bool IsPlayerPushTarget; //プレイヤーの動作目標
+    [SerializeField] public bool IsSecretItemInBox; //箱の中にアイテムの存在
     [SerializeField] public bool IsContactAccelerator; //加速器
 
     private Rigidbody _rigidBody;
@@ -25,7 +25,6 @@ public class Box : MonoBehaviour
 
     public bool OnMove; //移動中
     public bool OnRotate; //回転中
-    //public bool OnHead => Physics.Raycast(transform.position, Vector3.up, 0.5f, _wallLayer);   //上方向確認
     public bool OnGround => Physics.Raycast(transform.position + new Vector3(0, 0.1f, 0), Vector3.down, 0.2f, _groundLayer);   //地面確認
 
     void Awake()
@@ -36,12 +35,15 @@ public class Box : MonoBehaviour
     
     void Update()
     {
-        SetColor();
+        SetMaterialColor();
         StateCheck();
 
         Debug.DrawRay(transform.position + new Vector3(0, 0.1f, 0), Vector3.down * 0.15f, OnGround ? Color.red : Color.green);
     }
 
+    /// <summary>
+    /// 箱状態確認、重力設定する
+    /// </summary>
     private void StateCheck()
     {
         if (OnGround == false)
@@ -61,12 +63,12 @@ public class Box : MonoBehaviour
         if (transform.position.y < -100){
             Destroy(gameObject);
         }
-}
+    }
 
     /// <summary>
     /// 点滅
     /// </summary>
-    private void SetColor()
+    private void SetMaterialColor()
     {
         float lerp = Mathf.PingPong(Time.time, _colorDuration) / _colorDuration;
 
@@ -88,6 +90,11 @@ public class Box : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 箱移動
+    /// </summary>
+    /// <param name="direction">移動距離</param>
+    /// <returns></returns>
     public bool MoveBox(Vector3 direction)
     {
         if (OnMove || OnRotate) { return false; }
@@ -102,9 +109,9 @@ public class Box : MonoBehaviour
     }
 
     /// <summary>
-    /// 回転
+    /// 箱回転
     /// </summary>
-    /// <param name="angle"></param>
+    /// <param name="angle">回転角度</param>
     public void RotateBox(float angle)
     {
         if (OnMove || OnRotate) { return; }
@@ -115,7 +122,7 @@ public class Box : MonoBehaviour
     /// <summary>
     /// 移動先チェック
     /// </summary>
-    /// <param name="direction"></param>
+    /// <param name="direction">移動距離</param>
     /// <returns></returns>
     public bool MoveChecked(Vector3 direction)
     {
@@ -130,7 +137,7 @@ public class Box : MonoBehaviour
     /// <summary>
     /// 箱移動
     /// </summary>
-    /// <param name="targetOffset"></param>
+    /// <param name="targetOffset">移動距離</param>
     /// <returns></returns>
     IEnumerator BoxMove(Vector3 targetOffset)
     {
@@ -159,7 +166,7 @@ public class Box : MonoBehaviour
     /// <summary>
     /// 箱回転
     /// </summary>
-    /// <param name="angle"></param>
+    /// <param name="angle">回転角度</param>
     /// <returns></returns>
     IEnumerator BoxRotate(float angle){
         while(OnMove || OnRotate) { yield return null; }
@@ -180,6 +187,7 @@ public class Box : MonoBehaviour
         yield return null;
     }
 
+    #region  接触処理
     private void OnCollisionEnter(Collision other)
     {
         //if(IsContactBeltConveyor) { return; }
@@ -190,4 +198,5 @@ public class Box : MonoBehaviour
             _rigidBody.useGravity = false;
         }
     }
+    #endregion
 }

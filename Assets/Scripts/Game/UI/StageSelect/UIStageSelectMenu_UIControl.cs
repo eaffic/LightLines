@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using GameEnumList;
 
+/// <summary>
+/// UI ステージ選択画面のメニュー
+/// </summary>
 public class UIStageSelectMenu_UIControl : UIControl {
     //色、位置変更など必要なオブジェクト
     [SerializeField] private Text _returnText;
@@ -18,13 +21,11 @@ public class UIStageSelectMenu_UIControl : UIControl {
 
     private void OnEnable()
     {
-        //起動時、EventCenterに登録する
         EventCenter.AddUIListener(OnNotify);
     }
 
     private void OnDisable()
     {
-        //終了時、登録を外す
         EventCenter.RemoveUIListener(OnNotify);
     }
 
@@ -54,8 +55,6 @@ public class UIStageSelectMenu_UIControl : UIControl {
 
     private void Update()
     {
-        //入力があると、特定のUIを呼び出す
-        //TODO UI管理システムの構築
         if (_enabled == false) { return; }
         _starImage.transform.Rotate(Vector3.forward);
 
@@ -85,8 +84,8 @@ public class UIStageSelectMenu_UIControl : UIControl {
             if (_currentSelect == oldSelect) { return; }
             AudioManager.Instance.Play("UI", "UISelect", false);
 
+            //選択に応じて設定変更
             var sh = _selectParticle.shape;
-            //テキストの色変更
             switch (_currentSelect)
             {
                 case StageSelectMenuUISelect.Return:
@@ -164,7 +163,10 @@ public class UIStageSelectMenu_UIControl : UIControl {
         _enabled = !_enabled;
     }
 
-
+    /// <summary>
+    /// EventCenterから呼び出す
+    /// </summary>
+    /// <param name="uiName"></param>
     public void OnNotify(string uiName)
     {
         if (uiName != "Menu") { return; }

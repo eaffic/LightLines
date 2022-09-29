@@ -16,7 +16,7 @@ public class CameraIntoStageState : BaseState<StageCameraState> {
     public override void OnEnter(StageCameraState oldState)
     {
         base.OnEnter(oldState);
-        _fsm.TransitionState(base.ThisState, StageCameraState.Orbit);
+        _fsm.TransitionState(base.ThisState, StageCameraState.Control);
     }
 
     public override void OnLateUpdate(float deltaTime)
@@ -24,7 +24,7 @@ public class CameraIntoStageState : BaseState<StageCameraState> {
         base.OnLateUpdate(deltaTime);
         if (Timer > 2.0f)
         {
-            _fsm.TransitionState(base.ThisState, StageCameraState.Orbit);
+            _fsm.TransitionState(base.ThisState, StageCameraState.Control);
         }
     }
 

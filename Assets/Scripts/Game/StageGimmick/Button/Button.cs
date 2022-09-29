@@ -3,26 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+/// <summary>
+/// ボタン制御
+/// </summary>
 public class Button : BaseStageGimmick {
-    [SerializeField] private float _colorDuration;
-    [SerializeField] private bool _stateLock;   //起動状態を維持する
-    [SerializeField] private LayerMask _searchLayer = default;
+    [SerializeField] private float _colorDuration; //色点滅時間
+    [SerializeField] private bool _stateLock;   //一回起動した後状態を維持する
+    [SerializeField] private LayerMask _searchLayer = default; //反応可能のレイヤー
 
     private Vector3 _position;
-    private Light _light;
     private MeshRenderer _meshRenderer;
 
     void Awake()
     {
-        _light = GetComponentInChildren<Light>();
         TryGetComponent(out _meshRenderer);
 
         _position = transform.position;
     }
 
     private void Update() {
-        SetEmissionColor();
+        SetMaterialColor();
     }
 
     /// <summary>
@@ -39,7 +39,10 @@ public class Button : BaseStageGimmick {
         return false;
     }
 
-    private void SetEmissionColor(){
+    /// <summary>
+    /// 
+    /// </summary>
+    private void SetMaterialColor(){
         float lerp = Mathf.PingPong(Time.time, _colorDuration) / _colorDuration;
         if(IsOpen){
             _meshRenderer.material.SetColor("_EmissionColor", Color.Lerp(Color.blue, new Color(0.5f, 0.5f, 0.5f, 1f), lerp));
@@ -48,6 +51,7 @@ public class Button : BaseStageGimmick {
         }
     }
 
+#region 接触処理
     private void OnTriggerStay(Collider other) {
         if(_isOpen == false && TopCheck()){
             _isOpen = true;
@@ -65,6 +69,7 @@ public class Button : BaseStageGimmick {
             AudioManager.Instance.Play("Button", "ButtonClick", false);
         }
     }
+#endregion
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;

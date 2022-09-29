@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using GameEnumList;
 
+/// <summary>
+/// マネージャー、UIシーンのロード
+/// </summary>
 public class LoadManagerScene : MonoBehaviour
 {
     [SerializeField] private SceneType _startScene;

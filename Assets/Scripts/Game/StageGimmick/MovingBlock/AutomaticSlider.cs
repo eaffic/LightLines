@@ -22,13 +22,11 @@ public class AutomaticSlider : BaseStageGimmick
 
     private void OnEnable()
     {
-        //起動時、EventCenterに登録する
         EventCenter.AddButtonListener(OnNotify);
     }
 
     private void OnDisable()
     {
-        //終了時、登録を外す
         EventCenter.RemoveButtonListener(OnNotify);
     }
 
@@ -44,20 +42,16 @@ public class AutomaticSlider : BaseStageGimmick
         float delta = Time.deltaTime / _duration;
         if (!IsOpen)
         {
-            //元の位置に戻す
             ReturnToDefaultPosition();
             return;
         }
-
         
         if (_autoReversed)
         {
-            //往復移動
             AutoReserveseMove();
         }
         else
         {
-            //単方向移動
             NormalMove();
         }
     }

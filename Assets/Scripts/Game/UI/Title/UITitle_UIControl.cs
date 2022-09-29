@@ -5,6 +5,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// UI タイトル画面
+/// </summary>
 public class UITitle_UIControl : UIControl {
     [SerializeField] private Text _startText;
     [SerializeField] private Text _deleteText;
@@ -12,7 +15,7 @@ public class UITitle_UIControl : UIControl {
     [SerializeField] private Text _creditText;
     [SerializeField] private Text _exitText;
     [SerializeField] private Image _highLightImage;
-    [SerializeField] private Image _starImage; //選択のカーソルマーク
+    [SerializeField] private Image _starImage;
     [SerializeField] private ParticleSystem _selectParticle;
 
     private enum TitleSelect { GameStart, DeleteData, Credit, ExitGame }; //選択肢の種類
@@ -107,8 +110,8 @@ public class UITitle_UIControl : UIControl {
             if (_currentSelect == oldSelect) { return; }
             AudioManager.Instance.Play("UI", "UISelect", false); //カーソルの移動音
 
+            //選択に応じて設定変更
             var sh = _selectParticle.shape;
-            //テキストの色変更
             switch (_currentSelect)
             {
                 case TitleSelect.GameStart:
@@ -222,9 +225,11 @@ public class UITitle_UIControl : UIControl {
         yield return null;
     }
 
+    /// <summary>
+    /// ゲーム終了
+    /// </summary>
     private void ExitGame()
     {
-        //ゲーム終了
         Application.Quit();
     }
 
